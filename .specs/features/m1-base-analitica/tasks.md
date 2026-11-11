@@ -28,7 +28,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Bruto versionado e verificável
 - **Reqs:** REQ-102
 
-## [ ] T-103 — Migrações: esquemas, papéis, tabelas de operação e staging
+## [x] T-103 — Migrações: esquemas, papéis, tabelas de operação e staging
 - **What:** Executor de migrações (`loader/migrar.py`: aplica `sql/migrations/NNN_*.sql` em ordem, registra em `ops.schema_migrations`). Migrações: esquemas `stg`, `mart`, `resultado`, `ops`; papéis `loader_rw` e `app_ro` (SELECT só em `mart`, `resultado` e `ops.lote_carga`); `ops.parametros` com os valores v1.0.0; `ops.lote_carga`, `ops.rejeitado`, `ops.reconciliacao`; `stg.conversa` exatamente com as colunas do design.
 - **Where:** `sql/migrations/`, `loader/migrar.py`
 - **Depends on:** T-101

@@ -27,7 +27,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-acaso}
       POSTGRES_USER: ${POSTGRES_USER:-loader_rw}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-acaso_dev}
+      APP_RO_PASSWORD: ${APP_RO_PASSWORD:-acaso_ro_dev}
     volumes:
+      - ./sql:/app/sql:ro
+      - ./tests:/app/tests:ro
       - ./data/bruto:/app/data/bruto:ro
 
 volumes:

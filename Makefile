@@ -5,8 +5,8 @@ up:
 down:
 	docker compose down -v
 
-# Os testes entram nas tasks T-103 em diante (pytest sera adicionado ao loader).
+# Testes (pytest) rodam no container loader contra o db do compose.
 test:
-	docker compose run --build loader python -m pytest /app/tests
+	docker compose run --build --rm loader python -m pytest /app/tests -v -p no:cacheprovider
 
 reset: down up
