@@ -18,7 +18,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** Análise e base concordam no número principal
 - **Reqs:** REQ-214, REQ-270
 
-## [ ] T-202 — EDA e problemas de qualidade
+## [x] T-202 — EDA e problemas de qualidade
 - **What:** `analise/eda.py`: gera no máximo 6 figuras (PNG em `docs/figuras/`) — volume semanal com eras de modelo; concentração de conversas por IP; retorno semanal com IC e média móvel; distribuição de turnos; retorno por tema; uso por idioma — cada uma com uma frase de conclusão em `docs/figuras/conclusoes.md`. Grava `resultado.problema_qualidade` (pergunta vazia, hash repetido, IP que muda no meio, idioma mal detectado, semanas de volume anômalo, IP dominante, conversas tóxicas/PII removidas pelos autores) com contagem, % e tratamento.
 - **Where:** `analise/eda.py`, `docs/figuras/`
 - **Depends on:** T-201

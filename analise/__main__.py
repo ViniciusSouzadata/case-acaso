@@ -1,11 +1,11 @@
-"""Uso:  python -m analise meta     (T-201). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
+"""Uso:  python -m analise meta | eda     (T-201, T-202). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
 from __future__ import annotations
 
 import sys
 
 import psycopg
 
-from analise import meta
+from analise import eda, meta
 from loader.migrar import dsn
 
 
@@ -19,7 +19,12 @@ def main(argv: list[str]) -> int:
               f"efeito mínimo detectável {m['efeito_minimo_detectavel_pp']} p.p. (50/50) e "
               f"{m['efeito_minimo_detectavel_15_85_pp']} p.p. (15/85)")
         return 0
-    print("uso: python -m analise meta", file=sys.stderr)
+    if comando == "eda":
+        with psycopg.connect(dsn(), autocommit=True) as conn:
+            r = eda.gerar(conn)
+        print(f"EDA: {len(r['figuras'])} figuras ({', '.join(r['figuras'])}); {len(r['problemas'])} problemas de qualidade gravados")
+        return 0
+    print("uso: python -m analise meta | eda", file=sys.stderr)
     return 2
 
 
