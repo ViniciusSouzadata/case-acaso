@@ -1,0 +1,2 @@
+{ "dados": [{"covariavel":"exemplo","dp_antes":0.3,"dp_depois":0.05}],
+  "meta": {"versao_definicao":"1.0.0","versao_analise":"1.0.0","atualizado_em":"2026-11-14T12:00:00.000Z","lote_id":1,"request_id":"req_ab12cd","fonte":"resultado.balanco_propensao"} }

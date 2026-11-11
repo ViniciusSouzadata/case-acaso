@@ -60,7 +60,9 @@ def test_app_ro_le_mart_e_resultado_futuros_e_lote():
                 assert c.execute("SELECT * FROM mart.t_teste_permissao").fetchall() == []
                 assert c.execute("SELECT * FROM resultado.t_teste_permissao").fetchall() == []
                 assert isinstance(c.execute("SELECT * FROM ops.lote_carga").fetchall(), list)  # T-104: pode haver lotes
-                for tabela in ("ops.parametros", "ops.rejeitado", "ops.reconciliacao"):
+                # 020 (T-303): ops.reconciliacao passou a ser legível (tela de Qualidade); parametros e rejeitado seguem fechados
+                assert isinstance(c.execute("SELECT * FROM ops.reconciliacao").fetchall(), list)
+                for tabela in ("ops.parametros", "ops.rejeitado"):
                     with pytest.raises(psycopg.errors.InsufficientPrivilege):
                         c.execute(f"SELECT * FROM {tabela}")
                     c.rollback()

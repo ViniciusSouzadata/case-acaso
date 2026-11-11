@@ -1,0 +1,5 @@
+{ "dados": {"lote":{"lote_id":1,"iniciado_em":"2026-11-14 12:00:00+00","terminado_em":"2026-11-14 12:01:00+00","fonte":"wildchat_brasil.parquet","linhas_lidas":11621,"linhas_gravadas":11621,"linhas_rejeitadas":0,"versao_definicao":"1.0.0","status":"sucesso"},
+   "reconciliacao":[{"metrica":"exemplo","valor_bruto":1,"valor_mart":1,"diferenca":0,"tolerancia":0,"ok":true}],
+   "problemas":[{"problema":"exemplo","contagem":10,"percentual":0.1,"tratamento":"exemplo"}],
+   "validacao":[{"classificador":"exemplo","n":200,"acuracia":0.9,"kappa":0.8,"detalhe_json":{"matriz":[[1,0],[0,1]]},"versao_prompt":null,"modelo":null}]},
+  "meta": {"versao_definicao":"1.0.0","versao_analise":"1.0.0","atualizado_em":"2026-11-14T12:00:00.000Z","lote_id":1,"request_id":"req_ab12cd","fonte":"ops.lote_carga"} }

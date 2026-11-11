@@ -15,7 +15,7 @@ T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 - **Gate:** Esqueleto da API no ar com rastreio por requisição
 - **Reqs:** REQ-301, REQ-304, REQ-305, REQ-310
 
-## [ ] T-302 — Endpoints de retenção e dicionário
+## [x] T-302 — Endpoints de retenção e dicionário
 - **What:** `/api/retencao/resumo`, `/api/retencao/coortes` (com `meta.eras`), `/api/retencao/sensibilidade`, `/api/dicionario`. Validação zod (`pais`, `inicio`, `fim`, `granularidade`, `indicador`); `pais` ≠ Brazil → 400 "país ainda não carregado"; SQL parametrizado em `lib/consultas/`.
 - **Where:** `app/app/api/retencao/**`, `app/app/api/dicionario/`, `app/lib/consultas/`
 - **Depends on:** T-301
@@ -25,7 +25,7 @@ T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 - **Gate:** Tela 1 tem todos os dados de que precisa
 - **Reqs:** REQ-302, REQ-303, REQ-308, REQ-309
 
-## [ ] T-303 — Endpoints de fatores, semana, achados e qualidade
+## [x] T-303 — Endpoints de fatores, semana, achados e qualidade
 - **What:** `/api/fatores/efeitos`, `/api/fatores/segmentos`, `/api/fatores/balanco`, `/api/semana/decomposicao`, `/api/achados`, `/api/qualidade`.
 - **Where:** `app/app/api/**`
 - **Depends on:** T-302
@@ -35,7 +35,7 @@ T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 - **Gate:** Telas 2 e 3 têm todos os dados
 - **Reqs:** REQ-302, REQ-303, REQ-309
 
-## [ ] T-304 — Cache e medição de tempo
+## [x] T-304 — Cache e medição de tempo
 - **What:** Cache em memória por (rota, parâmetros, `lote_id`) com TTL de 1 h; campo `cache: hit|miss` no log; cabeçalho `Cache-Control` do design. `scripts/medir_api.ts`: 50 chamadas por rota, imprime p50/p95 (frio e quente) e grava a tabela em `docs/desempenho.md`.
 - **Where:** `app/lib/cache.ts`, `scripts/medir_api.ts`
 - **Depends on:** T-303
@@ -45,7 +45,7 @@ T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 - **Gate:** Desempenho medido, não suposto
 - **Reqs:** REQ-306, REQ-307
 
-## [ ] T-305 — Varredura de privacidade e gate
+## [ ] T-305 (parcial: falta make test no compose e fumaça 14/14, na integração) — Varredura de privacidade e gate
 - **What:** Teste automático que percorre todas as rotas e falha se alguma resposta contiver chaves ou valores com cara de `hashed_ip`, user-agent ou texto de conversa; teste que confirma que nenhuma consulta em `lib/consultas/` referencia `stg.`. Rodar todos os testes dentro do compose via `make test`.
 - **Where:** `app/tests/`
 - **Depends on:** T-304
