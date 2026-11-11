@@ -78,7 +78,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** Causa × seleção tratada e demonstrável
 - **Reqs:** REQ-220, REQ-221, REQ-222
 
-## [ ] T-207 — Semana de 20/11/2023: mix × taxa
+## [x] T-207 — Semana de 20/11/2023: mix × taxa
 - **What:** `analise/semana.py`: compara a coorte de 20/11/2023 com as 4 semanas anteriores; decomposição de Kitagawa por segmento (dispositivo × família de modelo); teste de duas proporções; `conclusao` em texto ("x p.p. por mudança de perfil, y p.p. por mudança de taxa; diferença [não] distinguível de ruído, p = ..."). Grava `resultado.decomposicao_semana` e `_resumo`.
 - **Where:** `analise/semana.py`
 - **Depends on:** T-201
