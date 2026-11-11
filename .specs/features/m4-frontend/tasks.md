@@ -7,7 +7,7 @@ T-401 ─► T-402 ─┬─► T-403 ─┐
                     T-405 ─┘
 ```
 
-## [ ] T-401 — Base visual: layout, componentes de confiança e mensagens
+## [x] T-401 — Base visual: layout, componentes de confiança e mensagens
 - **What:** Layout com navegação (Retenção · O que faz voltar · Confiança nos dados) e rodapé fixo ("dados atualizados em", versão da definição, fonte). Componentes: `Numero` (valor + IC + n + ícone "i"), `Glossario` (painel que abre com definição, fórmula, denominador, período, fonte e SQL de `/api/dicionario`), `AvisoAmostra` (regra única de amostra pequena), `Estado` (carregando, vazio, erro com `request_id`). Textos em `mensagens/pt.json`. Paleta segura para daltonismo.
 - **Where:** `app/app/`, `app/components/`, `app/mensagens/`
 - **Depends on:** T-302

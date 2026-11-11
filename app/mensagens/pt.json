@@ -1,0 +1,61 @@
+{
+  "app": {
+    "titulo": "Retenção de um assistente de IA"
+  },
+  "nav": {
+    "retencao": "Retenção",
+    "fatores": "O que faz voltar",
+    "dados": "Confiança nos dados"
+  },
+  "rodape": {
+    "atualizado": "Dados atualizados em {data}",
+    "definicao": "Definição versão {versao}",
+    "fonte": "Fonte: WildChat-1M, Brasil",
+    "carregando": "Carregando informações da base…",
+    "indisponivel": "Não foi possível ler a data da última carga."
+  },
+  "numero": {
+    "ic": "intervalo de 95%: {inf} a {sup}",
+    "n": "n = {n}",
+    "info": "O que é este número?",
+    "amostraPequena": "amostra pequena (n = {n})",
+    "semValor": "sem valor"
+  },
+  "amostra": {
+    "titulo": "Amostra pequena",
+    "explicacao": "Há poucas pessoas neste grupo (n = {n}). Com tão poucas, o resultado muda muito de um dia para o outro, por isso não mostramos como número firme."
+  },
+  "imatura": {
+    "rotulo": "ainda dentro dos 7 dias",
+    "explicacao": "Estas pessoas ainda estão dentro dos 7 dias em que podem voltar. O número ainda vai subir, não é uma queda."
+  },
+  "zero": {
+    "rotulo": "não dá para distinguir de zero",
+    "explicacao": "O intervalo de 95% inclui o zero: com estes dados não dá para dizer se há efeito."
+  },
+  "estado": {
+    "carregando": "Carregando…",
+    "vazio": "Ainda não há dados para mostrar aqui.",
+    "erro": "Algo deu errado ao buscar os dados.",
+    "codigoErro": "Se pedir ajuda, informe o código {requestId}."
+  },
+  "glossario": {
+    "titulo": "Como este número é calculado",
+    "fechar": "Fechar",
+    "definicao": "O que é",
+    "formula": "Conta",
+    "denominador": "Quem entra na conta",
+    "periodo": "Período de referência",
+    "fonte": "De onde vem",
+    "sql": "Consulta usada",
+    "limitacoes": "O que ele não mostra",
+    "naoEncontrado": "Este indicador ainda não tem descrição no dicionário."
+  },
+  "demo": {
+    "titulo": "Demonstração dos componentes de confiança",
+    "normal": "Número normal",
+    "pequena": "Amostra pequena",
+    "erro": "Erro ao buscar",
+    "imatura": "Semana ainda imatura"
+  }
+}

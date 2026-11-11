@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+/* Paleta de Okabe-Ito: distinguível por quem tem daltonismo (REQ-411). */
+@theme {
+  --color-azul: #0072b2;
+  --color-laranja: #e69f00;
+  --color-verde: #009e73;
+  --color-vermelho: #d55e00;
+  --color-roxo: #cc79a7;
+  --color-cinza: #8a8f98;
+  --color-fundo: #f8fafc;
+}
+
+body {
+  background: var(--color-fundo);
+  color: #0f172a;
+}
