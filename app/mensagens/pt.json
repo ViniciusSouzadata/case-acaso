@@ -142,7 +142,7 @@
   },
   "fatores": {
     "pergunta": "Quais fatores da primeira experiência mais pesam para a pessoa voltar, e quanto disso é efeito do assistente?",
-    "resposta": "Entre {m} comparações do assistente e do perfil, {k} se distinguem de zero depois de comparar grupos parecidos; as demais ficam dentro da incerteza.",
+    "resposta": "Entre {m} comparações do assistente e do perfil, {k} têm intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, {f} continuam diferentes de zero.",
     "respostaSemDados": "Ainda não há comparações para mostrar.",
     "abas": {
       "assistente": "Assistente",
@@ -158,7 +158,7 @@
     "ajustado": "Ajustada",
     "explicaTitulo": "Bruto ou ajustado?",
     "explica": "O ponto vazado é a diferença que se vê direto nos dados (bruta). O ponto cheio compara grupos parecidos, para separar o que é do assistente do que é de quem chegou. Quanto mais longe um ponto do outro, mais da diferença bruta vinha de quem chegou, e não do assistente.",
-    "tituloGrupo": "Neste grupo, {k} de {m} diferenças se distinguem de zero; o resto cai dentro da incerteza",
+    "tituloGrupo": "Neste grupo, {k} de {m} comparações têm intervalo que não inclui o zero (veja abaixo quais podem ser acaso); as demais caem dentro da incerteza",
     "tituloGrupoEng": "Estas são diferenças brutas de comportamento durante a visita, não efeitos do assistente",
     "tituloGrupoVazio": "Ainda não há comparações neste grupo",
     "eixo": "diferença na taxa de retorno, em pontos percentuais (p.p.): à direita do zero voltam mais, à esquerda voltam menos",
@@ -205,6 +205,8 @@
       "era_modelo": "época de oferta de modelo",
       "n_turnos_sessao": "turnos na visita",
       "n_conversas_sessao": "conversas na visita"
-    }
+    },
+    "respostaNenhuma": "Entre {m} comparações do assistente e do perfil, {k} têm intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, nenhuma continua diferente de zero. Não dá para afirmar um efeito com segurança.",
+    "naoResiste": "o intervalo não inclui o zero, mas não resiste à correção para muitas comparações: pode ser acaso"
   }
 }

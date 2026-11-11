@@ -58,6 +58,7 @@ export function LinhaDaFloresta({ l }: { l: LinhaFloresta }) {
 
           <div className="mt-1 flex flex-wrap gap-2 text-xs">
             {l.naoDistingue ? <span className="rounded bg-slate-100 px-2 py-0.5 font-medium text-slate-900">{t("zero.rotulo")}</span> : null}
+            {l.podeSerAcaso ? <span className="rounded bg-amber-50 px-2 py-0.5 text-slate-800">{t("fatores.naoResiste")}</span> : null}
             {l.resisteFdr && !l.naoDistingue ? <span className="rounded bg-emerald-50 px-2 py-0.5 text-slate-800">✓ {t("fatores.resiste")}</span> : null}
           </div>
         </div>

@@ -37,7 +37,7 @@ T-401 ─► T-402 ─┬─► T-403 ─┐
 - **Gate:** Premissas e movimento visíveis para o cliente
 - **Reqs:** REQ-403, REQ-409
 
-## [ ] T-404 — Tela 2: O que faz voltar
+## [x] T-404 — Tela 2: O que faz voltar
 - **What:** Gráfico de floresta por grupo (abas Assistente / Perfil / Engajamento): ponto vazado = bruto, ponto cheio = ajustado, barra de IC, linha do zero, ordenado pelo efeito; frase `leitura` em cada linha; rótulos "não dá para distinguir de zero" e "amostra pequena". Texto curto explicando a diferença entre bruto e ajustado em linguagem simples. Cartões dos 3 achados com decisão e limite. Detalhe recolhível "Como comparamos grupos parecidos" (balanço antes/depois).
 - **Where:** `app/app/fatores/page.tsx`
 - **Depends on:** T-401, T-303

@@ -50,6 +50,8 @@ export interface LinhaFloresta {
   referenciaDoRotulo: Estimativa | null;
   naoDistingue: boolean;
   resisteFdr: boolean;
+  /** intervalo fora do zero, mas sem resistir à correção para muitas comparações: pode ser acaso */
+  podeSerAcaso: boolean;
   leitura: string | null;
   /** posições em % da trilha: [inf, efeito, sup] */
   pos: { zero: number; bruto: [number, number, number] | null; ajustado: [number, number, number] | null };
@@ -93,6 +95,7 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
       referenciaDoRotulo: ref,
       naoDistingue: !pequena && ref !== null && cruzaZero(ref.inf, ref.sup),
       resisteFdr: e.significativo_fdr === true,
+      podeSerAcaso: grupo !== "engajamento" && !pequena && ajustado !== null && !cruzaZero(ajustado.inf, ajustado.sup) && e.significativo_fdr !== true,
       leitura: e.leitura,
       pos: { zero: pos(0), bruto: tri(bruto), ajustado: tri(ajustado) },
     };
@@ -101,10 +104,11 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
 }
 
 /** Quantas comparações (assistente + perfil, amostra suficiente, com ajuste) se distinguem de zero. */
-export function contarDistinguiveis(efeitos: EfeitoApi[]): { k: number; m: number } {
+export function contarDistinguiveis(efeitos: EfeitoApi[]): { k: number; m: number; f: number } {
   const validos = efeitos.filter((e) => e.grupo !== "engajamento" && e.amostra_suficiente && e.efeito_ajustado_pp !== null);
-  const k = validos.filter((e) => !cruzaZero(e.ajustado_ic_inf, e.ajustado_ic_sup)).length;
-  return { k, m: validos.length };
+  const fora = validos.filter((e) => !cruzaZero(e.ajustado_ic_inf, e.ajustado_ic_sup));
+  // f: as que continuam depois da correção para comparações múltiplas (Benjamini-Hochberg, feita na análise)
+  return { k: fora.length, m: validos.length, f: fora.filter((e) => e.significativo_fdr === true).length };
 }
 
 export function contarDoGrupo(linhas: LinhaFloresta[]): { k: number; m: number } {

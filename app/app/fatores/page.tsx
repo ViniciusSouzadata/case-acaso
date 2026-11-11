@@ -16,7 +16,7 @@ export default function PaginaFatores() {
   const [grupo, setGrupo] = useState<GrupoFator>("assistente");
   const r = useApi<EfeitoApi[]>("/api/fatores/efeitos");
   const efeitos = r.estado === "ok" ? r.corpo.dados : [];
-  const { k, m } = contarDistinguiveis(efeitos);
+  const { k, m, f } = contarDistinguiveis(efeitos);
   const { linhas, limite } = prepararFloresta(efeitos, grupo);
   const doGrupo = contarDoGrupo(linhas);
 
@@ -25,7 +25,7 @@ export default function PaginaFatores() {
       <header>
         <h1 className="text-xl font-semibold text-slate-900">{t("fatores.pergunta")}</h1>
         <p className="mt-2 text-base text-slate-800" data-testid="frase-resposta">
-          {r.estado === "ok" ? (m > 0 ? t("fatores.resposta", { k, m }) : t("fatores.respostaSemDados")) : ""}
+          {r.estado === "ok" ? (m === 0 ? t("fatores.respostaSemDados") : f === 0 ? t("fatores.respostaNenhuma", { k, m }) : t("fatores.resposta", { k, m, f })) : ""}
         </p>
       </header>
 
