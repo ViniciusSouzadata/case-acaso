@@ -1,0 +1,23 @@
+{
+  "_leia_me": "Referência das definições de indicador. Cada versão de ops.parametros.versao_definicao tem os valores de parâmetros e os números-âncora do snapshot versionado. Mudou uma definição de propósito? Suba versao_definicao (nova migração) E acrescente a versão nova aqui; nunca edite uma versão já publicada.",
+  "1.0.0": {
+    "parametros": {
+      "gap_sessao_min": "30",
+      "janela_retorno_horas": "168",
+      "burn_in_dias": "14",
+      "n_minimo": "30",
+      "limiar_conversas_ip": "200",
+      "limiar_uas_ip": "10",
+      "fuso_pais": "America/Sao_Paulo"
+    },
+    "ancoras_snapshot": {
+      "snapshot_sha256": "1f3567e696d243d27da6e822d710f66a6b8eaec9f1f010bf3602a1cdd8a54194",
+      "conversas": 11621,
+      "rejeitadas": 0,
+      "usuarios_com_uso": 2498,
+      "sessoes": 6230,
+      "elegiveis": 2372,
+      "voltaram_7d": 566
+    }
+  }
+}

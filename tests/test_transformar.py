@@ -7,7 +7,6 @@ import psycopg
 import pytest
 
 import esperado
-import fabrica_bruto
 from loader import carregar, migrar, transformar
 
 SNAPSHOT = Path(carregar.SNAPSHOT)
@@ -22,21 +21,8 @@ def _um(sql, *args):
     return _q(sql, *args)[0]
 
 
-def _recarregar(parquet=None):
-    migrar.migrar()
-    with psycopg.connect(migrar.dsn(), autocommit=True) as c:
-        c.execute("TRUNCATE stg.conversa, ops.rejeitado")
-    carregar.carregar(parquet)
-    transformar.transformar()
-
-
 # ------------------------------------------------------------------ base sintética
-@pytest.fixture(scope="class")
-def sint(tmp_path_factory):
-    _recarregar(fabrica_bruto.gerar(tmp_path_factory.mktemp("sint_t") / "sintetico.parquet"))
-
-
-@pytest.mark.usefixtures("sint")
+@pytest.mark.usefixtures("usar_sint")  # banco sintético da sessão (conftest.py): carregado e transformado uma vez
 class TestSintetico:
     def test_totais(self):
         assert _um("SELECT count(*) FROM mart.dim_usuario")[0] == esperado.USUARIOS_OFICIAIS == 42
@@ -45,24 +31,6 @@ class TestSintetico:
         assert _um("SELECT count(*) FROM mart.fct_primeira_experiencia WHERE elegivel AND voltou_7d")[0] \
             == esperado.RETORNOS_ENTRE_ELEGIVEIS == 5
         assert _um("SELECT count(*) FROM mart.dim_usuario WHERE NOT elegivel")[0] == esperado.USUARIOS_INELEGIVEIS == 22
-
-    @pytest.mark.parametrize("codigo", sorted(esperado.CASOS))
-    def test_caso(self, codigo):
-        caso = esperado.CASOS[codigo]
-        usuarios = [r[0] for r in _q(
-            "SELECT DISTINCT usuario_id FROM stg.conversa WHERE hashed_ip = ANY(%s) AND conta_como_uso",
-            list(caso.hashed_ips))]
-        assert len(usuarios) == caso.usuarios_oficiais
-        if not usuarios:
-            assert caso.elegivel is None
-            return
-        assert _um("SELECT count(*) FROM mart.fct_sessao WHERE usuario_id = ANY(%s)", usuarios)[0] == caso.sessoes
-        for elegivel, motivo, voltou in _q(
-                "SELECT d.elegivel, d.motivo_inelegivel, f.voltou_7d FROM mart.dim_usuario d "
-                "JOIN mart.fct_primeira_experiencia f USING (usuario_id) WHERE usuario_id = ANY(%s)", usuarios):
-            assert elegivel is caso.elegivel, codigo
-            assert motivo == caso.motivo_inelegivel, codigo
-            assert voltou is caso.voltou_7d, codigo
 
     def test_anomalo_so_no_caso_e(self):
         n_anom = _um("SELECT count(*) FROM mart.dim_usuario WHERE trafego_anomalo")[0]
@@ -104,11 +72,8 @@ class TestSintetico:
 
 
 # ------------------------------------------------------------------ permissões e atomicidade
+@pytest.mark.usefixtures("usar_sint")
 class TestSwap:
-    @pytest.fixture(autouse=True)
-    def preparar(self, tmp_path_factory):
-        _recarregar(fabrica_bruto.gerar(tmp_path_factory.mktemp("sint_s") / "sintetico.parquet"))
-
     def test_app_ro_le_marts_novos_e_nao_le_stg(self):
         dsn = (f"host={os.environ['PGHOST']} port={os.environ.get('PGPORT', '5432')} dbname={os.environ['POSTGRES_DB']} "
                f"user=app_ro password={os.environ['APP_RO_PASSWORD']}")
@@ -143,13 +108,8 @@ class TestSwap:
 
 
 # ------------------------------------------------------------------ snapshot real
-@pytest.fixture(scope="class")
-def real():
-    _recarregar()
-
-
 @pytest.mark.skipif(not SNAPSHOT.is_file(), reason="snapshot real ausente")
-@pytest.mark.usefixtures("real")
+@pytest.mark.usefixtures("usar_real")  # banco real da sessão (conftest.py), montado em paralelo uma única vez
 class TestReal:
     def test_uma_linha_por_usuario(self):
         com_uso = _um("SELECT count(DISTINCT usuario_id) FROM stg.conversa WHERE conta_como_uso")[0]

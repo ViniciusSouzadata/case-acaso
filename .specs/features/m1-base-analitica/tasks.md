@@ -78,7 +78,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Tudo que a tela vai mostrar está pré-calculado
 - **Reqs:** REQ-130, REQ-131, REQ-132, REQ-133
 
-## [ ] T-108 — Reconciliação bruto × marts
+## [x] T-108 — Reconciliação bruto × marts
 - **What:** `loader/reconciliar.py`: recalcula direto do parquet, com SQL independente em DuckDB, total de conversas, IPs distintos, usuários pela chave oficial e novos/voltaram por semana; compara com os marts; grava `ops.reconciliacao`; diferença acima da tolerância encerra a carga com erro e marca o lote como falho.
 - **Where:** `loader/reconciliar.py`
 - **Depends on:** T-107
@@ -88,7 +88,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Divergência é pega pela carga, não pelo cliente
 - **Reqs:** REQ-152
 
-## [ ] T-109 — Testes que travam as definições
+## [x] T-109 — Testes que travam as definições
 - **What:** `tests/test_definicoes_sintetico.py` (roda a carga + transformações na base sintética e compara com `esperado.py`, caso a caso); `tests/test_invariantes_snapshot.py` (11.621 conversas, `conversa_id` único, voltaram ≤ novos, somas fecham); `tests/test_versao_definicao.py` (os valores de `ops.parametros` para a versão corrente batem com um arquivo de referência; mudar parâmetro sem subir a versão falha). `make test` roda tudo dentro do compose.
 - **Where:** `tests/`
 - **Depends on:** T-105, T-107

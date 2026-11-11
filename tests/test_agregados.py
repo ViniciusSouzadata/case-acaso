@@ -8,7 +8,6 @@ import psycopg
 import pytest
 
 import esperado
-import fabrica_bruto
 from loader import carregar, migrar, transformar
 
 SNAPSHOT = Path(carregar.SNAPSHOT)
@@ -31,14 +30,6 @@ def _q(sql, *args):
 
 def _um(sql, *args):
     return _q(sql, *args)[0]
-
-
-def _recarregar(parquet=None):
-    migrar.migrar()
-    with psycopg.connect(migrar.dsn(), autocommit=True) as c:
-        c.execute("TRUNCATE stg.conversa, ops.rejeitado")
-    carregar.carregar(parquet)
-    transformar.transformar()
 
 
 def _wilson_py(k, n, z=1.96):
@@ -85,12 +76,7 @@ class TestWilson:
 
 
 # ------------------------------------------------------------------ regra_retorno da calc_retencao
-@pytest.fixture(scope="class")
-def sint(tmp_path_factory):
-    _recarregar(fabrica_bruto.gerar(tmp_path_factory.mktemp("sint_agg") / "sintetico.parquet"))
-
-
-@pytest.mark.usefixtures("sint")
+@pytest.mark.usefixtures("usar_sint")  # banco sintético da sessão (conftest.py)
 class TestSintetico:
     # ---- outro_dia
     def test_outro_dia_conta_das_regras(self):
@@ -277,13 +263,8 @@ class TestSintetico:
 
 
 # ------------------------------------------------------------------ snapshot real
-@pytest.fixture(scope="class")
-def real():
-    _recarregar()
-
-
 @pytest.mark.skipif(not SNAPSHOT.is_file(), reason="snapshot real ausente")
-@pytest.mark.usefixtures("real")
+@pytest.mark.usefixtures("usar_real")  # banco real da sessão (conftest.py)
 class TestReal:
     def test_sensibilidade_oficial_e_a_taxa_global(self):
         usuarios, vol, taxa = _um("SELECT usuarios, voltaram_7d, taxa FROM mart.agg_retencao_sensibilidade WHERE definicao = 'oficial'")
