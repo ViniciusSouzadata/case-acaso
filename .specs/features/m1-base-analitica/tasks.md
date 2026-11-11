@@ -8,7 +8,7 @@ T-101 ──► T-102 ─┐
 ```
 T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T-105 e T-107.
 
-## [ ] T-101 — Esqueleto do repositório e compose mínimo
+## [x] T-101 — Esqueleto do repositório e compose mínimo
 - **What:** Criar a estrutura de pastas do `design.md` (loader/, sql/migrations/, sql/transform/, seeds/, tests/, data/bruto/). `docker-compose.yml` com `db` (postgres:16, healthcheck) e `loader` (python:3.12-slim; por enquanto só conecta e imprime a versão do Postgres). `Makefile` com `up`, `down`, `test`, `reset`. `.env.example`. Ajustar `.gitignore`: ignorar `data/raw/` e `data/interim/`, **versionar** `data/bruto/`. README inicial com os dois jeitos de rodar (Docker Desktop ou WSL).
 - **Where:** raiz do repo
 - **Depends on:** —
