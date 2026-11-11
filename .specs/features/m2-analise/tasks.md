@@ -38,7 +38,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** Bruto pronto para comparar com ajustado
 - **Reqs:** REQ-210, REQ-212
 
-## [ ] T-204 — Efeito ajustado (logística + efeito marginal)
+## [x] T-204 — Efeito ajustado (logística + efeito marginal)
 - **What:** `analise/ajustado.py`: Logit (statsmodels) de `voltou_7d` em fatores de assistente + perfil + era de modelo; erro agrupado por `hashed_ip` (lido de `stg` pelo job de análise, nunca gravado em `resultado`); efeito marginal médio por nível em p.p. com IC (delta); p-valor; Benjamini-Hochberg; `ordem` por |efeito|; `leitura` em frase simples gerada por regra. Limite de ~25 parâmetros; registrar em `resultado.meta` quantos entraram.
 - **Where:** `analise/ajustado.py`
 - **Depends on:** T-203

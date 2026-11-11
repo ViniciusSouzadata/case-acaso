@@ -1,11 +1,11 @@
-"""Uso:  python -m analise meta | eda | bruto     (T-201..T-203). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
+"""Uso:  python -m analise meta | eda | bruto | ajustado     (T-201..T-204). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
 from __future__ import annotations
 
 import sys
 
 import psycopg
 
-from analise import bruto, eda, meta
+from analise import ajustado, bruto, eda, meta
 from loader.migrar import dsn
 
 
@@ -29,7 +29,13 @@ def main(argv: list[str]) -> int:
             linhas = bruto.gravar(conn)
         print(f"resultado.efeito_fator (bruto): {len(linhas)} linhas, {len({l['fator'] for l in linhas})} fatores")
         return 0
-    print("uso: python -m analise meta | eda | bruto", file=sys.stderr)
+    if comando == "ajustado":
+        with psycopg.connect(dsn(), autocommit=True) as conn:
+            linhas = ajustado.gravar(conn)
+        n_aj = sum(1 for l in linhas if l["efeito_ajustado_pp"] is not None)
+        print(f"resultado.efeito_fator: {len(linhas)} linhas, {n_aj} com efeito ajustado")
+        return 0
+    print("uso: python -m analise meta | eda | bruto | ajustado", file=sys.stderr)
     return 2
 
 

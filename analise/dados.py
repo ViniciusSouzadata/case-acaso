@@ -30,3 +30,17 @@ def carregar_elegiveis(conn: psycopg.Connection) -> pd.DataFrame:
     for c in COLUNAS_BOOL:
         df[c] = df[c].astype(bool)
     return df
+
+
+def carregar_grupos_ip(conn: psycopg.Connection) -> pd.Series:
+    """usuario_id -> código inteiro do IP do usuário (o da 1ª conversa, mesma regra de mart.dim_usuario).
+
+    Serve só para o erro-padrão agrupado: o IP nunca sai daqui como texto (vira código numérico em memória)
+    e nada dele é gravado em resultado.* ou impresso.
+    """
+    cur = conn.execute("""
+        SELECT DISTINCT ON (usuario_id) usuario_id, hashed_ip
+        FROM stg.conversa ORDER BY usuario_id, ts_inicio, conversa_id""")
+    df = pd.DataFrame(cur.fetchall(), columns=["usuario_id", "hashed_ip"])
+    codigos, _ = pd.factorize(df["hashed_ip"])
+    return pd.Series(codigos, index=df["usuario_id"].to_numpy(), name="grupo_ip")
