@@ -1,4 +1,5 @@
 import { afterAll, describe, expect, it } from "vitest";
+import { varrer } from "./helpers/varredura";
 import {
   respostaAchados,
   respostaBalanco,
@@ -49,6 +50,7 @@ describe.skipIf(!temBanco)("fumaça contra o banco real", () => {
     const r = esquema.safeParse(corpo);
     expect(r.success, r.success ? "" : JSON.stringify(r.error.issues.slice(0, 3))).toBe(true);
     expect(status).toBe(200);
+    expect(varrer(corpo), "dado sensível na resposta real").toEqual([]);
   });
 
   it("números oficiais batem com o STATE (2.372 elegíveis, 566 voltaram)", async () => {

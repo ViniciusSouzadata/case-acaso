@@ -12,5 +12,7 @@ down:
 # Testes: migrar -> pytest, no container loader contra o db do compose.
 test:
 	docker compose run --build --rm loader sh -c "python -m loader.migrar && python -m pytest /app/tests -q -p no:cacheprovider --durations=10"
+	# TypeScript (vitest + fumaça contra o banco do compose); roda depois do Python porque ele aplica as migrações
+	docker compose --profile testes run --build --rm app-testes
 
 reset: down up

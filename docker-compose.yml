@@ -48,5 +48,17 @@ services:
     ports:
       - "${APP_HOST_PORT:-3000}:3000"
 
+  # Testes do app (vitest, inclui a fumaça contra o banco do compose). Só roda com: docker compose --profile testes run --rm app-testes
+  app-testes:
+    profiles: ["testes"]
+    build:
+      context: ./app
+      target: testes
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://app_ro:${APP_RO_PASSWORD:-acaso_ro_dev}@db:5432/${POSTGRES_DB:-acaso}
+
 volumes:
   pgdata:
