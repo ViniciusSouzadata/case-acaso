@@ -1,5 +1,7 @@
-"""Transformações (T-106): executa sql/transform/NN_*.sql em ordem, em UMA transação.
+"""Transformações (T-106/T-107): executa sql/transform/NN_*.sql em ordem, em UMA transação.
 
+Hoje: 10_sessao, 20_usuario, 30_primeira_experiencia, 40_agregados, 50_dicionario (a ordem do prefixo importa:
+os agregados leem as tabelas `_novo` das etapas anteriores).
 Cada arquivo constrói tabelas `mart.<nome>_novo`. Ao final, na mesma transação, cada `_novo` substitui a tabela
 atual (DROP + RENAME): quem lê nunca vê tabela vazia ou pela metade. Tudo ou nada.
 

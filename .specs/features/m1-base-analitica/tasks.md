@@ -68,7 +68,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Definições oficiais materializadas
 - **Reqs:** REQ-113, REQ-114, REQ-115, REQ-116, REQ-117, REQ-120
 
-## [ ] T-107 — Agregados e dicionário de indicadores
+## [x] T-107 — Agregados e dicionário de indicadores
 - **What:** `40_agregados.sql`: `mart.agg_retencao_periodo` (semana e mês, IC de Wilson, média móvel de 4 semanas, `madura`, `amostra_suficiente`), `mart.agg_retencao_sensibilidade` (todas as linhas do design, via `calc_retencao`), `mart.agg_retencao_segmento`. `50_dicionario.sql`: `mart.dicionario_indicador` com definição, fórmula, denominador, período, fonte, SQL e limitações de cada indicador exibido.
 - **Where:** `sql/transform/40_agregados.sql`, `50_dicionario.sql`
 - **Depends on:** T-106
