@@ -112,6 +112,15 @@ Linhas: oficial; só IP; IP + UA completo; gap 60 min; "voltou em outro dia"; UT
 ### mart.dicionario_indicador
 `indicador, nome_exibicao, definicao, formula, denominador, periodo_referencia, fonte, sql_referencia, limitacoes, versao_definicao`
 
+## Esclarecimentos de regra (fechados em 11/11 após a T-105 — valem como contrato)
+1. **Usuário só existe se teve uso.** `dim_usuario` nasce de `fct_sessao`; quem só tem conversa que não conta como uso não é usuário.
+2. **Conversa que não conta como uso** não abre sessão nem conta como retorno.
+3. **Início e fim da base** (para burn-in e maturidade) = menor `ts_inicio` e maior `ts_fim` de `stg.conversa` (todas as conversas carregadas, contem ou não como uso; rejeitadas ficam fora).
+4. **Retorno:** `ts_inicio da sessão seguinte ≤ ts_primeira + janela_retorno_horas` — limite **inclusivo**.
+5. **Sessão:** intervalo medido do **fim** da conversa anterior ao **início** da seguinte; mesma sessão se `≤ gap_sessao_min` — limite **inclusivo**.
+6. **Tráfego anômalo** é por IP, contando **todas** as conversas carregadas do IP: `≥ limiar_conversas_ip` conversas **ou** `≥ limiar_uas_ip` user-agents distintos (texto completo do user-agent, não a família). Todos os usuários daquele IP ficam marcados.
+7. **Motivo de inelegibilidade** quando há mais de um: `trafego_anomalo` > `burn_in` > `imaturo`.
+
 ## Regras de carga
 - Lote único por execução, em transação: `INSERT ... ON CONFLICT (conversa_id) DO UPDATE` (conversa que cresce atualiza turnos e fim).
 - Rejeita (com motivo): sem resposta do assistente; `conversa_id` nulo; `ts_inicio > ts_fim`.

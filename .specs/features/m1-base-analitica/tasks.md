@@ -18,7 +18,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Um comando sobe o esqueleto; Docker do WSL confirmado funcionando
 - **Reqs:** REQ-101
 
-## [ ] T-102 — Snapshot do bruto e extração reproduzível
+## [x] T-102 — Snapshot do bruto e extração reproduzível
 - **What:** Promover `data/interim/brazil.parquet` a `data/bruto/wildchat_brasil.parquet` com `wildchat_brasil.sha256`. Criar `loader/extrair.py` a partir de `scripts/discovery/01_extract_brazil.py`: sem `FULL_REFRESH`, confere o SHA-256 do snapshot; com `FULL_REFRESH=1`, baixa `allenai/WildChat-1M` do Hugging Face, filtra `country = 'Brazil'` e regrava snapshot + checksum. Registrar no README a licença (ODC-BY) e a data do snapshot.
 - **Where:** `data/bruto/`, `loader/extrair.py`
 - **Depends on:** T-101
@@ -48,7 +48,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Carga idempotente e sem texto no banco
 - **Reqs:** REQ-103, REQ-104, REQ-110, REQ-111, REQ-112, REQ-120, REQ-121, REQ-122, REQ-123, REQ-140
 
-## [ ] T-105 — Base sintética de resposta conhecida
+## [x] T-105 — Base sintética de resposta conhecida
 - **What:** `tests/fabrica_bruto.py` gera um parquet no mesmo formato do bruto com usuários desenhados à mão e a resposta esperada escrita ao lado: retorno em 6d23h (conta); retorno em 7d+1min (não conta); 2ª conversa 20 min depois (mesma sessão, não é retorno); mesma pessoa com versão nova do navegador (mesmo usuário); um IP com 12 user-agents diferentes (tráfego anômalo); pergunta vazia (não conta como uso); usuário nos últimos 7 dias (imaturo); usuário nos primeiros 14 dias (burn-in); conversa sem resposta do assistente (rejeitada).
 - **Where:** `tests/fabrica_bruto.py`, `tests/esperado.py`
 - **Depends on:** T-101
