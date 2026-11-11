@@ -43,3 +43,6 @@ export type FormatoNumero = "pct" | "pp" | "int";
 export function formatar(valor: number | null | undefined, formato: FormatoNumero): string {
   return formato === "pct" ? formatarPct(valor) : formato === "pp" ? formatarPP(valor) : formatarInt(valor);
 }
+
+/** Limite metodologico do balanco (design M2, passo 4): diferenca padronizada abaixo disto = grupos parecidos. Nao e parametro de definicao. */
+export const LIMITE_BALANCO = 0.1;

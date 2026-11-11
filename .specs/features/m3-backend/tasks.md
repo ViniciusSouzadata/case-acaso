@@ -45,7 +45,7 @@ T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 - **Gate:** Desempenho medido, não suposto
 - **Reqs:** REQ-306, REQ-307
 
-## [ ] T-305 (parcial: falta make test no compose e fumaça 14/14, na integração) — Varredura de privacidade e gate
+## [x] T-305 (make test no compose fica para o gate do M4) — Varredura de privacidade e gate
 - **What:** Teste automático que percorre todas as rotas e falha se alguma resposta contiver chaves ou valores com cara de `hashed_ip`, user-agent ou texto de conversa; teste que confirma que nenhuma consulta em `lib/consultas/` referencia `stg.`. Rodar todos os testes dentro do compose via `make test`.
 - **Where:** `app/tests/`
 - **Depends on:** T-304

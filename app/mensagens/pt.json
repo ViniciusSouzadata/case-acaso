@@ -138,5 +138,72 @@
     "colTaxaSemana": "Taxa na semana",
     "colMix": "Efeito de quem chegou (p.p.)",
     "colTaxa": "Efeito do comportamento (p.p.)"
+  },
+  "fatores": {
+    "pergunta": "Quais fatores da primeira experiência mais pesam para a pessoa voltar, e quanto disso é efeito do assistente?",
+    "resposta": "Entre {m} comparações do assistente e do perfil, {k} se distinguem de zero depois de comparar grupos parecidos; as demais ficam dentro da incerteza.",
+    "respostaSemDados": "Ainda não há comparações para mostrar.",
+    "abas": {
+      "assistente": "Assistente",
+      "perfil": "Perfil",
+      "engajamento": "Engajamento"
+    },
+    "abasAjuda": {
+      "assistente": "O que a resposta do assistente fez: recusar, mudar de idioma, o tamanho da resposta e o modelo.",
+      "perfil": "Quem chegou e quando: tema, idioma, aparelho, horário, região e época.",
+      "engajamento": "O que aconteceu durante a primeira visita (quantos turnos e conversas). É consequência da experiência, não causa; por isso aparece só a diferença bruta, sem ajuste."
+    },
+    "bruto": "Diferença bruta",
+    "ajustado": "Ajustada",
+    "explicaTitulo": "Bruto ou ajustado?",
+    "explica": "O ponto vazado é a diferença que se vê direto nos dados (bruta). O ponto cheio compara grupos parecidos, para separar o que é do assistente do que é de quem chegou. Quanto mais longe um ponto do outro, mais da diferença bruta vinha de quem chegou, e não do assistente.",
+    "tituloGrupo": "Neste grupo, {k} de {m} diferenças se distinguem de zero; o resto cai dentro da incerteza",
+    "tituloGrupoEng": "Estas são diferenças brutas de comportamento durante a visita, não efeitos do assistente",
+    "tituloGrupoVazio": "Ainda não há comparações neste grupo",
+    "eixo": "diferença na taxa de retorno, em pontos percentuais (p.p.): à direita do zero voltam mais, à esquerda voltam menos",
+    "zero": "zero",
+    "legenda": "Ponto vazado: diferença bruta. Ponto cheio: ajustada (grupos parecidos). Barra: intervalo de 95%. Linha do meio: zero, sem diferença.",
+    "contra": "{nivel} contra {ref}",
+    "n": "{n} pessoas contra {nRef}",
+    "metodoLogit": "ajuste pelo perfil",
+    "metodoIpw": "comparação de grupos parecidos",
+    "resiste": "continua diferente de zero depois de corrigir para muitos testes",
+    "semAjuste": "sem ajuste",
+    "achadosTitulo": "O que isso quer dizer para o produto",
+    "achadosVazio": "Os achados ainda não foram escritos.",
+    "achadoEvidencia": "O que vimos",
+    "achadoDecisao": "O que fazer",
+    "achadoLimite": "Até onde vale",
+    "balancoResumo": "Como comparamos grupos parecidos",
+    "balancoIntro": "Para comparar pessoas parecidas, ajustamos o peso de cada uma. A tabela mostra o quanto os dois grupos diferiam em cada característica antes e depois (diferença padronizada; abaixo de {limite} conta como parecidos).",
+    "balancoEscolha": "Comparação",
+    "balancoVazio": "Ainda não há tabela de balanço para esta comparação.",
+    "colCovariavel": "Característica",
+    "colAntes": "Antes",
+    "colDepois": "Depois",
+    "colSituacao": "Situação",
+    "parecidos": "parecidos",
+    "aindaDiferem": "ainda diferem",
+    "tratamentos": {
+      "recusa": "Recusa do assistente",
+      "idioma_divergente": "Resposta em idioma diferente",
+      "modelo_familia": "Modelo usado"
+    },
+    "rotulos": {
+      "recusa": "recusa",
+      "idioma_divergente": "resposta em outro idioma",
+      "faixa_chars_resposta": "tamanho da resposta",
+      "modelo_familia": "modelo",
+      "tema": "tema",
+      "idioma": "idioma da pergunta",
+      "dispositivo": "dispositivo",
+      "periodo_dia": "período do dia",
+      "fim_de_semana": "fim de semana",
+      "faixa_chars_pergunta": "tamanho da pergunta",
+      "regiao": "região",
+      "era_modelo": "época de oferta de modelo",
+      "n_turnos_sessao": "turnos na visita",
+      "n_conversas_sessao": "conversas na visita"
+    }
   }
 }
