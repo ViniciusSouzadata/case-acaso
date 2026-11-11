@@ -30,6 +30,7 @@ services:
       APP_RO_PASSWORD: ${APP_RO_PASSWORD:-acaso_ro_dev}
     volumes:
       - ./sql:/app/sql:ro
+      - ./analise:/app/analise:ro
       - ./tests:/app/tests:ro
       - ./data/bruto:/app/data/bruto:ro
       - ./seeds:/app/seeds:ro

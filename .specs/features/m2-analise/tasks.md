@@ -8,7 +8,7 @@ T-207 (semana) ─────────────────────�
 ```
 T-201, T-205 e T-207 podem começar em paralelo.
 
-## [ ] T-201 — Pacote de análise, população e migração de `resultado.*`
+## [x] T-201 — Pacote de análise, população e migração de `resultado.*`
 - **What:** Pacote `analise/` com `dados.py` (lê `mart.fct_primeira_experiencia` elegível via SQL, devolve DataFrame tipado), `intervalos.py` (Wilson, Newcombe) e `gravar.py` (grava tabelas `resultado.*` com `versao_analise`). Migração criando todas as tabelas `resultado.*` do contrato. `resultado.meta` preenchida (n elegíveis, retornos, taxa global com IC, efeito mínimo detectável para divisão 50/50 e 15/85).
 - **Where:** `analise/`, `sql/migrations/`
 - **Depends on:** T-110
