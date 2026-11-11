@@ -58,7 +58,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Existe uma verdade conhecida para testar as definições
 - **Reqs:** REQ-150
 
-## [ ] T-106 — Transformações: sessão, usuário, primeira experiência
+## [x] T-106 — Transformações: sessão, usuário, primeira experiência
 - **What:** `sql/transform/10_sessao.sql`, `20_usuario.sql`, `30_primeira_experiencia.sql` e a função única `mart.calc_retencao(...)` do design. `mart.dim_era_modelo`. `loader/transformar.py` executa em ordem, com `CREATE TABLE ..._novo` + troca de nome na mesma transação. Todos os limiares lidos de `ops.parametros`, nunca escritos no SQL.
 - **Where:** `sql/transform/`, `loader/transformar.py`
 - **Depends on:** T-104

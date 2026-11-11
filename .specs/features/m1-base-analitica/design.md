@@ -104,7 +104,13 @@ IC de Wilson em SQL. `madura` = todo o período tem janela completa. `amostra_su
 
 ### mart.agg_retencao_sensibilidade
 `definicao, descricao, usuarios, voltaram_7d, taxa, ic_inf, ic_sup, delta_vs_oficial`
-Linhas: oficial; só IP; IP + UA completo; gap 60 min; "voltou em outro dia"; UTC; sem burn-in; com tráfego anômalo; contando perguntas vazias.
+Linhas: oficial; só IP; IP + UA completo; gap 60 min; "voltou em outro dia"; sem burn-in; com tráfego anômalo; contando perguntas vazias; **fuso UTC**.
+
+Ajustes fechados em 11/11 após a T-106 (valem como contrato):
+- `calc_retencao` **sempre** exige maturidade (taxa só faz sentido com janela completa); não há flag para isso.
+- "Voltou em outro dia" exige parâmetro novo: `regra_retorno text` (`'sessao'` padrão | `'outro_dia'` = existe conversa com uso em **dia local diferente** do dia da 1ª conversa, até 168 h depois; usa o `fuso` da função). Alterar a função em migração nova (`005_`).
+- O fuso **não muda a taxa global** (só em qual semana o usuário cai). A linha "fuso UTC" de `agg_retencao_sensibilidade` traz a mesma taxa e, na `descricao`, quantos usuários elegíveis mudariam de semana de coorte se a semana fosse contada em UTC (calcular e escrever o número). Isso responde ao "em que fuso conta um dia" do §2.3.
+- `calc_retencao` lê `stg`: não é chamável pelo `app_ro`. A aplicação lê só os `agg_*`.
 
 ### mart.agg_retencao_segmento
 `variavel, valor, novos, voltaram_7d, taxa, ic_inf, ic_sup, amostra_suficiente`
