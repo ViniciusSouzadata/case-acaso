@@ -130,3 +130,99 @@ export function resumoVariacao(linhas: LinhaGrafico[]): { min: number; max: numb
   const taxas = validas.map((l) => l.taxaFracao as number);
   return { min: Math.min(...taxas), max: Math.max(...taxas), validas: validas.length, total: linhas.length };
 }
+
+// ---------------------------------------------------------------- sensibilidade
+
+export interface SensibilidadeApi {
+  definicao: string;
+  descricao: string;
+  usuarios: number;
+  voltaram_7d: number;
+  taxa: number;
+  ic_inf: number;
+  ic_sup: number;
+  delta_vs_oficial: number; // pontos percentuais
+}
+
+export interface PontoSensibilidade extends SensibilidadeApi {
+  /** posições em % da trilha (0–100) */
+  posTaxa: number;
+  posInf: number;
+  posSup: number;
+  posOficial: number;
+  oficial: boolean;
+}
+
+/** Escala comum a todas as linhas, para o ponto e a barra de cada definição ficarem comparáveis. */
+export function pontosSensibilidade(linhas: SensibilidadeApi[]): { pontos: PontoSensibilidade[]; min: number; max: number } {
+  if (linhas.length === 0) return { pontos: [], min: 0, max: 0 };
+  const oficial = linhas.find((l) => l.definicao === "oficial") ?? linhas[0]!;
+  const folga = 0.01;
+  const min = Math.max(0, Math.min(...linhas.map((l) => l.ic_inf)) - folga);
+  const max = Math.max(...linhas.map((l) => l.ic_sup)) + folga;
+  const pos = (x: number) => ((x - min) / (max - min)) * 100;
+  return {
+    min,
+    max,
+    pontos: linhas.map((l) => ({
+      ...l,
+      posTaxa: pos(l.taxa),
+      posInf: pos(l.ic_inf),
+      posSup: pos(l.ic_sup),
+      posOficial: pos(oficial.taxa),
+      oficial: l.definicao === oficial.definicao,
+    })),
+  };
+}
+
+export function resumoSensibilidade(linhas: SensibilidadeApi[]): { min: number; max: number } | null {
+  if (linhas.length === 0) return null;
+  return { min: Math.min(...linhas.map((l) => l.taxa)), max: Math.max(...linhas.map((l) => l.taxa)) };
+}
+
+// ---------------------------------------------------------------- cascata da semana
+
+export interface ResumoSemanaApi {
+  semana: string;
+  base_descricao: string | null;
+  n_base: number | null;
+  n_semana: number | null;
+  taxa_base: number | null; // fração
+  taxa_semana: number | null; // fração
+  delta_pp: number | null;
+  mix_pp: number | null;
+  taxa_pp: number | null;
+  p_valor: number | null;
+  conclusao: string | null;
+}
+
+export interface DegrauCascata {
+  chave: "base" | "mix" | "taxa" | "semana";
+  /** valor mostrado (% para os totais; p.p. para os degraus) */
+  valor: number;
+  /** onde a barra começa e termina no eixo (%) */
+  de: number;
+  ate: number;
+  total: boolean;
+}
+
+/** Cascata: taxa da base → efeito de quem chegou (perfil) → efeito da taxa dentro de cada perfil → taxa da semana. */
+export function montarCascata(r: ResumoSemanaApi): { degraus: DegrauCascata[]; fecha: boolean; diferenca: number } | null {
+  if (r.taxa_base === null || r.taxa_semana === null || r.mix_pp === null || r.taxa_pp === null) return null;
+  const base = r.taxa_base * 100;
+  const semana = r.taxa_semana * 100;
+  const depoisMix = base + r.mix_pp;
+  const fim = depoisMix + r.taxa_pp;
+  const diferenca = fim - semana;
+  return {
+    diferenca,
+    // tolerância de arredondamento: valores vêm com poucas casas
+    fecha: Math.abs(diferenca) < 0.15,
+    degraus: [
+      { chave: "base", valor: base, de: 0, ate: base, total: true },
+      { chave: "mix", valor: r.mix_pp, de: base, ate: depoisMix, total: false },
+      { chave: "taxa", valor: r.taxa_pp, de: depoisMix, ate: fim, total: false },
+      { chave: "semana", valor: semana, de: 0, ate: semana, total: true },
+    ],
+  };
+}

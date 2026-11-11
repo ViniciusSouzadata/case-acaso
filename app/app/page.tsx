@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { BlocoSemana } from "@/components/BlocoSemana";
+import { BlocoSensibilidade } from "@/components/BlocoSensibilidade";
 import { Estado } from "@/components/Estado";
 import { Numero } from "@/components/Numero";
 import { GraficoRetencao } from "@/components/graficos/GraficoRetencao";
@@ -87,6 +89,9 @@ export default function PaginaRetencao() {
           </>
         ) : null}
       </section>
+
+      <BlocoSensibilidade />
+      <BlocoSemana />
     </div>
   );
 }

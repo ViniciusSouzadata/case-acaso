@@ -90,5 +90,53 @@
     "colIc": "Intervalo de 95%",
     "notaPequena": "{k} dos {total} períodos têm amostra pequena e aparecem em cinza, sem número em destaque.",
     "notaImatura": "{k} dos {total} períodos ainda estão dentro dos 7 dias; não são uma queda."
+  },
+  "sens": {
+    "titulo": "E se mudarmos o que chamamos de usuário, de sessão ou de voltar?",
+    "intro": "Cada ponto é a taxa de retorno em 7 dias com uma definição diferente; a barra é o intervalo de 95%.",
+    "tituloGrafico": "Conforme a definição, a taxa fica entre {min} e {max}; a linha tracejada marca a definição oficial",
+    "eixo": "% que voltou em até 7 dias",
+    "vsOficial": "{delta} em relação à oficial",
+    "igualOficial": "é a definição oficial",
+    "pessoas": "{n} pessoas",
+    "legenda": "Ponto azul: taxa com aquela definição. Barra: intervalo de 95%. Linha tracejada: taxa da definição oficial.",
+    "nomes": {
+      "oficial": "Definição oficial",
+      "so_ip": "Usuário = só o IP",
+      "ip_ua_completo": "Usuário = IP + navegador completo",
+      "sessao_60min": "Sessão de 60 minutos",
+      "outro_dia": "Voltou = em outro dia",
+      "sem_burn_in": "Sem descartar o início da base",
+      "com_trafego_anomalo": "Com tráfego fora do comum",
+      "com_perguntas_vazias": "Contando perguntas vazias",
+      "fuso_utc": "Dia contado em UTC"
+    }
+  },
+  "semana": {
+    "titulo": "O que aconteceu na semana de {semana}?",
+    "intro": "Comparamos a taxa daquela semana com a de uma semana de base e separamos duas causas possíveis: mudou quem chegou, ou mudou o comportamento de cada tipo de pessoa.",
+    "escolha": "Semana analisada",
+    "chip": "Semana de {data}",
+    "tituloGrafico": "A taxa foi de {base} na base para {semana}: {delta}, sendo {mix} por mudança de quem chegou e {taxa} por mudança de comportamento dentro de cada perfil",
+    "eixo": "% que voltou em até 7 dias",
+    "degrauBase": "Semana base",
+    "degrauMix": "Quem chegou",
+    "degrauTaxa": "Comportamento",
+    "degrauSemana": "Semana analisada",
+    "legenda": "Barras azuis: taxa de retorno na semana base e na analisada. Barras do meio: quanto cada causa soma ou tira, em pontos percentuais (p.p.). Verde sobe, vermelho desce.",
+    "base": "Base de comparação: {descricao}",
+    "n": "{nBase} pessoas na base e {nSemana} na semana analisada",
+    "semResumo": "Esta semana ainda não foi analisada.",
+    "naoFecha": "A soma difere em {dif} p.p. do total por arredondamento.",
+    "detalhe": "Detalhe técnico, para quem quer conferir",
+    "detalheP": "Chance de o acaso sozinho explicar uma diferença assim: {p}",
+    "porGrupo": "Ver por grupo",
+    "colGrupo": "Grupo",
+    "colPesoBase": "Peso na base",
+    "colPesoSemana": "Peso na semana",
+    "colTaxaBase": "Taxa na base",
+    "colTaxaSemana": "Taxa na semana",
+    "colMix": "Efeito de quem chegou (p.p.)",
+    "colTaxa": "Efeito do comportamento (p.p.)"
   }
 }
