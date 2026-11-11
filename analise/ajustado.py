@@ -18,7 +18,7 @@ from scipy.stats import norm
 
 from analise.bruto import COLUNAS_BRUTO, calcular_bruto, n_minimo
 from analise.dados import carregar_elegiveis, carregar_grupos_ip
-from analise.fatores import ENGAJAMENTO, FATORES, FAIXA_PERGUNTA_CURTA, Fator, agrupar_raros
+from analise.fatores import ASSISTENTE, ENGAJAMENTO, FATORES, FAIXA_PERGUNTA_CURTA, Fator, agrupar_raros
 from analise.gravar import substituir
 
 MAX_PARAMETROS = 25  # sem contar o intercepto
@@ -26,7 +26,7 @@ FDR = 0.05
 Z = 1.96
 
 COLUNAS_AJUSTADO = [
-    "efeito_ajustado_pp", "ajustado_ic_inf", "ajustado_ic_sup", "p_valor", "significativo_fdr", "e_value",
+    "efeito_ajustado_pp", "ajustado_ic_inf", "ajustado_ic_sup", "p_valor", "significativo_fdr", "e_value", "e_value_ic",
     "leitura", "ordem",
 ]
 COLUNAS_EFEITO = COLUNAS_BRUTO + COLUNAS_AJUSTADO
@@ -36,7 +36,7 @@ ROTULOS = {
     "faixa_chars_resposta": "tamanho da resposta", "modelo_familia": "modelo", "tema": "tema", "idioma": "idioma da pergunta",
     "dispositivo": "dispositivo", "periodo_dia": "período do dia", "fim_de_semana": "fim de semana",
     "faixa_chars_pergunta": "tamanho da pergunta", "regiao": "região", "era_modelo": "era de oferta de modelo",
-    "n_turnos_sessao": "turnos na sessão", "n_conversas_sessao": "conversas na sessão",
+    "virada_dez2023": "virada de dezembro/2023 (GPT-4 vira o modelo padrão)", "n_turnos_sessao": "turnos na sessão", "n_conversas_sessao": "conversas na sessão",
 }
 
 
@@ -68,6 +68,26 @@ def benjamini_hochberg(p: list[float], q: float = FDR) -> list[bool]:
     return passa
 
 
+def e_value(rr: float) -> float:
+    """E-value (VanderWeele & Ding): força mínima, em razão de riscos, que um fator não medido precisaria ter com o fator e com o
+    retorno para anular o efeito. RR < 1 é invertido. Sem efeito (RR = 1) dá 1."""
+    r = 1 / rr if rr < 1 else rr
+    return r + (r * (r - 1)) ** 0.5
+
+
+def e_value_do_intervalo(rr_inf: float, rr_sup: float) -> float:
+    """E-value do limite do IC mais próximo de 1; se o IC contém 1, é 1 (nenhuma confusão é necessária para explicar o resultado)."""
+    if rr_inf <= 1 <= rr_sup:
+        return 1.0
+    return e_value(rr_inf if rr_inf > 1 else rr_sup)
+
+
+def e_values_do_efeito(risco_ref: float, efeito_pp: float, inf_pp: float, sup_pp: float) -> tuple[float, float]:
+    """(E-value da estimativa, E-value do limite do IC) a partir do efeito em p.p. e do risco no cenário de referência."""
+    rr = lambda e: max((risco_ref + e / 100) / risco_ref, 1e-9)  # noqa: E731
+    return e_value(rr(efeito_pp)), e_value_do_intervalo(rr(inf_pp), rr(sup_pp))
+
+
 def _por_100(x: float) -> str:
     """Pontos percentuais como 'a cada 100' em linguagem simples: 1 casa abaixo de 10, inteiro acima."""
     x = abs(x)
@@ -81,7 +101,7 @@ def _faixa_por_100(inf: float, sup: float) -> str:
 
 
 def leitura_efeito(fator: str, nivel: str, referencia: str, efeito: float, inf: float, sup: float, ajustado: bool = True,
-                   sobrevive_fdr: bool | None = None) -> str:
+                   sobrevive_fdr: bool | None = None, controle: str = "depois de levar em conta o perfil de quem chegou") -> str:
     """Frase para o cliente, sem jargão. Intervalo que cruza zero = 'não dá para afirmar diferença' (nunca vende ruído como efeito).
 
     `sobrevive_fdr` False com intervalo fora de zero: avisa que, com tantos fatores comparados, pode ser acaso.
@@ -93,7 +113,7 @@ def leitura_efeito(fator: str, nivel: str, referencia: str, efeito: float, inf: 
                 f"'{referencia}'" if not inf <= 0 <= sup else
                 f"{rot}: entre quem teve '{nivel}' e quem teve '{referencia}' não dá para afirmar diferença no retorno")
         return base + " (só descrição: isso acontece depois da primeira resposta, então não mostra o que fez a pessoa voltar)."
-    comparacao = f"'{nivel}' contra '{referencia}', depois de levar em conta o perfil de quem chegou"
+    comparacao = f"'{nivel}' contra '{referencia}', {controle}"
     if inf <= 0 <= sup:
         return (f"{rot}: {comparacao}, não dá para afirmar diferença: com esta quantidade de usuários, "
                 f"o que se vê ({faixa}) pode ser só acaso.")
@@ -148,8 +168,8 @@ def montar_plano(df: pd.DataFrame, n_min: int, fatores: list[Fator] | None = Non
     return Plano(X=X, colunas_nivel=mapa, referencias=refs, populacao_ame=pops, notas=notas, n_parametros=X.shape[1] - 1)
 
 
-def _ame(res, X: pd.DataFrame, coluna: str, outras_do_fator: list[str], linhas: pd.Series) -> tuple[float, float]:
-    """(efeito marginal médio, erro-padrão pelo método delta) de ligar `coluna` (e zerar as outras dummies do fator)."""
+def _ame(res, X: pd.DataFrame, coluna: str, outras_do_fator: list[str], linhas: pd.Series) -> tuple[float, float, float]:
+    """(efeito marginal médio, erro-padrão pelo método delta, risco médio no cenário de referência) de ligar `coluna` (e zerar as outras dummies do fator)."""
     Xs = X[linhas.to_numpy()]
     x1, x0 = Xs.copy(), Xs.copy()
     x0[outras_do_fator] = 0.0
@@ -162,7 +182,7 @@ def _ame(res, X: pd.DataFrame, coluna: str, outras_do_fator: list[str], linhas: 
     ame = float(np.mean(p1 - p0))
     g = ((p1 * (1 - p1))[:, None] * x1.to_numpy() - (p0 * (1 - p0))[:, None] * x0.to_numpy()).mean(axis=0)
     se = float(np.sqrt(g @ res.cov_params().to_numpy() @ g))
-    return ame, se
+    return ame, se, float(np.mean(p0))
 
 
 def ajustar(df: pd.DataFrame, grupos: pd.Series, n_min: int, fatores: list[Fator] | None = None) -> tuple[list[dict], dict]:
@@ -186,10 +206,11 @@ def ajustar(df: pd.DataFrame, grupos: pd.Series, n_min: int, fatores: list[Fator
     linhas = []
     for (fator, nivel), coluna in plano.colunas_nivel.items():
         irmas = [c for (f2, _), c in plano.colunas_nivel.items() if f2 == fator and c != coluna]
-        ame, se = _ame(res, X, coluna, irmas, plano.populacao_ame[fator])
+        ame, se, p0 = _ame(res, X, coluna, irmas, plano.populacao_ame[fator])
         linhas.append({
             "fator": fator, "nivel": nivel, "efeito_ajustado_pp": ame * 100, "ajustado_ic_inf": (ame - Z * se) * 100,
             "ajustado_ic_sup": (ame + Z * se) * 100, "p_valor": float(2 * norm.sf(abs(ame / se))) if se > 0 else 1.0,
+            "risco_ref": p0,
         })
     return linhas, diag
 
@@ -207,6 +228,9 @@ def combinar(brutos: list[dict], ajustados: list[dict]) -> list[dict]:
             for c in ("efeito_ajustado_pp", "ajustado_ic_inf", "ajustado_ic_sup", "p_valor"):
                 l[c] = round(a[c], 6 if c == "p_valor" else 4)
             l["leitura"] = None  # depois do Benjamini-Hochberg (precisa saber se sobrevive)
+            if b["grupo"] == ASSISTENTE:
+                l["e_value"], l["e_value_ic"] = (round(v, 4) for v in e_values_do_efeito(
+                    a["risco_ref"], l["efeito_ajustado_pp"], l["ajustado_ic_inf"], l["ajustado_ic_sup"]))
         elif b["grupo"] == ENGAJAMENTO:
             l["leitura"] = leitura_efeito(b["fator"], b["nivel"], b["referencia"], b["efeito_bruto_pp"], b["bruto_ic_inf"], b["bruto_ic_sup"], ajustado=False)
         else:

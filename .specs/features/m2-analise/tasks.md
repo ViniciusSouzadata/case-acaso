@@ -68,7 +68,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** "Como conferiu a IA" tem número
 - **Reqs:** REQ-250
 
-## [ ] T-206 — Propensão, balanço e E-value
+## [x] T-206 — Propensão, balanço e E-value
 - **What:** `analise/propensao.py` para recusa, idioma divergente e modelo (só eras com escolha): escore de propensão (Logit em covariáveis pré-resposta), pesos estabilizados truncados p1/p99, diferença padronizada antes/depois em `resultado.balanco_propensao`, efeito ponderado com IC por bootstrap agrupado por IP (1.000, semente fixa). E-value dos efeitos de assistente. Antes/depois da virada de dez/2023 como evidência de apoio. Se o balanço não fechar (< 0,1), marcar o efeito como "não comparável".
 - **Where:** `analise/propensao.py`
 - **Depends on:** T-204, T-205b
