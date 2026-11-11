@@ -28,7 +28,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** EDA só com gráfico que leva a conclusão
 - **Reqs:** REQ-201, REQ-202, REQ-203
 
-## [ ] T-203 — Efeito bruto por fator
+## [x] T-203 — Efeito bruto por fator
 - **What:** `analise/bruto.py`: para cada fator e nível (lista e grupo — assistente/perfil/engajamento — definidos em `analise/fatores.py`, níveis raros agrupados em "outros"), n, taxa, diferença em p.p. contra a referência (nível mais frequente) e IC de Newcombe. Grava as colunas de bruto de `resultado.efeito_fator`.
 - **Where:** `analise/bruto.py`, `analise/fatores.py`
 - **Depends on:** T-202

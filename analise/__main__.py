@@ -1,11 +1,11 @@
-"""Uso:  python -m analise meta | eda     (T-201, T-202). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
+"""Uso:  python -m analise meta | eda | bruto     (T-201..T-203). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
 from __future__ import annotations
 
 import sys
 
 import psycopg
 
-from analise import eda, meta
+from analise import bruto, eda, meta
 from loader.migrar import dsn
 
 
@@ -24,7 +24,12 @@ def main(argv: list[str]) -> int:
             r = eda.gerar(conn)
         print(f"EDA: {len(r['figuras'])} figuras ({', '.join(r['figuras'])}); {len(r['problemas'])} problemas de qualidade gravados")
         return 0
-    print("uso: python -m analise meta | eda", file=sys.stderr)
+    if comando == "bruto":
+        with psycopg.connect(dsn(), autocommit=True) as conn:
+            linhas = bruto.gravar(conn)
+        print(f"resultado.efeito_fator (bruto): {len(linhas)} linhas, {len({l['fator'] for l in linhas})} fatores")
+        return 0
+    print("uso: python -m analise meta | eda | bruto", file=sys.stderr)
     return 2
 
 
