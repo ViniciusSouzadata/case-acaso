@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { cacheRotas } from "@/lib/api";
 import {
   esquemaErro,
   respostaAchados,
@@ -50,6 +51,7 @@ const { GET: qualidade } = await import("@/app/api/qualidade/route");
 const pedir = (rota: string, query = "") => new Request(`http://x/api/${rota}${query}`);
 
 beforeEach(() => {
+  cacheRotas.limpar();
   estado.vazio = false;
   chamadas.length = 0;
   vi.spyOn(console, "log").mockImplementation(() => undefined);

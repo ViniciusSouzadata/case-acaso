@@ -35,7 +35,7 @@ T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 - **Gate:** Telas 2 e 3 têm todos os dados
 - **Reqs:** REQ-302, REQ-303, REQ-309
 
-## [ ] T-304 — Cache e medição de tempo
+## [x] T-304 — Cache e medição de tempo
 - **What:** Cache em memória por (rota, parâmetros, `lote_id`) com TTL de 1 h; campo `cache: hit|miss` no log; cabeçalho `Cache-Control` do design. `scripts/medir_api.ts`: 50 chamadas por rota, imprime p50/p95 (frio e quente) e grava a tabela em `docs/desempenho.md`.
 - **Where:** `app/lib/cache.ts`, `scripts/medir_api.ts`
 - **Depends on:** T-303

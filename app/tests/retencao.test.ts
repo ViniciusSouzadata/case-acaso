@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { cacheRotas } from "@/lib/api";
 import {
   esquemaErro,
   respostaCoortes,
@@ -41,6 +42,7 @@ const { GET: dicionario } = await import("@/app/api/dicionario/route");
 const pedir = (rota: string, query = "") => new Request(`http://x/api/${rota}${query}`);
 
 beforeEach(() => {
+  cacheRotas.limpar();
   chamadas.length = 0;
   vi.spyOn(console, "log").mockImplementation(() => undefined);
 });

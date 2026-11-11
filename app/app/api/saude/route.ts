@@ -21,5 +21,5 @@ export async function GET(req: Request) {
         versao_definicao: lote?.versao_definicao ?? null,
       },
     };
-  });
+  }, { cache: false });
 }
