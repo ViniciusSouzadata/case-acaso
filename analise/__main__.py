@@ -1,4 +1,4 @@
-"""Uso:  python -m analise meta | eda | bruto | ajustado | semana | propensao | validacao     (T-201..T-206). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
+"""Uso:  python -m analise meta | eda | bruto | ajustado | semana | propensao | sensibilidade | validacao     (T-201..T-208). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
 from __future__ import annotations
 
 import sys
@@ -6,7 +6,7 @@ from datetime import date
 
 import psycopg
 
-from analise import ajustado, bruto, eda, meta, propensao, semana, validacao
+from analise import ajustado, bruto, eda, meta, propensao, semana, sensibilidade, validacao
 from loader.migrar import dsn
 
 
@@ -52,12 +52,17 @@ def main(argv: list[str]) -> int:
             print(f"{l['fator']}: n={l['n_nivel']} × {l['n_referencia']}; pior balanço depois = {l['_pior_balanco']:.3f}; {ef}")
         print(f"resultado.balanco_propensao: {len(balancos)} linhas")
         return 0
+    if comando == "sensibilidade":
+        with psycopg.connect(dsn(), autocommit=True) as conn:
+            linhas = sensibilidade.gravar(conn)
+        print(f"resultado.sensibilidade_efeito: {len(linhas)} linhas")
+        return 0
     if comando == "validacao":
         with psycopg.connect(dsn(), autocommit=True) as conn:
             for r in validacao.validar(conn):
                 print(f"validação de {r['classificador']}: n={r['n']}, acurácia {r['acuracia']:.3f}, kappa {r['kappa']:.3f} ({r['modelo']})")
         return 0
-    print("uso: python -m analise meta | eda | bruto | ajustado | semana [AAAA-MM-DD ...] | propensao | validacao", file=sys.stderr)
+    print("uso: python -m analise meta | eda | bruto | ajustado | semana [AAAA-MM-DD ...] | propensao | sensibilidade | validacao", file=sys.stderr)
     return 2
 
 

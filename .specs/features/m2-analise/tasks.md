@@ -88,7 +88,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** Movimento explicado com veredito honesto
 - **Reqs:** REQ-230
 
-## [ ] T-208 — Sensibilidade dos efeitos
+## [x] T-208 — Sensibilidade dos efeitos
 - **What:** `analise/sensibilidade.py`: refaz o modelo ajustado com as chaves alternativas (só IP; IP + UA completo) e sessão de 60 min; grava `resultado.sensibilidade_efeito` com `mesmo_sinal`.
 - **Where:** `analise/sensibilidade.py`
 - **Depends on:** T-206
