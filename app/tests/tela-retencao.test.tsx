@@ -44,10 +44,10 @@ describe("preparação dos dados do gráfico", () => {
     expect(linhas[2]!.amostraOk).toBe(false);
   });
 
-  it("faixas de era usam a primeira e a última categoria dentro da era", () => {
+  it("faixas de era são contíguas: cada uma vai até o início da próxima; a última, até o fim", () => {
     const f = faixasEras(linhas, eras);
     expect(f.map((x) => [x.era, x.x1, x.x2])).toEqual([
-      ["A", "2023-04-24", "2023-04-24"],
+      ["A", "2023-04-24", "2023-05-01"],
       ["B", "2023-05-01", "2024-04-15"],
     ]);
   });

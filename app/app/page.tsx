@@ -60,7 +60,9 @@ export default function PaginaRetencao() {
           <h2 className="max-w-2xl text-base font-semibold text-slate-900">
             {variacao
               ? t("retencao.tituloGrafico", { min: formatarPct(variacao.min), max: formatarPct(variacao.max) })
-              : t("retencao.tituloGraficoSemMedida")}
+              : coortes.estado === "ok"
+                ? t("retencao.tituloGraficoSemMedida")
+                : t("retencao.tituloGraficoCarregando")}
           </h2>
           <div role="group" aria-label="Granularidade" className="flex overflow-hidden rounded border border-slate-300 text-sm">
             <button type="button" aria-pressed={gran === "semana"} onClick={() => setGran("semana")} className={`px-3 py-1 ${gran === "semana" ? "bg-azul text-white" : "bg-white text-slate-800"}`}>

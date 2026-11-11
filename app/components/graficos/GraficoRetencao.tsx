@@ -77,7 +77,7 @@ export function GraficoRetencao({
                 fillOpacity={0.9}
                 stroke={CINZA}
                 strokeDasharray="3 3"
-                label={{ value: t("imatura.rotulo"), position: "insideTop", fontSize: 11, fill: "#334155" }}
+                label={{ value: t("imatura.rotulo"), position: "insideTopRight", fontSize: 11, fill: "#334155" }}
               />
             ))}
             <XAxis dataKey="periodo" tickFormatter={(p: string) => linhas.find((l) => l.periodo === p)?.rotulo ?? p} interval={passo} tick={{ fontSize: 11 }} />

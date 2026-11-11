@@ -101,7 +101,8 @@ export function faixasEras(linhas: LinhaGrafico[], eras: EraApi[]): FaixaEra[] {
         cor: CORES_ERA[i % CORES_ERA.length]!,
       });
   });
-  return faixas;
+  // Faixas contíguas: cada era vai até o início da próxima (sem vão branco entre elas).
+  return faixas.map((f, i) => (i < faixas.length - 1 ? { ...f, x2: faixas[i + 1]!.x1 } : f));
 }
 
 /** Trechos consecutivos de coortes ainda imaturas (hachurados no gráfico). */

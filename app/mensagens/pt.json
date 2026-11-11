@@ -89,7 +89,8 @@
     "colTaxa": "Taxa",
     "colIc": "Intervalo de 95%",
     "notaPequena": "{k} dos {total} períodos têm amostra pequena e aparecem em cinza, sem número em destaque.",
-    "notaImatura": "{k} dos {total} períodos ainda estão dentro dos 7 dias; não são uma queda."
+    "notaImatura": "{k} dos {total} períodos ainda estão dentro dos 7 dias; não são uma queda.",
+    "tituloGraficoCarregando": "Taxa de retorno em 7 dias, período a período"
   },
   "sens": {
     "titulo": "E se mudarmos o que chamamos de usuário, de sessão ou de voltar?",
@@ -118,12 +119,12 @@
     "escolha": "Semana analisada",
     "chip": "Semana de {data}",
     "tituloGrafico": "A taxa foi de {base} na base para {semana}: {delta}, sendo {mix} por mudança de quem chegou e {taxa} por mudança de comportamento dentro de cada perfil",
-    "eixo": "% que voltou em até 7 dias",
+    "eixo": "% que voltou",
     "degrauBase": "Semana base",
     "degrauMix": "Quem chegou",
     "degrauTaxa": "Comportamento",
     "degrauSemana": "Semana analisada",
-    "legenda": "Barras azuis: taxa de retorno na semana base e na analisada. Barras do meio: quanto cada causa soma ou tira, em pontos percentuais (p.p.). Verde sobe, vermelho desce.",
+    "legenda": "Barras azuis: taxa de retorno na semana base e na analisada. Barras do meio: quanto cada causa soma (verde) ou tira (laranja), em pontos percentuais (p.p.).",
     "base": "Base de comparação: {descricao}",
     "n": "{nBase} pessoas na base e {nSemana} na semana analisada",
     "semResumo": "Esta semana ainda não foi analisada.",
