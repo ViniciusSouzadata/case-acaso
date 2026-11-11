@@ -21,7 +21,6 @@ from scipy.stats import norm
 
 from analise.bruto import n_minimo
 from analise.gravar import substituir
-from analise.intervalos import newcombe
 
 # 20/11/2023 é a semana que o case cita; 01/05/2023 e 17/07/2023 saíram do discovery (T-106/T-107: as de menor retorno com n >= 30).
 SEMANAS_CANDIDATAS = [date(2023, 11, 20), date(2023, 5, 1), date(2023, 7, 17)]
@@ -81,20 +80,35 @@ def agrupar_segmentos_raros(base: dict, semana: dict, n_min: int) -> tuple[dict,
     return junta(base), junta(semana)
 
 
-def veredito(delta_pp: float, mix_pp: float, taxa_pp: float, p: float, ic: tuple[float, float], n_semanas: int, n_sig: int) -> str:
-    """Texto do veredito: separa perfil de comportamento e diz com todas as letras se a diferença se distingue de ruído."""
-    f = lambda x: f"{x:+.1f}".replace(".", ",")  # noqa: E731
-    distingue = p < 0.05
-    parte = (f"Diferença de {f(delta_pp)} p.p. contra as semanas anteriores: {f(mix_pp)} p.p. por mudança de perfil de quem chegou (mix) "
-             f"e {f(taxa_pp)} p.p. por mudança de taxa dentro dos segmentos.")
-    teste = (f" Teste de duas proporções: p = {f"{p:.3f}".replace(".", ",")}; IC 95% da diferença: {f(ic[0])} a {f(ic[1])} p.p. ")
-    if distingue:
-        teste += "A diferença se distingue de ruído nesta comparação isolada, mas "
+def veredito(taxa_base: float, taxa_semana: float, n_base: int, n_semana: int, mix_pp: float, taxa_pp: float, p: float,
+             n_semanas: int, n_sig: int) -> str:
+    """Texto para o cliente (sem jargão estatístico): quanto voltou, de onde veio a diferença e se dá para distinguir de ruído.
+
+    Os números técnicos (mix, taxa, p-valor, IC) ficam nas colunas numéricas da tabela; aqui só linguagem simples.
+    """
+    por_100 = lambda x: f"{round(x * 100):d}"  # noqa: E731
+    queda = taxa_semana < taxa_base
+    s1 = (f"Nesta semana, {por_100(taxa_semana)} de cada 100 novos usuários ({n_semana} no total) voltaram, contra "
+          f"{por_100(taxa_base)} de cada 100 nas semanas anteriores ({n_base} usuários).")
+    total = abs(mix_pp) + abs(taxa_pp)
+    parte_comportamento = abs(taxa_pp) / total if total else 0.0
+    movimento = "queda" if queda else "subida"
+    if parte_comportamento >= 0.8:
+        s2 = (f"Quase toda a {movimento} veio de as pessoas {'voltarem menos' if queda else 'voltarem mais'}, "
+              f"não de ter chegado um público diferente.")
+    elif parte_comportamento <= 0.2:
+        s2 = (f"Quase toda a {movimento} veio de ter chegado um público diferente (outra mistura de celular, computador e modelo), "
+              f"não de as pessoas terem mudado de comportamento.")
     else:
-        teste += "Não dá para distinguir esta diferença de ruído; e "
-    cautela = (f"escolher uma semana por parecer extrema entre {n_semanas} compara demais: aplicando o mesmo teste a todas as {n_semanas} semanas "
-               f"com amostra suficiente, {n_sig} deram p < 0,05 (o acaso sozinho produziria cerca de {max(1, round(0.05 * n_semanas))}).")
-    return parte + teste + cautela
+        s2 = f"Parte da {movimento} veio de um público diferente e parte de as pessoas terem mudado de comportamento."
+    if p < 0.05:
+        esperado = max(1, round(0.05 * n_semanas))
+        s3 = (f"A {movimento} é maior do que a variação normal entre semanas, mas, olhando todas as {n_semanas} semanas com amostra "
+              f"suficiente, {n_sig} tiveram uma diferença assim e só pelo acaso se esperam cerca de {esperado}: não dá para descartar coincidência.")
+    else:
+        s3 = ("A diferença está dentro da variação normal entre semanas: com tão poucos usuários por semana, "
+              "não dá para afirmar que houve uma mudança real.")
+    return f"{s1} {s2} {s3}"
 
 
 # ----------------------------------------------------------------------------------------------- dados
@@ -133,7 +147,6 @@ def decompor(df: pd.DataFrame, semana: date, n_min: int) -> tuple[dict, list[dic
     n_b, n_s = len(base), len(sem)
     k_b, k_s = int(base["voltou_7d"].sum()), int(sem["voltou_7d"].sum())
     p = teste_duas_proporcoes(k_s, n_s, k_b, n_b)
-    _, inf, sup = newcombe(k_s, n_s, k_b, n_b)
     testadas, sig = contar_semanas_significativas(df, n_min)
     delta, mix, taxa = (round(tot[k] * 100, 4) for k in ("delta", "mix", "taxa"))
     semanas_base = sorted(base["semana"].unique())
@@ -142,7 +155,7 @@ def decompor(df: pd.DataFrame, semana: date, n_min: int) -> tuple[dict, list[dic
         "base_descricao": f"{len(semanas_base)} semanas de coorte anteriores ({semanas_base[0]:%d/%m/%Y} a {semanas_base[-1]:%d/%m/%Y}), só elegíveis",
         "n_base": n_b, "n_semana": n_s, "taxa_base": round(tot["taxa_base"], 6), "taxa_semana": round(tot["taxa_semana"], 6),
         "delta_pp": delta, "mix_pp": mix, "taxa_pp": taxa, "p_valor": round(p, 6),
-        "conclusao": veredito(delta, mix, taxa, p, (inf * 100, sup * 100), testadas, sig),
+        "conclusao": veredito(tot["taxa_base"], tot["taxa_semana"], n_b, n_s, mix, taxa, p, testadas, sig),
     }
     segs = [{"semana": semana, "segmento": l["segmento"], "peso_base": round(l["peso_base"], 6), "peso_semana": round(l["peso_semana"], 6),
              "taxa_base": round(l["taxa_base"], 6), "taxa_semana": round(l["taxa_semana"], 6),

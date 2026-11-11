@@ -1,0 +1,37 @@
+# Regras de tema da 1ª pergunta (T-205, provedor `regras`: palavras-chave, sem LLM).
+# Texto em minúsculas e sem acento. Cada palavra casa no INÍCIO de uma palavra do texto (prefixo: "program" pega
+# "programa", "programação", "programming"). Terminando com "$", só a palavra inteira ("api$" não pega "apimentado").
+# Vence o tema com mais palavras diferentes encontradas; empate: a ordem desta lista. Nada encontrado: "outros/indefinido".
+# Mudou a lista? Suba a `versao` e regere o seed (python -m classificador.tema gerar).
+versao: "1.1.0"
+temas:
+  - tema: "programação/TI"
+    palavras: [python, javascript, typescript, java$, html, css$, sql$, "c++", "c#", php$, react, node$, codigo, code$, coding,
+               program, funcao, function, algoritm, algorithm, script, debug, "bug$", api$, banco de dados, database, compil,
+               variavel, variable, "loop$", array, django, flask, linux, github, git$, backend, frontend, servidor, server$,
+               "excel", planilha, "vba$", "regex", "json$", "docker", "stack overflow", "```"]
+  - tema: "estudo/dever de casa"
+    palavras: [redacao, resumo, resuma, resumir, summar, "essay", exercicio, questao, "prova$", vestibular, enem, escola,
+               "faculdade", universidade, professor, "aluno", "tarefa", "dever de casa", homework, "trabalho escolar", "tcc$",
+               "artigo cientifico", "monografia", "equacao", "calcule", "calcular", "derivada", "integral", "geometria",
+               "quimica", "fisica", "biologia", "historia do brasil", "explique o conceito", "mitose", "fotossintese", "matematica"]
+  - tema: "escrita e tradução"
+    palavras: [traduz, translat, "traducao", revise, revisar, "corrija", correct, "proofread", "portugues", "ingles", "portuguese", "english", "palavras", "words$", reescreva, rewrite, parafrase,
+               paraphrase, "melhore o texto", "texto abaixo", "gramatica", "grammar", "email", "e-mail", "carta", "legenda",
+               "titulo", "slogan", "copy$", "post para", "instagram", "descricao do produto", "blog"]
+  - tema: "trabalho/negócios"
+    palavras: [empresa, negocio, business, marketing, vendas, venda$, cliente, "curriculo", resume$, "vaga de", "entrevista de emprego",
+               "plano de negocio", "startup", "investimento", "contrato", "juridic", "advogado", "imposto", "contabil", "relatorio",
+               "apresentacao", "reuniao", "gerente", "projeto", "mercado", "empreend", "financeir", "empreg"]
+  - tema: "criação/ficção e roleplay"
+    palavras: [historia, story, conto$, poema, poem$, poesia, roteiro, "personagem", character, roleplay, "role-play", "finja",
+               pretend, "aja como", "act as", "voce e um", "you are a", "imagine", "ficcao", "fanfic", "romance", "rpg$", "musica",
+               "letra de", "lyrics", "piada", joke, "dungeon", "fantasia", "anime", "naruto", "pokemon", "minecraft", "jogo$", game$, chapter, capitulo, estoria, livro, novel, "write a", "escreva uma", piloto, "grande premio", "formula 1", brasileirao, campeonato, "acidente"]
+  - tema: "conversa pessoal/conselho"
+    palavras: ["oi$", "ola$", "hello", "hi$", "bom dia", "boa tarde", "boa noite", "tudo bem", "como voce esta", "how are you",
+               "conselho", advice, "me sinto", "estou triste", "ansied", "depress", "namorad", "relacionamento", "amizade", "amigo",
+               "solidao", "voce tem sentimentos", "quem e voce", "who are you", "qual o seu nome", "voce e uma ia", "terapia", "saude mental"]
+  - tema: "informação geral/curiosidade"
+    palavras: ["o que e", "what is", "quem foi", "who was", "quem e", "quando", "when did", "onde fica", "where is", "por que",
+               "porque", "why ", "como funciona", "how does", "how do", "qual a diferenca", "difference between", "capital",
+               "populacao", "significado", "meaning", "curiosidade", "receita", "recipe", "como fazer", "how to", "fale sobre", "me fale", "tell me", "explique", "explain", "descreva", "describe", "liste", "list of", "quais sao", "give me"]

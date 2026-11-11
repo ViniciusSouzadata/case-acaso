@@ -79,7 +79,7 @@ def test_bruto_real_cobre_os_fatores_e_fecha_com_a_taxa_global():
         n_min = bruto.n_minimo(c)
     assert gravadas == len(linhas) > 20
     fatores = {l["fator"] for l in linhas}
-    esperados = {f.nome for f in FATORES} - {"tema"}  # tema só tem um nível até o seed da T-205
+    esperados = {f.nome for f in FATORES}  # com o seed da T-205 o tema também tem níveis
     assert esperados <= fatores
     assert {l["grupo"] for l in linhas} == {"assistente", "perfil", ENGAJAMENTO}
     for l in linhas:

@@ -44,7 +44,7 @@ def test_eda_gera_figuras_com_conclusao_e_problemas_do_discovery(tmp_path, monke
         r = eda.gerar(c)
         tabela = {p: (n, float(f)) for p, n, f in c.execute(
             "SELECT problema, contagem, percentual FROM resultado.problema_qualidade")}
-    assert 5 <= len(r["figuras"]) <= eda.MAX_FIGURAS  # tema só entra com seed de verdade
+    assert 5 <= len(r["figuras"]) <= eda.MAX_FIGURAS  # com o seed de tema, as 6 figuras
     assert eda.figuras_sem_conclusao(tmp_path) == []
     assert all((tmp_path / n).stat().st_size > 5000 for n in r["figuras"])
     por_inicio = lambda ini: next(v for k, v in tabela.items() if k.startswith(ini))  # noqa: E731

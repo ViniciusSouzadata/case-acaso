@@ -68,19 +68,41 @@ def benjamini_hochberg(p: list[float], q: float = FDR) -> list[bool]:
     return passa
 
 
-def _pt(x: float, casas: int = 1) -> str:
-    return f"{x:.{casas}f}".replace(".", ",")
+def _por_100(x: float) -> str:
+    """Pontos percentuais como 'a cada 100' em linguagem simples: 1 casa abaixo de 10, inteiro acima."""
+    x = abs(x)
+    return (f"{x:.1f}" if x < 10 else f"{x:.0f}").replace(".", ",")
 
 
-def leitura_efeito(fator: str, nivel: str, referencia: str, efeito: float, inf: float, sup: float, ajustado: bool = True) -> str:
-    """Frase simples gerada por regra. IC que cruza zero = 'não dá para distinguir de zero' (nunca vende ruído como efeito)."""
+def _faixa_por_100(inf: float, sup: float) -> str:
+    def f(x):
+        return ("+" if x > 0 else "−" if x < 0 else "") + _por_100(x)
+    return f"entre {f(inf)} e {f(sup)} a cada 100"
+
+
+def leitura_efeito(fator: str, nivel: str, referencia: str, efeito: float, inf: float, sup: float, ajustado: bool = True,
+                   sobrevive_fdr: bool | None = None) -> str:
+    """Frase para o cliente, sem jargão. Intervalo que cruza zero = 'não dá para afirmar diferença' (nunca vende ruído como efeito).
+
+    `sobrevive_fdr` False com intervalo fora de zero: avisa que, com tantos fatores comparados, pode ser acaso.
+    """
     rot = ROTULOS.get(fator, fator)
-    intervalo = f"IC 95%: de {_pt(inf)} a {_pt(sup)} p.p."
-    tipo = "depois de controlar pelo perfil" if ajustado else "diferença bruta, sem controle; consequência da experiência, não causa"
+    faixa = _faixa_por_100(inf, sup)
+    if not ajustado:
+        base = (f"{rot}: quem teve '{nivel}' voltou {_por_100(efeito)} a cada 100 {'a mais' if efeito > 0 else 'a menos'} do que quem teve "
+                f"'{referencia}'" if not inf <= 0 <= sup else
+                f"{rot}: entre quem teve '{nivel}' e quem teve '{referencia}' não dá para afirmar diferença no retorno")
+        return base + " (só descrição: isso acontece depois da primeira resposta, então não mostra o que fez a pessoa voltar)."
+    comparacao = f"'{nivel}' contra '{referencia}', depois de levar em conta o perfil de quem chegou"
     if inf <= 0 <= sup:
-        return f"{rot}: '{nivel}' contra '{referencia}' não dá para distinguir de zero ({intervalo}; {tipo})."
-    sentido = "mais" if efeito > 0 else "menos"
-    return f"{rot}: '{nivel}' voltou {_pt(abs(efeito))} p.p. {sentido} do que '{referencia}' ({intervalo}; {tipo})."
+        return (f"{rot}: {comparacao}, não dá para afirmar diferença: com esta quantidade de usuários, "
+                f"o que se vê ({faixa}) pode ser só acaso.")
+    sentido = "a mais" if efeito > 0 else "a menos"
+    texto = (f"{rot}: {comparacao}, voltaram cerca de {_por_100(efeito)} a cada 100 {sentido} "
+             f"(o valor real deve estar {faixa}).")
+    if sobrevive_fdr is False:
+        texto += " Como foram comparados muitos fatores ao mesmo tempo, uma diferença assim pode aparecer por acaso."
+    return texto
 
 
 # ----------------------------------------------------------------------------------------------- modelo
@@ -184,15 +206,18 @@ def combinar(brutos: list[dict], ajustados: list[dict]) -> list[dict]:
         if b["grupo"] != ENGAJAMENTO and a is not None:
             for c in ("efeito_ajustado_pp", "ajustado_ic_inf", "ajustado_ic_sup", "p_valor"):
                 l[c] = round(a[c], 6 if c == "p_valor" else 4)
-            l["leitura"] = leitura_efeito(b["fator"], b["nivel"], b["referencia"], l["efeito_ajustado_pp"], l["ajustado_ic_inf"], l["ajustado_ic_sup"])
+            l["leitura"] = None  # depois do Benjamini-Hochberg (precisa saber se sobrevive)
         elif b["grupo"] == ENGAJAMENTO:
             l["leitura"] = leitura_efeito(b["fator"], b["nivel"], b["referencia"], b["efeito_bruto_pp"], b["bruto_ic_inf"], b["bruto_ic_sup"], ajustado=False)
         else:
-            l["leitura"] = f"{ROTULOS.get(b['fator'], b['fator'])}: '{b['nivel']}' tem poucos usuários (n={b['n_nivel']}); só o bruto é mostrado, sem ajuste."
+            l["leitura"] = (f"{ROTULOS.get(b['fator'], b['fator'])}: '{b['nivel']}' tem poucos usuários (n={b['n_nivel']}) e ficou fora do modelo; "
+                            f"só a diferença simples, sem levar em conta o perfil, é mostrada.")
         linhas.append(l)
     com_p = [l for l in linhas if l["p_valor"] is not None]
     for l, passa in zip(com_p, benjamini_hochberg([l["p_valor"] for l in com_p])):
         l["significativo_fdr"] = passa
+        l["leitura"] = leitura_efeito(l["fator"], l["nivel"], l["referencia"], l["efeito_ajustado_pp"], l["ajustado_ic_inf"],
+                                      l["ajustado_ic_sup"], sobrevive_fdr=passa)
     chave = lambda l: (l["efeito_ajustado_pp"] is None, -abs(l["efeito_ajustado_pp"] if l["efeito_ajustado_pp"] is not None else l["efeito_bruto_pp"]))  # noqa: E731
     for pos, l in enumerate(sorted(linhas, key=chave), start=1):
         l["ordem"] = pos

@@ -58,11 +58,31 @@ def test_benjamini_hochberg_feito_a_mao():
     assert ajustado.benjamini_hochberg([0.2, 0.3]) == [False, False]
 
 
+JARGAO = ["p.p.", "IC ", "IC:", "p =", "p-valor", "marginal", "logit", "FDR", "Benjamini", "significativ", "bruto"]
+
+
+def _sem_jargao(texto):
+    achados = [j for j in JARGAO if j in texto]
+    assert not achados, f"jargão no texto para o cliente: {achados}"
+
+
 def test_leitura_nunca_vende_ruido_como_efeito():
-    assert "não dá para distinguir de zero" in ajustado.leitura_efeito("recusa", "sim", "não", -1.8, -7.9, 5.7)
-    t = ajustado.leitura_efeito("recusa", "sim", "não", -6.0, -11.0, -1.0)
-    assert "6,0 p.p. menos" in t and "não dá para distinguir" not in t
-    assert "mais" in ajustado.leitura_efeito("faixa_chars_resposta", "301–1.000", "até 300", 8.8, 3.8, 14.0)
+    t = ajustado.leitura_efeito("recusa", "sim", "não", -1.8, -7.9, 5.7)
+    assert "não dá para afirmar diferença" in t and "pode ser só acaso" in t and "entre −7,9 e +5,7 a cada 100" in t
+    _sem_jargao(t)
+    t = ajustado.leitura_efeito("recusa", "sim", "não", -6.0, -11.0, -1.0, sobrevive_fdr=True)
+    assert "cerca de 6,0 a cada 100 a menos" in t and "não dá para afirmar" not in t and "por acaso" not in t
+    _sem_jargao(t)
+    t = ajustado.leitura_efeito("faixa_chars_resposta", "301–1.000", "até 300", 6.2, 0.4, 12.1, sobrevive_fdr=False)
+    assert "a mais" in t and "muitos fatores ao mesmo tempo" in t
+    _sem_jargao(t)
+
+
+def test_leitura_do_engajamento_diz_que_e_so_descricao():
+    t = ajustado.leitura_efeito("n_turnos_sessao", "4 ou mais", "1", 15.6, 11.3, 19.9, ajustado=False)
+    assert "voltou 16 a cada 100 a mais" in t and "só descrição" in t
+    t = ajustado.leitura_efeito("n_turnos_sessao", "2 a 3", "1", 1.0, -3.0, 5.0, ajustado=False)
+    assert "não dá para afirmar diferença" in t
 
 
 def test_plano_junta_nivel_raro_a_referencia_e_registra():
@@ -109,6 +129,8 @@ def test_ajustado_real_completo_com_ic_e_sem_ip_no_resultado():
             assert l["significativo_fdr"] in (True, False)
     assert sorted(l["ordem"] for l in linhas) == list(range(1, len(linhas) + 1))
     assert all(l["leitura"] for l in linhas)
+    for l in linhas:
+        _sem_jargao(l["leitura"])
     com_aj = [l for l in linhas if l["efeito_ajustado_pp"] is not None]
     assert [l["ordem"] for l in sorted(com_aj, key=lambda l: l["ordem"])] == list(range(1, len(com_aj) + 1))
     efs = [abs(l["efeito_ajustado_pp"]) for l in sorted(com_aj, key=lambda l: l["ordem"])]

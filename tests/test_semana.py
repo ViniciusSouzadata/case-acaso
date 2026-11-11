@@ -62,11 +62,39 @@ def test_duas_proporcoes_feito_a_mao():
     assert semana.teste_duas_proporcoes(25, 100, 25, 100) == pytest.approx(1.0)
 
 
-def test_veredito_honesto_quando_nao_distingue_de_ruido():
-    t = semana.veredito(-5.0, -1.0, -4.0, 0.2, (-12.0, 2.0), 36, 3)
-    assert "Não dá para distinguir esta diferença de ruído" in t and "p = 0,200" in t and "36 semanas" in t
-    t2 = semana.veredito(-9.0, 0.0, -9.0, 0.001, (-14.0, -4.0), 36, 3)
-    assert "se distingue de ruído nesta comparação isolada" in t2 and "escolher uma semana" in t2
+JARGAO = ["mix", "p =", "p<", "p <", "IC ", "IC:", "teste", "marginal", "p.p.", "Kitagawa", "proporç", "z ="]
+
+
+def _sem_jargao(texto):
+    achados = [j for j in JARGAO if j in texto]
+    assert not achados, f"jargão no texto para o cliente: {achados}"
+
+
+def test_veredito_dentro_do_ruido_em_linguagem_de_cliente():
+    t = semana.veredito(0.264, 0.215, 197, 65, -0.4, -4.4, 0.434, 35, 2)
+    assert t.startswith("Nesta semana, 22 de cada 100 novos usuários (65 no total) voltaram, contra 26 de cada 100")
+    assert "Quase toda a queda veio de as pessoas voltarem menos, não de ter chegado um público diferente." in t
+    assert "dentro da variação normal entre semanas" in t and "não dá para afirmar que houve uma mudança real" in t
+    _sem_jargao(t)
+
+
+def test_veredito_distinguivel_mas_com_cautela_de_comparacoes_multiplas():
+    t = semana.veredito(0.338, 0.167, 74, 84, 0.7, -17.8, 0.013, 35, 2)
+    assert "17 de cada 100" in t and "34 de cada 100" in t
+    assert "maior do que a variação normal entre semanas, mas" in t and "todas as 35 semanas" in t
+    assert "2 tiveram uma diferença assim" in t and "cerca de 2" in t and "não dá para descartar coincidência" in t
+    _sem_jargao(t)
+
+
+def test_veredito_separa_mudanca_de_publico_de_mudanca_de_comportamento():
+    publico = semana.veredito(0.30, 0.25, 100, 100, -4.8, -0.2, 0.5, 30, 1)   # quase tudo mix
+    assert "veio de ter chegado um público diferente" in publico and "outra mistura de celular" in publico
+    misto = semana.veredito(0.30, 0.25, 100, 100, -2.5, -2.5, 0.5, 30, 1)
+    assert "Parte da queda veio de um público diferente e parte" in misto
+    subida = semana.veredito(0.20, 0.28, 100, 100, 0.1, 7.9, 0.5, 30, 1)
+    assert "Quase toda a subida veio de as pessoas voltarem mais" in subida
+    for t in (publico, misto, subida):
+        _sem_jargao(t)
 
 
 def test_decompor_sintetico_ponta_a_ponta():
@@ -94,7 +122,8 @@ def test_semanas_reais_gravadas_e_fecham():
     for _, n_b, n_s, delta, mix, taxa, p, conclusao in res:
         assert n_b > 0 and n_s > 0 and 0 <= float(p) <= 1
         assert float(mix) + float(taxa) == pytest.approx(float(delta), abs=2e-3)
-        assert "p = " in conclusao and "ruído" in conclusao
+        assert "de cada 100" in conclusao and "variação normal entre semanas" in conclusao
+        _sem_jargao(conclusao)
     for _, total, pb, ps in segs:
         assert float(pb) == pytest.approx(1.0, abs=1e-4) and float(ps) == pytest.approx(1.0, abs=1e-4)
     assert {s[0]: float(s[1]) for s in segs}.keys() == {r[0] for r in res}

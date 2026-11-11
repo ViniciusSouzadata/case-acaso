@@ -1,0 +1,2 @@
+# Só para gerar o seed de tema com LLM, FORA do compose (python -m classificador.tema gerar --provedor bedrock). Não entra na imagem do loader.
+boto3==1.44.1

@@ -50,6 +50,25 @@ def _faixas(s: pd.Series, limites: list[tuple[int, str]], ultimo: str) -> pd.Ser
     return s.map(f)
 
 
+def _top_k_mais_demais(niveis: pd.Series, k: int, rotulo: str, excluir: tuple[str, ...] = ()) -> pd.Series:
+    """Mantém os k níveis mais frequentes (fora os de `excluir`); o resto vira `rotulo`. Decisão do planejador (limite de ~25
+    parâmetros): região = 2 maiores + "outras regiões"; tema = 3 maiores específicos + "demais temas" (inclui indefinido)."""
+    contagem = niveis[~niveis.isin(excluir)].value_counts()
+    manter = set(sorted(contagem.index, key=lambda x: (-contagem[x], str(x)))[:k])
+    return niveis.where(niveis.isin(manter), rotulo).where(niveis.notna())
+
+
+def _regiao(df: pd.DataFrame) -> pd.Series:
+    return _top_k_mais_demais(_texto(df["regiao"]), 2, "outras regiões")
+
+
+def _tema(df: pd.DataFrame) -> pd.Series:
+    t = _texto(df["tema"])
+    if not (t.isin(["não classificado"]).all()):
+        return _top_k_mais_demais(t, 3, "demais temas", excluir=("outros/indefinido", "não classificado"))
+    return t  # sem seed: um só nível, o fator não entra
+
+
 def _idioma(df: pd.DataFrame) -> pd.Series:
     i = _texto(df["idioma"])
     return i.where(i.isin(IDIOMAS_PRINCIPAIS), RAROS)
@@ -67,13 +86,13 @@ FATORES: list[Fator] = [
     Fator("faixa_chars_resposta", ASSISTENTE, lambda d: _texto(d["faixa_chars_resposta"])),
     Fator("modelo_familia", ASSISTENTE, lambda d: _texto(d["modelo_familia"])),
     # perfil: quem chegou e quando
-    Fator("tema", PERFIL, lambda d: _texto(d["tema"])),
+    Fator("tema", PERFIL, _tema),
     Fator("idioma", PERFIL, _idioma),
     Fator("dispositivo", PERFIL, lambda d: _texto(d["dispositivo"])),
     Fator("periodo_dia", PERFIL, lambda d: _texto(d["periodo_dia"])),
     Fator("fim_de_semana", PERFIL, lambda d: _sim_nao(d["fim_de_semana"])),
     Fator("faixa_chars_pergunta", PERFIL, lambda d: _texto(d["faixa_chars_pergunta"])),
-    Fator("regiao", PERFIL, lambda d: _texto(d["regiao"])),
+    Fator("regiao", PERFIL, _regiao),
     Fator("era_modelo", PERFIL, lambda d: _texto(d["era_modelo"])),
     # engajamento: consequência da experiência, não causa (descritivo, fora do ajuste)
     Fator("n_turnos_sessao", ENGAJAMENTO,

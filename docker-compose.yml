@@ -31,6 +31,7 @@ services:
     volumes:
       - ./sql:/app/sql:ro
       - ./analise:/app/analise:ro
+      - ./classificador:/app/classificador:ro
       - ./docs:/app/docs
       - ./tests:/app/tests:ro
       - ./data/bruto:/app/data/bruto:ro

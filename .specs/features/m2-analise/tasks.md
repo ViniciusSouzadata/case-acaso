@@ -48,7 +48,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** Cada efeito com IC, n e leitura
 - **Reqs:** REQ-211, REQ-212, REQ-213, REQ-214
 
-## [ ] T-205 — Classificador de tema e seed
+## [x] T-205 — Classificador de tema e seed
 - **What:** `classificador/tema.py` com interface única `classificar(pergunta) -> tema` e provedores trocáveis por configuração (`TEMA_PROVEDOR`): `bedrock` (Claude Haiku; reserva Amazon Nova), `regras` (palavras-chave, sem LLM) e o provedor alternativo declarado no ADR-09. Taxonomia v1 do design. Lê a 1ª pergunta do snapshot (truncada), grava `seeds/tema_conversa.csv` (`conversa_id, tema, tema_origem, versao_prompt`). **Qual provedor gera o seed da entrega é decisão registrada no STATE.md (depende da conta AWS e da resposta da Acaso).**
 - **Where:** `classificador/`, `seeds/tema_conversa.csv`
 - **Depends on:** T-110
