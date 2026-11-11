@@ -36,5 +36,17 @@ services:
       - ./data/bruto:/app/data/bruto:ro
       - ./seeds:/app/seeds:ro
 
+  # M3/M4: app Next.js. Lê só mart.* e resultado.* com o papel app_ro; sobe depois que o loader termina com sucesso.
+  app:
+    build:
+      context: ./app
+    depends_on:
+      loader:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgres://app_ro:${APP_RO_PASSWORD:-acaso_ro_dev}@db:5432/${POSTGRES_DB:-acaso}
+    ports:
+      - "${APP_HOST_PORT:-3000}:3000"
+
 volumes:
   pgdata:
