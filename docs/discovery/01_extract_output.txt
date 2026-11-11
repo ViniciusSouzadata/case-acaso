@@ -1,0 +1,5 @@
+== Conversas por país (top 15) ==
+[('United States', 170520, 20.35), ('Russia', 113881, 13.59), ('China', 101156, 12.07), ('Hong Kong', 46955, 5.6), ('United Kingdom', 30808, 3.68), ('Germany', 28975, 3.46), ('France', 26065, 3.11), ('Japan', 17567, 2.1), ('India', 16676, 1.99), ('Canada', 16389, 1.96), ('Egypt', 14310, 1.71), ('Singapore', 13401, 1.6), ('Taiwan', 11927, 1.42), ('Brazil', 11621, 1.39), ('DR Congo', 9874, 1.18)]
+== Conversas com algum turno BR mas country top-level != Brazil ==
+[(5,)]
+== Linhas Brasil == [(11621,)]

@@ -1,0 +1,50 @@
+
+== Timestamp nulo por papel ==
+['role', 'n', 'nulos']
+('user', 26579, 26579)
+('assistant', 26579, 0)
+
+== hashed_ip/header nulo por papel ==
+['role', 'ip_nulo', 'header_nulo']
+('user', 0, 0)
+('assistant', 26579, 26579)
+
+== Duração conversa (último - 1a resposta), min ==
+['quantile_cont((epoch((ts_last - ts_first_bot)) / 60), list_value(0.5, 0.9, 0.99))', 'sem_bot', 'inconsistentes']
+([0.0, 21.166666666666668, 349.4166666666666], 0, 0)
+
+== IP mais pesado: participação, estado, modelos, dias ativos ==
+['rk', 'conv', 'pct', 'estado', 'uas', 'dias_ativos', 'turnos_med']
+(1, 1557, 13.4, 'Piauí', 35, 129, 2.5)
+(2, 648, 5.6, 'Rio de Janeiro', 2, 21, 1.6)
+(3, 319, 2.7, 'Rio de Janeiro', 2, 27, 1.4)
+(4, 249, 2.1, 'Paraíba', 4, 52, 1.5)
+(5, 207, 1.8, 'Rio de Janeiro', 1, 11, 1.6)
+
+== Gap entre conversas do mesmo IP (min) — quantis ==
+['quantile_cont((epoch((ts_first_bot - prev)) / 60), list_value(0.1, 0.25, 0.5, 0.75, 0.9))']
+([0.9166666666666666, 2.2958333333333334, 13.641666666666666, 273.2625, 2405.1416666666664],)
+
+== Gap: % abaixo de 30 min / 60 min / 24h ==
+['lt30', 'lt60', 'lt24h']
+(58.2, 64.6, 87.1)
+
+== Retenção IP — usuários elegíveis e taxa global (sessão 30 min) ==
+['usuarios', 'voltaram', 'pct', 'maduros']
+(2385, 577, 24.2, 2330)
+
+== Uso do GPT-4 x período (disponibilidade) ==
+['mes', 'pct_gpt4', 'n']
+('2023-04', 16.0, 1277)
+('2023-05', 13.0, 2308)
+('2023-06', 16.0, 1125)
+('2023-07', 0.0, 662)
+('2023-08', 0.0, 630)
+('2023-09', 0.0, 740)
+('2023-10', 0.0, 581)
+('2023-11', 15.0, 824)
+('2023-12', 75.0, 681)
+('2024-01', 91.0, 539)
+('2024-02', 94.0, 529)
+('2024-03', 92.0, 1011)
+('2024-04', 93.0, 714)
