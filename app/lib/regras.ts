@@ -46,3 +46,12 @@ export function formatar(valor: number | null | undefined, formato: FormatoNumer
 
 /** Limite metodologico do balanco (design M2, passo 4): diferenca padronizada abaixo disto = grupos parecidos. Nao e parametro de definicao. */
 export const LIMITE_BALANCO = 0.1;
+
+/** Data e hora de texto do banco ("2026-11-11 22:30:37+00") → "11/11/2026, 19:30" (horário de Brasília). */
+export function formatarDataHora(texto: string | null | undefined): string | null {
+  if (!texto) return null;
+  const d = new Date(texto.replace(" ", "T").replace(/\+00$/, "Z"));
+  return Number.isNaN(d.getTime())
+    ? null
+    : d.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short", timeZone: "America/Sao_Paulo" });
+}

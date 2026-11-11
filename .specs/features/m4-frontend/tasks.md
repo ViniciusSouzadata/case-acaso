@@ -47,7 +47,7 @@ T-401 ─► T-402 ─┬─► T-403 ─┐
 - **Gate:** Tela 2 entendível sem ajuda
 - **Reqs:** REQ-403, REQ-404, REQ-406, REQ-409
 
-## [ ] T-405 — Tela 3: Confiança nos dados (Should)
+## [x] T-405 — Tela 3: Confiança nos dados (Should)
 - **What:** Última carga (quando, linhas, rejeitados), reconciliação (ok/falha por métrica), problemas de qualidade com contagem e tratamento, validação da classificação de tema, e o quadro "O que este painel mostra / nunca mostra".
 - **Where:** `app/app/dados/page.tsx`
 - **Depends on:** T-401, T-303

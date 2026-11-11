@@ -208,5 +208,47 @@
     },
     "respostaNenhuma": "Entre {m} comparações do assistente e do perfil, {k} têm intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, nenhuma continua diferente de zero. Não dá para afirmar um efeito com segurança.",
     "naoResiste": "o intervalo não inclui o zero, mas não resiste à correção para muitas comparações: pode ser acaso"
+  },
+  "dados": {
+    "pergunta": "Posso confiar nestes números?",
+    "respostaOk": "Sim, com os limites descritos abaixo: a carga mais recente foi lida por inteiro e as contas conferem com os dados de origem.",
+    "respostaFalha": "Ainda não. Em {k} de {m} conferências, o painel não bate com os dados de origem. Veja abaixo.",
+    "respostaSemConf": "A última carga foi lida por inteiro, mas ainda não há conferência registrada entre o painel e os dados de origem. Leia os limites abaixo.",
+    "respostaSemLote": "Ainda não há nenhuma carga concluída para avaliar.",
+    "cargaTitulo": "Última carga de dados",
+    "cargaQuando": "Terminou em {data}",
+    "cargaLinhas": "{n} linhas lidas",
+    "cargaGravadas": "{n} linhas aproveitadas",
+    "cargaRejeitadas": "{n} linhas rejeitadas",
+    "cargaRejeitadasAjuda": "Linhas rejeitadas são as que não passaram nas verificações e ficaram de fora.",
+    "cargaVazia": "Nenhuma carga concluída até agora.",
+    "confTitulo": "Conferência: o painel bate com os dados de origem?",
+    "confAjuda": "Para cada número importante, comparamos o valor calculado direto nos dados de origem com o valor que o painel mostra.",
+    "confVazia": "Ainda não há conferência registrada para esta carga.",
+    "confOk": "confere",
+    "confFalha": "não confere",
+    "confLinha": "origem {bruto} · painel {mart} · diferença {dif}",
+    "problemasTitulo": "O que encontramos de estranho nos dados",
+    "problemasAjuda": "Cada item mostra quantas conversas são afetadas e o que fizemos com elas.",
+    "problemasVazio": "Nenhum problema registrado.",
+    "problemaContagem": "{n} ({pct})",
+    "tratamento": "O que fizemos",
+    "validacaoTitulo": "O classificador de tema acerta?",
+    "validacaoAjuda": "Conferimos uma amostra de conversas à mão e comparamos com o que o classificador disse.",
+    "validacaoVazia": "A conferência do classificador de tema ainda não foi feita. Enquanto isso, o tema não é usado nas conclusões.",
+    "validacaoLinha": "{nome}: acerta {acuracia} das {n} conversas conferidas (concordância além do acaso: {kappa})",
+    "painelTitulo": "O que este painel mostra e o que nunca mostra",
+    "mostra": "Mostra",
+    "mostraItens": {
+      "1": "Quantas pessoas voltam em até 7 dias, por semana ou mês, sempre com a faixa de incerteza e o número de pessoas.",
+      "2": "O que muda a chance de voltar: comparações entre grupos parecidos, com o intervalo de 95%.",
+      "3": "A qualidade dos dados desta carga."
+    },
+    "nunca": "Nunca mostra",
+    "nuncaItens": {
+      "1": "O texto de nenhuma conversa.",
+      "2": "Endereço de rede (IP) nem identificação do aparelho ou do navegador.",
+      "3": "Números firmes para grupos com poucas pessoas: nesses casos aparece o aviso de amostra pequena."
+    }
   }
 }
