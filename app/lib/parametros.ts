@@ -31,6 +31,16 @@ export const esquemaCoortes = z
     path: ["inicio"],
   });
 
+const texto = z.string().min(1, "obrigatório").max(80);
+
+export const esquemaEfeitos = z.object({
+  pais,
+  grupo: z.enum(["assistente", "perfil", "engajamento"]).optional(),
+});
+export const esquemaSegmentos = z.object({ pais, variavel: texto });
+export const esquemaBalanco = z.object({ pais, tratamento: texto });
+export const esquemaSemana = z.object({ pais, semana: dataIso });
+
 export const esquemaDicionario = z.object({
   indicador: z.string().min(1).max(80).optional(),
 });

@@ -25,7 +25,7 @@ T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 - **Gate:** Tela 1 tem todos os dados de que precisa
 - **Reqs:** REQ-302, REQ-303, REQ-308, REQ-309
 
-## [ ] T-303 — Endpoints de fatores, semana, achados e qualidade
+## [x] T-303 — Endpoints de fatores, semana, achados e qualidade
 - **What:** `/api/fatores/efeitos`, `/api/fatores/segmentos`, `/api/fatores/balanco`, `/api/semana/decomposicao`, `/api/achados`, `/api/qualidade`.
 - **Where:** `app/app/api/**`
 - **Depends on:** T-302

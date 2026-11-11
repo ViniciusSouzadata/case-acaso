@@ -85,3 +85,131 @@ export const respostaResumo = envelope(resumoSaida.nullable());
 export const respostaCoortes = envelope(z.array(coorteSaida), { eras: z.array(eraSaida) });
 export const respostaSensibilidade = envelope(z.array(sensibilidadeSaida));
 export const respostaDicionario = envelope(z.array(dicionarioSaida));
+
+// ---- T-303: fatores, semana, achados, qualidade
+export const efeitoSaida = z.strictObject({
+  fator: z.string(),
+  nivel: z.string(),
+  referencia: z.string(),
+  grupo: z.enum(["assistente", "perfil", "engajamento"]),
+  n_nivel: z.number().int(),
+  n_referencia: z.number().int(),
+  taxa_nivel: numOuNulo,
+  taxa_referencia: numOuNulo,
+  efeito_bruto_pp: numOuNulo,
+  bruto_ic_inf: numOuNulo,
+  bruto_ic_sup: numOuNulo,
+  efeito_ajustado_pp: numOuNulo,
+  ajustado_ic_inf: numOuNulo,
+  ajustado_ic_sup: numOuNulo,
+  p_valor: numOuNulo,
+  significativo_fdr: z.boolean().nullable(),
+  e_value: numOuNulo,
+  metodo: z.enum(["logit_ame", "ipw"]),
+  amostra_suficiente: z.boolean(),
+  leitura: z.string().nullable(),
+  ordem: z.number().int().nullable(),
+});
+
+export const segmentoSaida = z.strictObject({
+  valor: z.string(),
+  novos: z.number().int(),
+  voltaram_7d: z.number().int(),
+  taxa: num,
+  ic_inf: num,
+  ic_sup: num,
+  amostra_suficiente: z.boolean(),
+});
+
+export const balancoSaida = z.strictObject({
+  covariavel: z.string(),
+  dp_antes: numOuNulo,
+  dp_depois: numOuNulo,
+});
+
+export const resumoSemanaSaida = z.strictObject({
+  semana: z.string(),
+  base_descricao: z.string().nullable(),
+  n_base: z.number().int().nullable(),
+  n_semana: z.number().int().nullable(),
+  taxa_base: numOuNulo,
+  taxa_semana: numOuNulo,
+  delta_pp: numOuNulo,
+  mix_pp: numOuNulo,
+  taxa_pp: numOuNulo,
+  p_valor: numOuNulo,
+  conclusao: z.string().nullable(),
+});
+
+export const segmentoSemanaSaida = z.strictObject({
+  semana: z.string(),
+  segmento: z.string(),
+  peso_base: numOuNulo,
+  peso_semana: numOuNulo,
+  taxa_base: numOuNulo,
+  taxa_semana: numOuNulo,
+  efeito_mix_pp: numOuNulo,
+  efeito_taxa_pp: numOuNulo,
+});
+
+export const achadoSaida = z.strictObject({
+  ordem: z.number().int(),
+  titulo: z.string(),
+  evidencia: z.string(),
+  decisao: z.string(),
+  limite: z.string(),
+});
+
+export const qualidadeSaida = z.strictObject({
+  lote: z
+    .strictObject({
+      lote_id: z.number().int(),
+      iniciado_em: z.string(),
+      terminado_em: z.string().nullable(),
+      fonte: z.string().nullable(),
+      linhas_lidas: z.number().int().nullable(),
+      linhas_gravadas: z.number().int().nullable(),
+      linhas_rejeitadas: z.number().int().nullable(),
+      versao_definicao: z.string().nullable(),
+      status: z.string(),
+    })
+    .nullable(),
+  reconciliacao: z.array(
+    z.strictObject({
+      metrica: z.string(),
+      valor_bruto: numOuNulo,
+      valor_mart: numOuNulo,
+      diferenca: numOuNulo,
+      tolerancia: numOuNulo,
+      ok: z.boolean(),
+    }),
+  ),
+  problemas: z.array(
+    z.strictObject({
+      problema: z.string(),
+      contagem: z.number().int(),
+      percentual: numOuNulo,
+      tratamento: z.string().nullable(),
+    }),
+  ),
+  validacao: z.array(
+    z.strictObject({
+      classificador: z.string(),
+      n: z.number().int(),
+      acuracia: numOuNulo,
+      kappa: numOuNulo,
+      detalhe_json: z.unknown(),
+      versao_prompt: z.string().nullable(),
+      modelo: z.string().nullable(),
+    }),
+  ),
+});
+
+export const respostaEfeitos = envelope(z.array(efeitoSaida));
+export const respostaSegmentos = envelope(z.array(segmentoSaida));
+export const respostaBalanco = envelope(z.array(balancoSaida));
+export const respostaSemana = envelope(
+  z.strictObject({ resumo: resumoSemanaSaida.nullable(), segmentos: z.array(segmentoSemanaSaida) }),
+);
+export const respostaAchados = envelope(z.array(achadoSaida));
+export const respostaQualidade = envelope(qualidadeSaida);
