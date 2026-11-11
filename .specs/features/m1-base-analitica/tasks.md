@@ -98,7 +98,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Definição de indicador não muda sem um teste quebrar
 - **Reqs:** REQ-150, REQ-151, REQ-153
 
-## [ ] T-110 — Subida do zero, ponta a ponta (gate do M1)
+## [x] T-110 — Subida do zero, ponta a ponta (gate do M1)
 - **What:** `loader/cli.py` encadeia migrar → verificar bruto → carregar → transformar → reconciliar. `docker compose down -v && docker compose up` em pasta limpa (clone novo). Registrar tempo total e números finais (conversas, usuários, taxa global oficial, linhas rejeitadas) no STATE.md e no README.
 - **Where:** `loader/cli.py`, README, STATE.md
 - **Depends on:** T-108, T-109
