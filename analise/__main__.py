@@ -1,4 +1,4 @@
-"""Uso:  python -m analise meta | eda | bruto | ajustado | semana     (T-201..T-207). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
+"""Uso:  python -m analise meta | eda | bruto | ajustado | semana | validacao     (T-201..T-205b). Os demais comandos entram nas tasks seguintes; `tudo` na T-209."""
 from __future__ import annotations
 
 import sys
@@ -6,7 +6,7 @@ from datetime import date
 
 import psycopg
 
-from analise import ajustado, bruto, eda, meta, semana
+from analise import ajustado, bruto, eda, meta, semana, validacao
 from loader.migrar import dsn
 
 
@@ -43,7 +43,12 @@ def main(argv: list[str]) -> int:
                 print(f"semana {r['semana']}: n={r['n_semana']} contra {r['n_base']}; delta {r['delta_pp']:+.1f} p.p. "
                       f"(mix {r['mix_pp']:+.1f}, taxa {r['taxa_pp']:+.1f}); p = {r['p_valor']:.3f}")
         return 0
-    print("uso: python -m analise meta | eda | bruto | ajustado | semana [AAAA-MM-DD ...]", file=sys.stderr)
+    if comando == "validacao":
+        with psycopg.connect(dsn(), autocommit=True) as conn:
+            for r in validacao.validar(conn):
+                print(f"validação de {r['classificador']}: n={r['n']}, acurácia {r['acuracia']:.3f}, kappa {r['kappa']:.3f} ({r['modelo']})")
+        return 0
+    print("uso: python -m analise meta | eda | bruto | ajustado | semana [AAAA-MM-DD ...] | validacao", file=sys.stderr)
     return 2
 
 

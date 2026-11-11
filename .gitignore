@@ -5,3 +5,7 @@ __pycache__/
 .env
 node_modules/
 .next/
+
+# T-205b: planilhas de validação com texto de conversa (só local); o arquivo versionado é seeds/validacao_manual.csv (ids + rótulos)
+seeds/validacao_manual_em_branco.csv
+seeds/validacao_manual_preenchida.csv
