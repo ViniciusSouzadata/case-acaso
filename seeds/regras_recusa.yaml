@@ -1,0 +1,17 @@
+# Regras de detecção de recusa na 1ª resposta do assistente (T-104).
+# Aplicadas por substring sobre a resposta em minúsculas. Lista curta e conservadora:
+# prefere perder alguma recusa a marcar resposta normal como recusa.
+# Mudou a lista? Suba a `versao` (a validação por amostra manual é do M2).
+versao: "1.0.0"
+padroes:
+  en:
+    - "i'm sorry"
+    - "i cannot"
+    - "i can't"
+    - "as an ai"
+  pt:
+    - "desculpe, mas"
+    - "não posso"
+    - "nao posso"
+    - "como uma ia"
+    - "como um modelo de linguagem"

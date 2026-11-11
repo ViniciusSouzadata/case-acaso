@@ -32,6 +32,7 @@ services:
       - ./sql:/app/sql:ro
       - ./tests:/app/tests:ro
       - ./data/bruto:/app/data/bruto:ro
+      - ./seeds:/app/seeds:ro
 
 volumes:
   pgdata:

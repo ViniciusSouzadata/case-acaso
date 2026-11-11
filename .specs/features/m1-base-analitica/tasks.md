@@ -38,7 +38,7 @@ T-102, T-103 e T-105 podem rodar em paralelo depois da T-101. T-109 precisa de T
 - **Gate:** Privacidade por permissão comprovada por teste
 - **Reqs:** REQ-118, REQ-141
 
-## [ ] T-104 — Carga: derivar variáveis de texto e gravar staging
+## [x] T-104 — Carga: derivar variáveis de texto e gravar staging
 - **What:** `loader/derivar.py` (funções puras): `conversa_id`, início/fim, família de user-agent (SO, navegador, dispositivo), `usuario_id` e chaves alternativas, família/versão de modelo, idiomas da 1ª pergunta e 1ª resposta e `idioma_divergente`, fuso por estado, tamanhos, `recusa_1` (regras em `seeds/regras_recusa.yaml`), `pergunta_vazia`, `conta_como_uso`, `ip_mudou`, `hash_repetido`. `loader/carregar.py`: lê o parquet com DuckDB, aplica as derivações, **descarta o texto**, grava em `stg.conversa` com upsert por `conversa_id` em uma transação, cria o lote em `ops.lote_carga` e grava rejeitados com motivo. Junta o seed de tema se existir.
 - **Where:** `loader/derivar.py`, `loader/carregar.py`, `seeds/regras_recusa.yaml`
 - **Depends on:** T-102, T-103
