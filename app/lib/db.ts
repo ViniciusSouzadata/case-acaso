@@ -1,6 +1,12 @@
-import { Pool, type QueryResultRow } from "pg";
+import { Pool, types, type QueryResultRow } from "pg";
 
-// Papel app_ro: só lê mart.* e resultado.* (e ops.lote_carga). A URL vem do ambiente, nunca do código.
+// Papel app_ro: só lê mart.* e resultado.* (e ops.lote_carga, ops.reconciliacao). A URL vem do ambiente, nunca do código.
+// bigint e numeric chegam do pg como texto; aqui as contagens e taxas são pequenas, então viram number.
+types.setTypeParser(types.builtins.INT8, (v) => Number(v));
+types.setTypeParser(types.builtins.NUMERIC, (v) => Number(v));
+// date chega como "AAAA-MM-DD" (sem virar Date no fuso da máquina).
+types.setTypeParser(types.builtins.DATE, (v) => v);
+
 const global = globalThis as unknown as { __pool?: Pool };
 
 function criarPool(): Pool {

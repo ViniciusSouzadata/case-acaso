@@ -1,0 +1,4 @@
+{ "dados": [
+    {"indicador":"taxa_retorno_7d","nome_exibicao":"Taxa de retorno em 7 dias","definicao":"texto","formula":"voltaram_7d / novos_usuarios","denominador":"texto","periodo_referencia":"texto","fonte":"mart.agg_retencao_periodo","sql_referencia":"SELECT 1","limitacoes":"texto"}
+  ],
+  "meta": {"versao_definicao":"1.0.0","versao_analise":"1.0.0","atualizado_em":"2026-11-14T12:00:00.000Z","lote_id":1,"request_id":"req_ab12cd","fonte":"mart.dicionario_indicador"} }

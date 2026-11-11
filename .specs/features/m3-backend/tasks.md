@@ -15,7 +15,7 @@ T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 - **Gate:** Esqueleto da API no ar com rastreio por requisição
 - **Reqs:** REQ-301, REQ-304, REQ-305, REQ-310
 
-## [ ] T-302 — Endpoints de retenção e dicionário
+## [x] T-302 — Endpoints de retenção e dicionário
 - **What:** `/api/retencao/resumo`, `/api/retencao/coortes` (com `meta.eras`), `/api/retencao/sensibilidade`, `/api/dicionario`. Validação zod (`pais`, `inicio`, `fim`, `granularidade`, `indicador`); `pais` ≠ Brazil → 400 "país ainda não carregado"; SQL parametrizado em `lib/consultas/`.
 - **Where:** `app/app/api/retencao/**`, `app/app/api/dicionario/`, `app/lib/consultas/`
 - **Depends on:** T-301
