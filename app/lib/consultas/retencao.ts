@@ -38,11 +38,12 @@ export interface Coorte {
   taxa_mm4: number | null;
   madura: boolean;
   amostra_suficiente: boolean;
+  inicio_coleta: boolean;
 }
 
 export async function coortes(granularidade: string, inicio: string | undefined, fim: string | undefined) {
   return consultar<Coorte>(
-    `SELECT periodo, novos, voltaram_7d, taxa, ic_inf, ic_sup, taxa_mm4, madura, amostra_suficiente
+    `SELECT periodo, novos, voltaram_7d, taxa, ic_inf, ic_sup, taxa_mm4, madura, amostra_suficiente, inicio_coleta
        FROM mart.agg_retencao_periodo
       WHERE granularidade = $1
         AND ($2::date IS NULL OR periodo >= $2::date)
