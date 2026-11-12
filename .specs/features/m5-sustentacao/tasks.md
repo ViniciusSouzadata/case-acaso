@@ -17,7 +17,7 @@ T-503 ──────────┘
 - **Gate:** A hipótese do incidente tem consulta que roda
 - **Reqs:** REQ-512
 
-## [ ] T-502 — Correção escrita do código de referência
+## [x] T-502 — Correção escrita do código de referência
 - **What:** `docs/incidente/correcao/`: `carga_corrigida.py` (identidade vinda de uma regra única, upsert `ON CONFLICT DO UPDATE`, transação por lote, registro de lote) e `route_corrigida.ts` (início da conversa em vez do último turno, semana no fuso do país, coortes imaturas marcadas, mesma definição de usuário). Cada alteração com comentário de uma linha dizendo o defeito que resolve. É código de documentação: precisa ser sintaticamente válido, não precisa rodar no compose.
 - **Where:** `docs/incidente/correcao/`
 - **Depends on:** T-501
