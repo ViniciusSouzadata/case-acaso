@@ -179,3 +179,23 @@ def test_bedrock_usa_o_mesmo_classificador_e_marca_a_origem(tmp_path):
     r = c.classificar_lote(_itens(2))
     assert all(v.origem == "bedrock:amazon.modelo-v1" for v in r.values())
     assert "bedrock:amazon.modelo-v1" in (tmp_path / "chamadas.csv").read_text(encoding="utf-8")
+
+
+def test_paralelismo_classifica_tudo_e_registra_cada_chamada_no_log(tmp_path):
+    f = Falso()
+    cl = _cl(tmp_path, f)
+    res = cl.classificar_lote(_itens(45), paralelismo=3)
+    assert len(res) == 45 and all(r.origem == cl.origem for r in res.values())
+    assert len(f.enviados) == 5
+    assert len((tmp_path / "chamadas.csv").read_text(encoding="utf-8").splitlines()) == 1 + 5
+    assert len(cl.cache) == 45
+    assert round(cl.gasto_usd, 6) == round(5 * (1000 * 1.0 + 100 * 5.0) / 1e6, 6)
+
+
+def test_paralelismo_com_erro_de_rede_cai_no_fallback_e_conta_o_tipo(tmp_path):
+    def chamar(modelo, mensagens):
+        raise TimeoutError("lento")
+    cl = _cl(tmp_path, chamar)
+    res = cl.classificar_lote(_itens(20), paralelismo=3)
+    assert all(r.origem == "regras-fallback" for r in res.values())
+    assert "erro:TimeoutError" in (tmp_path / "chamadas.csv").read_text(encoding="utf-8")

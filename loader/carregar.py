@@ -62,7 +62,7 @@ COLUNAS = [
     "modelo_versao", "modelo_familia", "ts_inicio", "ts_fim", "n_turnos",
     "idioma_conversa", "idioma_pergunta_1", "idioma_resposta_1", "idioma_divergente",
     "estado", "fuso", "chars_pergunta_1", "chars_resposta_1", "recusa_1", "pergunta_vazia",
-    "conta_como_uso", "ip_mudou", "redacted", "tema", "tema_origem", "lote_id",
+    "conta_como_uso", "ip_mudou", "redacted", "tema", "tema_origem", "recusa_origem", "lote_id",
 ]
 
 
@@ -100,8 +100,19 @@ def _utc(dt):
     return dt.replace(tzinfo=timezone.utc) if dt is not None else None
 
 
+def carregar_recusa_seed(caminho: Path) -> dict[int, tuple[bool, str]]:
+    """conversa_id -> (recusa, origem) das linhas do seed com a coluna `recusa` preenchida (classificador LLM).
+    Sem arquivo ou sem a coluna = vazio: a recusa continua vindo das regras de palavras-chave."""
+    caminho = Path(caminho)
+    if not caminho.is_file():
+        return {}
+    with open(caminho, encoding="utf-8", newline="") as f:
+        return {int(l["conversa_id"]): (l["recusa"].strip().lower() == "true", l.get("recusa_origem") or "llm")
+                for l in csv.DictReader(f) if (l.get("recusa") or "").strip().lower() in ("true", "false")}
+
+
 def processar(nomes: list[str], linhas: list[tuple], padroes: list[str],
-              tema_seed: dict) -> tuple[list[dict], list[tuple[Any, str]]]:
+              tema_seed: dict, recusa_seed: dict | None = None) -> tuple[list[dict], list[tuple[Any, str]]]:
     """Deriva e separa aceitas de rejeitadas [(conversa_id, motivo)]. Puro em relação ao banco."""
     aceitas: list[dict] = []
     rejeitadas: list[tuple[Any, str]] = []
@@ -119,6 +130,8 @@ def processar(nomes: list[str], linhas: list[tuple], padroes: list[str],
             rejeitadas.append((bruto["conversa_id"], motivo))
             continue
         vistos.add(bruto["conversa_id"])
+        if recusa_seed and bruto["conversa_id"] in recusa_seed:
+            bruto["recusa_seed"] = recusa_seed[bruto["conversa_id"]]
         aceitas.append(derivar.derivar_conversa(bruto, padroes, tema_seed))
     return aceitas, rejeitadas
 
@@ -145,6 +158,7 @@ def carregar(caminho_bruto: str | Path | None = None) -> dict[str, Any]:
         verificar_snapshot(caminho)  # snapshot real: confere integridade antes de ler
     versao_recusa, padroes = carregar_regras_recusa(Path(os.environ.get("REGRAS_RECUSA_CAMINHO") or REGRAS_RECUSA))
     tema_seed = carregar_tema_seed(Path(os.environ.get("TEMA_SEED_CAMINHO") or TEMA_SEED))
+    recusa_seed = carregar_recusa_seed(Path(os.environ.get("TEMA_SEED_CAMINHO") or TEMA_SEED))
     sha = calcular_sha256(caminho)
 
     # Lote registrado em conexão própria (autocommit): sobrevive ao rollback dos dados.
@@ -157,7 +171,7 @@ def carregar(caminho_bruto: str | Path | None = None) -> dict[str, Any]:
         ).fetchone()[0]
         try:
             nomes, linhas = ler_bruto(caminho)
-            aceitas, rejeitadas = processar(nomes, linhas, padroes, tema_seed)
+            aceitas, rejeitadas = processar(nomes, linhas, padroes, tema_seed, recusa_seed)
             with psycopg.connect(dsn()) as conn:  # transação única; rollback automático em exceção
                 if rejeitadas:
                     with conn.cursor() as cur:

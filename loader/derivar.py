@@ -178,6 +178,9 @@ def derivar_conversa(bruto: dict[str, Any], padroes_recusa: list[str],
     msgs = bruto["mensagens_usuario"]
     pergunta_1 = msgs[0] if msgs else None
     tema, origem = aplicar_tema(bruto["conversa_id"], tema_seed)
+    seed_recusa = bruto.get("recusa_seed")  # (recusa, origem) do seed do classificador LLM; ausente = regra de palavras-chave
+    recusa = seed_recusa[0] if seed_recusa else detectar_recusa(bruto["resposta_1"], padroes_recusa)
+    recusa_origem = seed_recusa[1] if seed_recusa else "regras"
     return {
         "conversa_id": bruto["conversa_id"],
         "conversation_hash": bruto["conversation_hash"],
@@ -202,7 +205,8 @@ def derivar_conversa(bruto: dict[str, Any], padroes_recusa: list[str],
         "fuso": fuso_do_estado(bruto["estado"]),
         "chars_pergunta_1": tamanho(pergunta_1),
         "chars_resposta_1": tamanho(bruto["resposta_1"]),
-        "recusa_1": detectar_recusa(bruto["resposta_1"], padroes_recusa),
+        "recusa_1": recusa,
+        "recusa_origem": recusa_origem,
         "pergunta_vazia": mensagem_vazia(pergunta_1),
         "conta_como_uso": conta_como_uso(msgs, bruto["n_respostas_assistente"]),
         "ip_mudou": bool(bruto["ip_mudou"]),

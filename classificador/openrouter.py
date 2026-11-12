@@ -21,7 +21,9 @@ import csv
 import json
 import os
 import re
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable
@@ -244,6 +246,7 @@ class ClassificadorOpenRouter:
     nome = "openrouter"
 
     def __post_init__(self) -> None:
+        self._trava = threading.Lock()
         self.pasta.mkdir(parents=True, exist_ok=True)
         self._arq_cache = self.pasta / f"{self.provedor}__{re.sub(r'[^A-Za-z0-9_.-]', '_', self.modelo)}__{PROMPT_VERSAO}.csv"
         self._arq_log = self.pasta / "chamadas.csv"
@@ -264,7 +267,7 @@ class ClassificadorOpenRouter:
 
     def _registrar(self, n: int, uso: Uso, custo: float, latencia: float, status: str) -> None:
         novo = not self._arq_log.is_file()
-        with self._arq_log.open("a", encoding="utf-8", newline="") as f:
+        with self._trava, self._arq_log.open("a", encoding="utf-8", newline="") as f:
             w = csv.writer(f, lineterminator="\n")
             if novo:
                 w.writerow(["quando", "modelo", "n_itens", "tokens_entrada", "tokens_saida", "custo_usd", "latencia_s", "status"])
@@ -283,13 +286,15 @@ class ClassificadorOpenRouter:
             self._registrar(len(itens), Uso(), 0.0, time.time() - t0, f"erro:{type(e).__name__}")
             return {}
         custo = self._custo(uso)
-        self.gasto_usd += custo
+        with self._trava:
+            self.gasto_usd += custo
         ok = {itens[n - 1][0]: v for n, v in extrair_lote(texto, range(1, len(itens) + 1)).items()}
         self._registrar(len(itens), uso, custo, time.time() - t0, "ok" if len(ok) == len(itens) else f"parcial:{len(ok)}/{len(itens)}")
         return ok
 
-    def classificar_lote(self, itens: list[tuple[int, str, str]]) -> dict[int, Resultado]:
-        """itens: (conversa_id, pergunta, resposta). Devolve um Resultado por id (os não obtidos caem no fallback por regra)."""
+    def classificar_lote(self, itens: list[tuple[int, str, str]], paralelismo: int = 1) -> dict[int, Resultado]:
+        """itens: (conversa_id, pergunta, resposta). Devolve um Resultado por id (os não obtidos caem no fallback por regra).
+        `paralelismo` > 1 envia lotes independentes ao mesmo tempo; cache e log são gravados sob trava (só a thread principal grava o cache)."""
         saida: dict[int, Resultado] = {}
         pendentes = []
         for i, p, r in itens:
@@ -298,26 +303,41 @@ class ClassificadorOpenRouter:
             else:
                 pendentes.append((i, p, r))
         textos = {i: r for i, _, r in itens}
-        for ini in range(0, len(pendentes), TAMANHO_LOTE):
-            lote = pendentes[ini:ini + TAMANHO_LOTE]
-            try:
-                ok = self._chamar_lote(lote)
-                faltam = [x for x in lote if x[0] not in ok]
-                if faltam:  # uma nova tentativa, só para os ids que falharam
-                    ok.update(self._chamar_lote(faltam))
-            except TetoAtingido:
-                ok = {}
-                self._fallback(lote, saida, textos)
-                self._salvar_cache()
-                raise
-            novos = []
+        lotes = [pendentes[ini:ini + TAMANHO_LOTE] for ini in range(0, len(pendentes), TAMANHO_LOTE)]
+
+        def trabalhar(lote):
+            ok = self._chamar_lote(lote)
+            faltam = [x for x in lote if x[0] not in ok]
+            if faltam:  # uma nova tentativa, só para os ids que falharam
+                ok.update(self._chamar_lote(faltam))
+            return ok
+
+        def aplicar(lote, ok):
             for i, p, r in lote:
                 if i in ok:
                     self.cache[i] = ok[i]
                     saida[i] = Resultado(*ok[i], self.origem)
-                    novos.append(i)
             self._fallback([x for x in lote if x[0] not in ok], saida, textos)
             self._salvar_cache()
+
+        teto = None
+        with ThreadPoolExecutor(max_workers=max(1, paralelismo)) as ex:
+            futuros = {ex.submit(trabalhar, lote): lote for lote in lotes}
+            for fut in as_completed(futuros):
+                lote = futuros[fut]
+                if fut.cancelled():  # lote que nem chegou a sair por causa do teto
+                    self._fallback(lote, saida, textos)
+                    continue
+                try:
+                    aplicar(lote, fut.result())
+                except TetoAtingido as e:
+                    teto = e
+                    for f in futuros:
+                        f.cancel()
+                    self._fallback(lote, saida, textos)
+        if teto is not None:
+            self._salvar_cache()
+            raise teto
         return saida
 
     def _fallback(self, itens: list[tuple[int, str, str]], saida: dict[int, Resultado], textos: dict[int, str]) -> None:
@@ -332,10 +352,10 @@ class ClassificadorOpenRouter:
                 w.writerow([i, t, "true" if rec else "false"])
 
 
-def criar(modelo: str, preco_entrada_milhao: float, preco_saida_milhao: float, env: dict | None = None, **kw) -> ClassificadorOpenRouter:
+def criar(modelo: str, preco_entrada_milhao: float, preco_saida_milhao: float, env: dict | None = None, timeout: int = 120, **kw) -> ClassificadorOpenRouter:
     env = os.environ if env is None else env
     teto = float(env.get("LLM_TETO_USD") or TETO_PADRAO_USD)
-    return ClassificadorOpenRouter(modelo, chamada_real(ler_chave(env)), preco_entrada_milhao, preco_saida_milhao, teto_usd=teto, **kw)
+    return ClassificadorOpenRouter(modelo, chamada_real(ler_chave(env), timeout), preco_entrada_milhao, preco_saida_milhao, teto_usd=teto, **kw)
 
 
 def criar_bedrock(modelo: str, preco_entrada_milhao: float, preco_saida_milhao: float, env: dict | None = None, **kw) -> ClassificadorOpenRouter:

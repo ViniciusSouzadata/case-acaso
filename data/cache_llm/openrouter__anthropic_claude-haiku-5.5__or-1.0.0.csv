@@ -8,194 +8,2788 @@ conversa_id,tema,recusa
 212299,trabalho/negócios,true
 217346,informação geral/curiosidade,false
 220890,informação geral/curiosidade,false
+221118,conversa pessoal/conselho,false
+227288,conversa pessoal/conselho,false
+228610,conversa pessoal/conselho,false
+231103,criação/ficção e roleplay,false
 231525,criação/ficção e roleplay,false
+232977,conversa pessoal/conselho,false
+237310,conversa pessoal/conselho,false
+238944,programação/TI,false
+238999,estudo/dever de casa,false
+239026,informação geral/curiosidade,false
+239114,informação geral/curiosidade,false
 239235,programação/TI,false
+239281,programação/TI,false
+239641,informação geral/curiosidade,false
 239748,informação geral/curiosidade,false
+240869,estudo/dever de casa,false
+240873,trabalho/negócios,false
 241393,trabalho/negócios,false
+241727,conversa pessoal/conselho,false
+241736,estudo/dever de casa,false
+241844,informação geral/curiosidade,false
+241961,conversa pessoal/conselho,false
+241972,trabalho/negócios,false
 241973,informação geral/curiosidade,false
+242177,escrita e tradução,false
+242824,outros/indefinido,false
+243703,outros/indefinido,false
+247990,criação/ficção e roleplay,false
+250447,informação geral/curiosidade,false
+250551,conversa pessoal/conselho,false
+251561,criação/ficção e roleplay,false
+252410,estudo/dever de casa,false
+253456,conversa pessoal/conselho,false
+254415,trabalho/negócios,false
+254993,programação/TI,false
 255046,conversa pessoal/conselho,false
+259386,conversa pessoal/conselho,false
+259945,conversa pessoal/conselho,false
+260069,programação/TI,true
+261359,programação/TI,false
+261754,estudo/dever de casa,false
+262551,programação/TI,false
+263412,conversa pessoal/conselho,false
+265446,criação/ficção e roleplay,false
+266212,conversa pessoal/conselho,false
+266280,informação geral/curiosidade,true
+266794,programação/TI,false
+273544,programação/TI,false
+276783,conversa pessoal/conselho,false
+277102,escrita e tradução,false
 277499,informação geral/curiosidade,false
+278678,criação/ficção e roleplay,false
+279219,criação/ficção e roleplay,false
+279670,informação geral/curiosidade,false
+280009,informação geral/curiosidade,false
+284892,escrita e tradução,false
+284908,informação geral/curiosidade,false
 285495,informação geral/curiosidade,true
 285512,informação geral/curiosidade,true
+286280,programação/TI,false
+287407,programação/TI,true
 287432,programação/TI,true
 287615,criação/ficção e roleplay,false
+288314,conversa pessoal/conselho,true
+289531,estudo/dever de casa,false
+289756,conversa pessoal/conselho,false
 289972,informação geral/curiosidade,false
+290045,criação/ficção e roleplay,false
+291041,escrita e tradução,false
+291095,escrita e tradução,false
+291511,informação geral/curiosidade,false
+293601,informação geral/curiosidade,false
+294257,informação geral/curiosidade,true
+294265,informação geral/curiosidade,true
+296028,informação geral/curiosidade,false
+296987,criação/ficção e roleplay,false
+297617,informação geral/curiosidade,false
+298080,programação/TI,false
+298773,trabalho/negócios,false
+298862,conversa pessoal/conselho,false
+299479,escrita e tradução,false
 299495,escrita e tradução,false
+301511,informação geral/curiosidade,false
 302032,criação/ficção e roleplay,false
 302273,criação/ficção e roleplay,false
 302717,escrita e tradução,false
+305455,escrita e tradução,false
+306309,escrita e tradução,false
+306410,conversa pessoal/conselho,false
 307790,informação geral/curiosidade,true
+309997,conversa pessoal/conselho,false
+312277,conversa pessoal/conselho,false
+313305,programação/TI,false
+314142,programação/TI,false
+314195,programação/TI,false
+314462,informação geral/curiosidade,false
+315053,conversa pessoal/conselho,false
+315521,conversa pessoal/conselho,false
+315878,programação/TI,false
+316227,conversa pessoal/conselho,false
 316600,criação/ficção e roleplay,false
+319912,trabalho/negócios,false
+321832,escrita e tradução,false
+322628,informação geral/curiosidade,false
+322999,informação geral/curiosidade,false
+323908,informação geral/curiosidade,false
+325260,informação geral/curiosidade,false
 325299,informação geral/curiosidade,false
+326270,informação geral/curiosidade,false
+329875,conversa pessoal/conselho,false
+330516,escrita e tradução,false
+331251,trabalho/negócios,true
+332724,estudo/dever de casa,false
+333069,criação/ficção e roleplay,false
+333625,informação geral/curiosidade,false
+333859,escrita e tradução,false
+334379,conversa pessoal/conselho,false
+334928,escrita e tradução,false
+335599,estudo/dever de casa,false
+336182,escrita e tradução,false
+336447,trabalho/negócios,false
 336457,criação/ficção e roleplay,false
+336584,estudo/dever de casa,false
+336820,criação/ficção e roleplay,false
 337085,estudo/dever de casa,false
+337690,informação geral/curiosidade,false
+337754,informação geral/curiosidade,false
+343262,programação/TI,false
+344337,estudo/dever de casa,false
+345040,outros/indefinido,false
+348308,informação geral/curiosidade,false
+351060,programação/TI,false
+351064,informação geral/curiosidade,false
+351119,informação geral/curiosidade,false
+351920,informação geral/curiosidade,false
+352084,estudo/dever de casa,false
 352250,outros/indefinido,false
+360693,escrita e tradução,false
+360782,informação geral/curiosidade,false
+361097,conversa pessoal/conselho,false
+361342,programação/TI,false
+363635,escrita e tradução,false
+363836,criação/ficção e roleplay,false
+364327,conversa pessoal/conselho,true
+365091,escrita e tradução,false
+365495,programação/TI,false
+366098,programação/TI,false
+366159,informação geral/curiosidade,false
+366323,criação/ficção e roleplay,false
+368280,conversa pessoal/conselho,false
+371963,trabalho/negócios,false
+372275,estudo/dever de casa,false
+372325,programação/TI,false
+372748,conversa pessoal/conselho,false
 373623,trabalho/negócios,true
+373892,conversa pessoal/conselho,false
+374417,conversa pessoal/conselho,false
+374830,informação geral/curiosidade,false
+375184,outros/indefinido,false
+375386,trabalho/negócios,false
+375715,estudo/dever de casa,false
+375719,outros/indefinido,false
+375843,criação/ficção e roleplay,false
+375873,conversa pessoal/conselho,false
+376351,outros/indefinido,false
+376934,informação geral/curiosidade,false
+377024,estudo/dever de casa,false
+377126,escrita e tradução,false
+377962,informação geral/curiosidade,false
+378762,estudo/dever de casa,false
+380280,criação/ficção e roleplay,false
+380362,informação geral/curiosidade,false
+381967,programação/TI,false
+382290,informação geral/curiosidade,false
+382923,criação/ficção e roleplay,false
+384579,conversa pessoal/conselho,false
 384748,informação geral/curiosidade,false
+384757,outros/indefinido,true
+385001,programação/TI,false
+385220,informação geral/curiosidade,false
+385320,programação/TI,false
+385503,escrita e tradução,false
+385781,trabalho/negócios,false
+385838,conversa pessoal/conselho,false
+387059,trabalho/negócios,false
+387607,informação geral/curiosidade,false
+388152,criação/ficção e roleplay,false
+390440,estudo/dever de casa,false
+391340,escrita e tradução,false
+393110,trabalho/negócios,false
+393423,programação/TI,false
+393439,criação/ficção e roleplay,true
+393553,conversa pessoal/conselho,false
+394385,conversa pessoal/conselho,false
+394431,informação geral/curiosidade,true
+395044,escrita e tradução,false
+395694,trabalho/negócios,false
+397085,trabalho/negócios,false
+397424,trabalho/negócios,false
+397524,estudo/dever de casa,false
+398531,conversa pessoal/conselho,false
+399641,escrita e tradução,false
 399943,informação geral/curiosidade,false
+406012,trabalho/negócios,false
+410113,informação geral/curiosidade,false
+410599,estudo/dever de casa,false
+411161,criação/ficção e roleplay,false
+411655,programação/TI,false
 411881,criação/ficção e roleplay,false
+412901,informação geral/curiosidade,false
+412925,programação/TI,false
+413334,trabalho/negócios,false
+414441,outros/indefinido,false
+415505,programação/TI,false
+415653,informação geral/curiosidade,false
+415867,conversa pessoal/conselho,false
+420717,informação geral/curiosidade,false
+420761,conversa pessoal/conselho,false
+420843,informação geral/curiosidade,false
+421234,informação geral/curiosidade,false
+421507,criação/ficção e roleplay,false
 422105,conversa pessoal/conselho,false
+422562,conversa pessoal/conselho,false
+424308,conversa pessoal/conselho,false
+424599,escrita e tradução,false
+424602,informação geral/curiosidade,false
 424632,informação geral/curiosidade,false
+425381,programação/TI,false
+425589,conversa pessoal/conselho,false
+426460,estudo/dever de casa,false
+426491,programação/TI,false
+426609,escrita e tradução,false
+426993,conversa pessoal/conselho,false
+427296,outros/indefinido,false
+428310,programação/TI,false
+428755,conversa pessoal/conselho,false
+428906,estudo/dever de casa,false
+429378,programação/TI,false
+429420,trabalho/negócios,false
+429630,programação/TI,false
+429820,trabalho/negócios,false
+429862,conversa pessoal/conselho,false
+429879,conversa pessoal/conselho,false
 429888,conversa pessoal/conselho,false
+430696,estudo/dever de casa,false
+431889,criação/ficção e roleplay,false
 432818,informação geral/curiosidade,false
+433163,informação geral/curiosidade,false
+437091,conversa pessoal/conselho,false
 438766,trabalho/negócios,false
+440548,escrita e tradução,false
+441096,trabalho/negócios,false
+441945,criação/ficção e roleplay,false
+441974,informação geral/curiosidade,false
+442327,estudo/dever de casa,false
+442949,conversa pessoal/conselho,false
+443853,programação/TI,false
+444951,programação/TI,false
+445260,outros/indefinido,true
 445925,informação geral/curiosidade,false
+452241,trabalho/negócios,false
+452997,escrita e tradução,false
 453045,outros/indefinido,false
+454151,conversa pessoal/conselho,false
 454778,informação geral/curiosidade,false
+455341,criação/ficção e roleplay,false
 456214,trabalho/negócios,false
+456721,trabalho/negócios,false
+457993,informação geral/curiosidade,false
+458026,criação/ficção e roleplay,false
+458120,programação/TI,false
+458943,informação geral/curiosidade,false
+459116,conversa pessoal/conselho,false
+463497,conversa pessoal/conselho,false
+463719,informação geral/curiosidade,false
+463841,informação geral/curiosidade,false
 463927,informação geral/curiosidade,false
+463957,criação/ficção e roleplay,true
+464300,informação geral/curiosidade,false
+464704,escrita e tradução,false
 465100,informação geral/curiosidade,false
+466341,estudo/dever de casa,false
+467955,informação geral/curiosidade,false
+470171,informação geral/curiosidade,false
 470249,criação/ficção e roleplay,false
+474282,escrita e tradução,false
 474945,informação geral/curiosidade,false
+475367,conversa pessoal/conselho,false
+480404,conversa pessoal/conselho,false
+480561,conversa pessoal/conselho,false
+481008,trabalho/negócios,false
+482153,criação/ficção e roleplay,false
+482179,criação/ficção e roleplay,false
+483609,informação geral/curiosidade,false
+483748,programação/TI,false
+487465,trabalho/negócios,false
+488495,escrita e tradução,false
+489550,estudo/dever de casa,false
 492899,programação/TI,false
+494670,trabalho/negócios,false
+494790,estudo/dever de casa,false
+496897,programação/TI,false
+497615,outros/indefinido,false
+504837,trabalho/negócios,false
+505889,estudo/dever de casa,false
+506676,escrita e tradução,false
+507268,estudo/dever de casa,false
+507933,criação/ficção e roleplay,false
 508741,outros/indefinido,false
+509778,escrita e tradução,false
+509872,conversa pessoal/conselho,false
+510147,trabalho/negócios,false
 510639,informação geral/curiosidade,true
+511325,conversa pessoal/conselho,false
+511487,trabalho/negócios,false
+512358,conversa pessoal/conselho,false
+512422,programação/TI,false
+517401,programação/TI,false
+518213,estudo/dever de casa,false
+518227,programação/TI,true
+518357,trabalho/negócios,false
 519469,outros/indefinido,true
+520040,informação geral/curiosidade,false
+520992,escrita e tradução,false
+521851,programação/TI,false
+522909,criação/ficção e roleplay,false
+522973,programação/TI,false
+523510,programação/TI,false
 523522,informação geral/curiosidade,false
+523940,outros/indefinido,false
+524325,conversa pessoal/conselho,false
 525004,trabalho/negócios,false
+526328,criação/ficção e roleplay,false
+532239,informação geral/curiosidade,false
+532336,trabalho/negócios,false
+532394,conversa pessoal/conselho,false
+532686,estudo/dever de casa,false
+532919,informação geral/curiosidade,false
+533568,outros/indefinido,false
+534305,estudo/dever de casa,false
+534454,programação/TI,true
 534773,outros/indefinido,true
+536342,criação/ficção e roleplay,false
 536438,informação geral/curiosidade,false
+536745,informação geral/curiosidade,false
 537712,programação/TI,false
+537836,conversa pessoal/conselho,false
+538704,informação geral/curiosidade,false
 539187,estudo/dever de casa,false
+542343,criação/ficção e roleplay,false
+544867,conversa pessoal/conselho,false
+544871,trabalho/negócios,false
+549272,estudo/dever de casa,false
+549452,outros/indefinido,false
 550364,conversa pessoal/conselho,false
+550444,outros/indefinido,false
+550481,informação geral/curiosidade,true
+550854,conversa pessoal/conselho,false
 551452,estudo/dever de casa,false
+551652,outros/indefinido,false
+551692,programação/TI,false
+552946,criação/ficção e roleplay,false
+556711,informação geral/curiosidade,false
+556776,informação geral/curiosidade,false
+556817,outros/indefinido,false
+557077,informação geral/curiosidade,false
+557081,informação geral/curiosidade,false
+557376,estudo/dever de casa,false
+557444,informação geral/curiosidade,false
 558436,informação geral/curiosidade,false
+558481,informação geral/curiosidade,false
+558699,informação geral/curiosidade,false
+558746,informação geral/curiosidade,false
+560008,programação/TI,false
+560997,criação/ficção e roleplay,true
+561718,informação geral/curiosidade,false
+562154,escrita e tradução,false
+563400,trabalho/negócios,false
 564522,programação/TI,false
+565000,criação/ficção e roleplay,false
+568824,informação geral/curiosidade,false
+568870,informação geral/curiosidade,false
+568889,informação geral/curiosidade,false
 568916,informação geral/curiosidade,false
+570600,conversa pessoal/conselho,false
+571744,criação/ficção e roleplay,false
+573668,trabalho/negócios,true
+573830,conversa pessoal/conselho,false
+575183,programação/TI,false
+582363,escrita e tradução,false
 583321,programação/TI,false
+584315,trabalho/negócios,false
+584873,escrita e tradução,false
+585776,programação/TI,false
+586352,outros/indefinido,false
+587294,programação/TI,false
+587484,conversa pessoal/conselho,false
+587592,conversa pessoal/conselho,false
+588415,outros/indefinido,false
+588472,informação geral/curiosidade,false
 588577,informação geral/curiosidade,false
+588761,criação/ficção e roleplay,false
+589003,programação/TI,false
+589290,estudo/dever de casa,false
+596500,escrita e tradução,false
+596588,conversa pessoal/conselho,false
+598780,estudo/dever de casa,false
+599055,informação geral/curiosidade,false
+599340,trabalho/negócios,false
+599844,informação geral/curiosidade,false
+599938,informação geral/curiosidade,false
+600380,informação geral/curiosidade,false
+601181,informação geral/curiosidade,false
+603353,programação/TI,false
+603784,conversa pessoal/conselho,false
+604357,outros/indefinido,false
+608362,estudo/dever de casa,false
+611244,informação geral/curiosidade,false
 612047,programação/TI,true
+612142,informação geral/curiosidade,false
+612175,informação geral/curiosidade,true
+612273,informação geral/curiosidade,false
 612521,programação/TI,false
+612719,informação geral/curiosidade,false
 612801,informação geral/curiosidade,false
+613476,informação geral/curiosidade,false
+614379,informação geral/curiosidade,false
+614431,informação geral/curiosidade,false
+617805,conversa pessoal/conselho,false
+617864,programação/TI,false
+624006,informação geral/curiosidade,false
+624781,escrita e tradução,false
+625439,estudo/dever de casa,false
+626061,programação/TI,false
+627464,programação/TI,false
 629722,informação geral/curiosidade,false
 630757,conversa pessoal/conselho,false
+630875,outros/indefinido,false
+632776,conversa pessoal/conselho,false
+633061,estudo/dever de casa,false
+634090,conversa pessoal/conselho,false
+634754,criação/ficção e roleplay,false
+639024,programação/TI,false
+639349,conversa pessoal/conselho,false
 639468,trabalho/negócios,false
+639622,criação/ficção e roleplay,false
+640670,conversa pessoal/conselho,false
+641258,escrita e tradução,false
+642259,programação/TI,true
+642355,conversa pessoal/conselho,false
+643722,programação/TI,false
+644288,conversa pessoal/conselho,false
+644792,escrita e tradução,false
+645242,criação/ficção e roleplay,false
+645325,programação/TI,false
+645667,programação/TI,false
 646128,criação/ficção e roleplay,false
+648151,conversa pessoal/conselho,false
+648887,programação/TI,false
+649158,trabalho/negócios,false
+649893,informação geral/curiosidade,false
+649952,informação geral/curiosidade,false
+650880,conversa pessoal/conselho,false
+651746,informação geral/curiosidade,true
+651980,trabalho/negócios,false
+652214,conversa pessoal/conselho,false
+652437,criação/ficção e roleplay,false
+654009,conversa pessoal/conselho,false
+654446,conversa pessoal/conselho,false
+654974,estudo/dever de casa,false
+655095,conversa pessoal/conselho,false
+655218,programação/TI,true
+655355,informação geral/curiosidade,false
+656706,informação geral/curiosidade,false
+657419,programação/TI,false
+657430,escrita e tradução,false
+658702,outros/indefinido,false
+661509,conversa pessoal/conselho,false
+662578,estudo/dever de casa,false
+663208,programação/TI,false
+663435,estudo/dever de casa,false
+664404,criação/ficção e roleplay,false
+666110,escrita e tradução,false
+666194,informação geral/curiosidade,false
+666860,escrita e tradução,false
+667302,trabalho/negócios,false
+668997,programação/TI,false
+669380,criação/ficção e roleplay,false
 670553,trabalho/negócios,false
+676208,conversa pessoal/conselho,false
 676687,informação geral/curiosidade,false
+676932,conversa pessoal/conselho,false
+677266,trabalho/negócios,true
+678302,trabalho/negócios,true
+679007,trabalho/negócios,false
+679497,informação geral/curiosidade,false
+679578,estudo/dever de casa,false
+679795,programação/TI,false
+679982,informação geral/curiosidade,true
+680271,trabalho/negócios,false
+680703,criação/ficção e roleplay,false
+680791,estudo/dever de casa,false
+683929,conversa pessoal/conselho,false
+685634,conversa pessoal/conselho,false
+686243,criação/ficção e roleplay,false
+686564,conversa pessoal/conselho,false
+686839,conversa pessoal/conselho,false
+687400,informação geral/curiosidade,false
+687723,informação geral/curiosidade,false
+687763,informação geral/curiosidade,false
+687906,informação geral/curiosidade,false
+687989,trabalho/negócios,false
+688166,informação geral/curiosidade,false
+689842,programação/TI,false
+690323,conversa pessoal/conselho,false
+690559,estudo/dever de casa,false
 690791,informação geral/curiosidade,false
 691014,informação geral/curiosidade,true
+691381,estudo/dever de casa,false
+691842,programação/TI,true
+692022,escrita e tradução,false
 692769,estudo/dever de casa,false
+693225,informação geral/curiosidade,false
+699880,outros/indefinido,true
+699966,informação geral/curiosidade,false
+700222,informação geral/curiosidade,false
+700255,informação geral/curiosidade,false
+700371,informação geral/curiosidade,false
+700397,informação geral/curiosidade,false
+700482,informação geral/curiosidade,false
+700560,informação geral/curiosidade,false
+701040,informação geral/curiosidade,false
+701208,escrita e tradução,false
+701662,estudo/dever de casa,false
+701962,estudo/dever de casa,false
 702179,criação/ficção e roleplay,false
+704468,programação/TI,false
+704794,escrita e tradução,false
+707578,estudo/dever de casa,false
+708048,conversa pessoal/conselho,true
+708607,conversa pessoal/conselho,false
+710191,informação geral/curiosidade,false
+710229,informação geral/curiosidade,false
+710419,outros/indefinido,false
+710421,programação/TI,false
+710665,estudo/dever de casa,false
+710691,informação geral/curiosidade,false
+710700,estudo/dever de casa,false
+711313,estudo/dever de casa,false
+711785,programação/TI,false
+711991,informação geral/curiosidade,false
+712076,informação geral/curiosidade,true
+712217,estudo/dever de casa,false
 712582,informação geral/curiosidade,false
+712596,estudo/dever de casa,true
+712701,estudo/dever de casa,false
+712702,conversa pessoal/conselho,false
+713009,criação/ficção e roleplay,false
+718627,estudo/dever de casa,false
 718682,estudo/dever de casa,false
+718996,estudo/dever de casa,false
+720675,escrita e tradução,false
+721030,conversa pessoal/conselho,false
+722165,informação geral/curiosidade,false
+722677,conversa pessoal/conselho,false
+723554,outros/indefinido,false
+726180,programação/TI,false
+728799,estudo/dever de casa,false
+730380,criação/ficção e roleplay,false
+730638,programação/TI,true
+730695,criação/ficção e roleplay,false
+730846,criação/ficção e roleplay,false
+731587,escrita e tradução,false
+731772,informação geral/curiosidade,false
+732618,outros/indefinido,true
+733314,estudo/dever de casa,false
+734053,escrita e tradução,false
+735867,conversa pessoal/conselho,false
+741446,estudo/dever de casa,false
+742199,criação/ficção e roleplay,false
+743555,estudo/dever de casa,false
+744067,escrita e tradução,false
+745139,programação/TI,false
+745154,outros/indefinido,true
+745563,estudo/dever de casa,false
+745642,informação geral/curiosidade,false
+753211,criação/ficção e roleplay,false
+754087,estudo/dever de casa,false
 754196,trabalho/negócios,false
+754688,trabalho/negócios,false
+754783,trabalho/negócios,false
+754864,conversa pessoal/conselho,false
+755059,trabalho/negócios,false
+755097,estudo/dever de casa,false
+755428,escrita e tradução,false
+755722,conversa pessoal/conselho,false
+756591,programação/TI,false
 756803,programação/TI,false
+757006,estudo/dever de casa,false
+757668,conversa pessoal/conselho,false
+757687,estudo/dever de casa,false
+761115,programação/TI,false
+761514,conversa pessoal/conselho,false
+761524,trabalho/negócios,false
+763746,criação/ficção e roleplay,false
+764177,programação/TI,false
+764868,trabalho/negócios,false
+765130,programação/TI,false
+765176,conversa pessoal/conselho,false
 765211,informação geral/curiosidade,false
+766361,trabalho/negócios,false
+768312,estudo/dever de casa,false
+769672,criação/ficção e roleplay,false
+769985,conversa pessoal/conselho,false
+775627,informação geral/curiosidade,false
+777275,escrita e tradução,false
+778026,conversa pessoal/conselho,false
+778056,programação/TI,true
+778136,trabalho/negócios,true
+778227,estudo/dever de casa,false
+780678,informação geral/curiosidade,false
+780944,escrita e tradução,false
+782905,conversa pessoal/conselho,false
+784506,programação/TI,false
+789085,estudo/dever de casa,false
+789524,estudo/dever de casa,false
+789920,escrita e tradução,false
+791325,conversa pessoal/conselho,false
 792346,outros/indefinido,true
+792582,programação/TI,false
+794619,programação/TI,false
+797755,programação/TI,true
+801396,informação geral/curiosidade,false
+803807,conversa pessoal/conselho,false
+804914,estudo/dever de casa,false
+806189,informação geral/curiosidade,false
+806855,programação/TI,false
+807015,informação geral/curiosidade,false
+807407,outros/indefinido,false
+809965,escrita e tradução,false
+816565,estudo/dever de casa,false
+817053,informação geral/curiosidade,false
+817134,escrita e tradução,false
+818713,informação geral/curiosidade,false
+819894,conversa pessoal/conselho,false
+820084,estudo/dever de casa,false
+820110,criação/ficção e roleplay,false
+820279,trabalho/negócios,false
+820433,informação geral/curiosidade,false
+820467,informação geral/curiosidade,false
 820499,informação geral/curiosidade,false
+820621,programação/TI,false
+821512,estudo/dever de casa,false
+821961,estudo/dever de casa,false
+832051,programação/TI,false
 834759,conversa pessoal/conselho,false
+835367,conversa pessoal/conselho,false
+835869,programação/TI,false
 835941,informação geral/curiosidade,false
 836222,criação/ficção e roleplay,false
+836533,estudo/dever de casa,false
+836809,criação/ficção e roleplay,false
+837002,estudo/dever de casa,false
+843032,estudo/dever de casa,false
+843773,estudo/dever de casa,false
+843865,outros/indefinido,true
+845162,criação/ficção e roleplay,false
 846728,informação geral/curiosidade,false
+846800,conversa pessoal/conselho,false
+847292,escrita e tradução,false
 847441,conversa pessoal/conselho,false
+847463,informação geral/curiosidade,false
+847508,informação geral/curiosidade,false
+848932,escrita e tradução,false
+849860,conversa pessoal/conselho,false
+851394,criação/ficção e roleplay,false
+851409,outros/indefinido,false
+853505,informação geral/curiosidade,false
+854869,programação/TI,false
+865391,programação/TI,false
+865690,estudo/dever de casa,false
+867291,informação geral/curiosidade,false
+867474,informação geral/curiosidade,false
+867814,informação geral/curiosidade,false
+867870,informação geral/curiosidade,false
+869380,estudo/dever de casa,false
+870826,criação/ficção e roleplay,true
+871277,programação/TI,false
+876338,trabalho/negócios,false
+878493,informação geral/curiosidade,false
+878947,trabalho/negócios,false
+879455,informação geral/curiosidade,false
+880427,informação geral/curiosidade,false
+880900,outros/indefinido,false
+881279,programação/TI,false
+881515,escrita e tradução,false
+881829,programação/TI,false
+885223,informação geral/curiosidade,false
+885348,informação geral/curiosidade,false
+886095,outros/indefinido,false
+886342,informação geral/curiosidade,false
+893550,estudo/dever de casa,false
+896013,conversa pessoal/conselho,false
+898084,trabalho/negócios,false
+898585,programação/TI,false
+898636,conversa pessoal/conselho,false
+898800,criação/ficção e roleplay,false
+900207,outros/indefinido,false
+900292,escrita e tradução,false
+900823,programação/TI,true
+900932,informação geral/curiosidade,false
+907785,conversa pessoal/conselho,false
+908423,informação geral/curiosidade,false
+910037,criação/ficção e roleplay,false
+911440,estudo/dever de casa,false
+912477,informação geral/curiosidade,false
+913214,informação geral/curiosidade,false
+916352,criação/ficção e roleplay,false
 916366,outros/indefinido,false
+919788,conversa pessoal/conselho,false
+919892,estudo/dever de casa,false
+923536,conversa pessoal/conselho,false
+923832,criação/ficção e roleplay,false
+923976,programação/TI,true
+925853,informação geral/curiosidade,false
+926029,informação geral/curiosidade,false
+927649,criação/ficção e roleplay,false
+928843,escrita e tradução,false
+930080,outros/indefinido,true
+930622,conversa pessoal/conselho,true
+931153,programação/TI,false
+935658,programação/TI,true
+936389,criação/ficção e roleplay,false
+937534,outros/indefinido,false
+938019,outros/indefinido,false
 939346,criação/ficção e roleplay,true
 940139,criação/ficção e roleplay,false
+943452,estudo/dever de casa,false
+943757,conversa pessoal/conselho,false
+951385,conversa pessoal/conselho,false
+951767,outros/indefinido,true
+952437,informação geral/curiosidade,false
 957447,criação/ficção e roleplay,false
+957502,criação/ficção e roleplay,false
+961682,conversa pessoal/conselho,false
+966876,informação geral/curiosidade,false
+967947,programação/TI,false
+971585,conversa pessoal/conselho,false
+973175,conversa pessoal/conselho,false
+973392,escrita e tradução,false
+973529,trabalho/negócios,false
+973576,programação/TI,false
+977368,estudo/dever de casa,false
+982666,conversa pessoal/conselho,false
+984999,outros/indefinido,false
+988843,informação geral/curiosidade,false
+990034,criação/ficção e roleplay,false
+990391,trabalho/negócios,false
+995561,estudo/dever de casa,false
+996487,estudo/dever de casa,false
+997277,escrita e tradução,false
+1003170,conversa pessoal/conselho,false
+1004146,estudo/dever de casa,false
+1005812,outros/indefinido,false
+1007499,criação/ficção e roleplay,false
+1012838,criação/ficção e roleplay,false
+1017029,informação geral/curiosidade,false
+1017107,estudo/dever de casa,false
+1017878,conversa pessoal/conselho,false
+1017932,outros/indefinido,false
+1018659,escrita e tradução,true
+1019938,conversa pessoal/conselho,false
+1019963,estudo/dever de casa,false
+1020690,estudo/dever de casa,false
+1021993,criação/ficção e roleplay,false
+1022639,informação geral/curiosidade,false
+1026989,trabalho/negócios,false
 1030307,informação geral/curiosidade,false
+1030930,conversa pessoal/conselho,false
+1031616,estudo/dever de casa,false
+1032311,conversa pessoal/conselho,false
+1034573,informação geral/curiosidade,false
+1035268,programação/TI,false
+1040939,outros/indefinido,false
+1042894,informação geral/curiosidade,false
+1043919,trabalho/negócios,false
+1044392,programação/TI,false
 1045399,estudo/dever de casa,false
+1047584,informação geral/curiosidade,false
+1048624,informação geral/curiosidade,false
+1052145,escrita e tradução,false
+1052693,programação/TI,false
+1053742,conversa pessoal/conselho,false
+1054536,conversa pessoal/conselho,false
+1055375,conversa pessoal/conselho,false
+1057612,conversa pessoal/conselho,false
+1060127,escrita e tradução,false
+1060609,conversa pessoal/conselho,false
+1065959,criação/ficção e roleplay,false
+1065964,criação/ficção e roleplay,false
+1066615,conversa pessoal/conselho,false
+1067304,programação/TI,true
+1069417,programação/TI,false
+1070208,conversa pessoal/conselho,false
+1071262,conversa pessoal/conselho,false
+1071890,conversa pessoal/conselho,false
+1076439,conversa pessoal/conselho,false
+1077454,informação geral/curiosidade,false
+1079398,conversa pessoal/conselho,false
+1080061,conversa pessoal/conselho,false
+1081597,conversa pessoal/conselho,false
+1082693,escrita e tradução,false
+1089222,informação geral/curiosidade,true
+1090751,informação geral/curiosidade,false
+1091398,conversa pessoal/conselho,false
+1091616,criação/ficção e roleplay,false
+1096043,informação geral/curiosidade,false
+1097449,criação/ficção e roleplay,false
+1098480,informação geral/curiosidade,false
+1099480,conversa pessoal/conselho,false
+1099618,estudo/dever de casa,false
+1101130,informação geral/curiosidade,false
+1101239,programação/TI,false
+1102937,criação/ficção e roleplay,false
+1104617,programação/TI,false
+1109361,estudo/dever de casa,true
+1109957,trabalho/negócios,false
+1110700,informação geral/curiosidade,false
+1112011,estudo/dever de casa,false
+1112024,informação geral/curiosidade,false
+1113072,conversa pessoal/conselho,false
+1114163,estudo/dever de casa,false
+1120884,estudo/dever de casa,false
+1121719,trabalho/negócios,false
+1123613,conversa pessoal/conselho,false
+1125363,criação/ficção e roleplay,false
+1125521,informação geral/curiosidade,false
+1125693,estudo/dever de casa,false
+1126494,estudo/dever de casa,false
+1126541,estudo/dever de casa,false
+1136804,conversa pessoal/conselho,false
+1137219,trabalho/negócios,true
+1137368,conversa pessoal/conselho,false
+1138604,conversa pessoal/conselho,false
+1138749,estudo/dever de casa,false
 1139163,estudo/dever de casa,false
+1139981,programação/TI,false
+1140836,conversa pessoal/conselho,false
+1143808,conversa pessoal/conselho,false
+1146573,conversa pessoal/conselho,false
+1147668,escrita e tradução,false
+1148469,estudo/dever de casa,false
+1150664,escrita e tradução,false
+1151177,conversa pessoal/conselho,false
+1153239,programação/TI,false
+1153927,conversa pessoal/conselho,false
+1155276,conversa pessoal/conselho,false
+1162360,escrita e tradução,false
+1163597,outros/indefinido,true
+1164402,estudo/dever de casa,false
+1165529,informação geral/curiosidade,false
+1167076,programação/TI,false
+1167431,conversa pessoal/conselho,false
+1172253,criação/ficção e roleplay,false
+1173101,informação geral/curiosidade,false
+1174535,conversa pessoal/conselho,false
+1174679,conversa pessoal/conselho,false
+1174823,informação geral/curiosidade,false
+1175094,conversa pessoal/conselho,false
+1180046,conversa pessoal/conselho,false
+1185905,informação geral/curiosidade,false
+1186132,informação geral/curiosidade,false
+1191072,escrita e tradução,false
+1191108,conversa pessoal/conselho,false
+1191193,estudo/dever de casa,false
+1191954,informação geral/curiosidade,true
+1192041,trabalho/negócios,false
 1192083,conversa pessoal/conselho,false
+1192363,conversa pessoal/conselho,false
+1192519,escrita e tradução,false
+1193329,conversa pessoal/conselho,false
+1193580,estudo/dever de casa,false
+1195291,informação geral/curiosidade,false
+1195529,criação/ficção e roleplay,false
+1195787,informação geral/curiosidade,false
+1196623,trabalho/negócios,false
+1196656,criação/ficção e roleplay,false
+1197675,conversa pessoal/conselho,false
+1198801,conversa pessoal/conselho,false
+1200680,outros/indefinido,false
+1200699,estudo/dever de casa,false
+1201425,programação/TI,false
+1201462,estudo/dever de casa,false
+1204375,criação/ficção e roleplay,false
+1208127,escrita e tradução,true
+1208612,trabalho/negócios,false
+1208770,trabalho/negócios,false
+1209025,conversa pessoal/conselho,false
+1209124,estudo/dever de casa,false
+1210694,programação/TI,false
+1210934,informação geral/curiosidade,false
+1211269,informação geral/curiosidade,false
+1211806,conversa pessoal/conselho,false
+1211873,informação geral/curiosidade,false
 1211952,conversa pessoal/conselho,false
+1212349,criação/ficção e roleplay,false
+1216198,trabalho/negócios,false
+1216818,criação/ficção e roleplay,true
+1217408,criação/ficção e roleplay,false
+1218459,conversa pessoal/conselho,false
+1218592,criação/ficção e roleplay,false
 1219708,criação/ficção e roleplay,true
+1220662,conversa pessoal/conselho,false
+1221499,estudo/dever de casa,false
+1223214,informação geral/curiosidade,true
+1223782,informação geral/curiosidade,false
+1224303,trabalho/negócios,false
+1225370,conversa pessoal/conselho,false
+1226899,trabalho/negócios,false
+1227136,programação/TI,false
+1227996,informação geral/curiosidade,false
+1228294,informação geral/curiosidade,false
+1228369,conversa pessoal/conselho,false
+1228513,estudo/dever de casa,false
+1228708,conversa pessoal/conselho,false
+1228803,criação/ficção e roleplay,false
+1229266,criação/ficção e roleplay,false
+1230051,conversa pessoal/conselho,false
+1232576,criação/ficção e roleplay,false
+1233181,trabalho/negócios,false
+1233193,informação geral/curiosidade,false
+1233841,conversa pessoal/conselho,true
+1233847,criação/ficção e roleplay,false
+1234295,criação/ficção e roleplay,true
+1236636,informação geral/curiosidade,false
+1238012,estudo/dever de casa,false
+1238896,trabalho/negócios,false
+1240562,informação geral/curiosidade,false
+1240918,conversa pessoal/conselho,false
+1241002,outros/indefinido,true
+1241376,criação/ficção e roleplay,false
+1243734,estudo/dever de casa,false
+1243946,trabalho/negócios,false
+1244066,estudo/dever de casa,false
+1244132,estudo/dever de casa,false
+1244151,conversa pessoal/conselho,false
+1244276,informação geral/curiosidade,false
+1244410,programação/TI,true
+1244479,conversa pessoal/conselho,false
+1244663,criação/ficção e roleplay,false
+1245260,programação/TI,false
+1245553,programação/TI,false
+1245635,programação/TI,false
 1247399,estudo/dever de casa,false
 1251351,informação geral/curiosidade,false
+1253668,informação geral/curiosidade,false
+1253742,escrita e tradução,false
+1253901,informação geral/curiosidade,false
+1254585,trabalho/negócios,false
+1255146,informação geral/curiosidade,false
+1258639,outros/indefinido,true
+1261377,estudo/dever de casa,false
+1261817,conversa pessoal/conselho,false
+1262285,trabalho/negócios,false
+1262738,programação/TI,false
+1263567,conversa pessoal/conselho,false
+1268023,conversa pessoal/conselho,false
+1269276,informação geral/curiosidade,false
+1269834,conversa pessoal/conselho,false
+1270209,informação geral/curiosidade,false
+1271893,estudo/dever de casa,false
+1274659,conversa pessoal/conselho,false
+1277009,estudo/dever de casa,false
+1277871,programação/TI,false
+1279269,criação/ficção e roleplay,false
+1282446,trabalho/negócios,false
+1282788,trabalho/negócios,false
+1284122,informação geral/curiosidade,false
+1284317,estudo/dever de casa,false
+1286674,escrita e tradução,false
+1290230,conversa pessoal/conselho,false
+1291584,criação/ficção e roleplay,false
+1292395,programação/TI,false
+1292814,estudo/dever de casa,false
+1293862,informação geral/curiosidade,false
+1295370,escrita e tradução,false
+1298673,trabalho/negócios,false
+1299160,conversa pessoal/conselho,false
+1299513,criação/ficção e roleplay,false
+1299536,trabalho/negócios,false
+1301807,estudo/dever de casa,false
+1302077,conversa pessoal/conselho,false
+1302759,programação/TI,false
+1303893,informação geral/curiosidade,false
+1305944,criação/ficção e roleplay,true
+1307267,escrita e tradução,false
+1309096,escrita e tradução,false
+1310033,outros/indefinido,true
+1312355,criação/ficção e roleplay,false
+1312642,informação geral/curiosidade,false
+1313098,informação geral/curiosidade,false
+1313314,informação geral/curiosidade,false
+1313356,conversa pessoal/conselho,false
+1313598,estudo/dever de casa,false
+1313738,outros/indefinido,false
+1314403,trabalho/negócios,false
+1314555,informação geral/curiosidade,false
+1316968,estudo/dever de casa,false
+1317415,informação geral/curiosidade,false
+1318533,informação geral/curiosidade,false
+1318616,estudo/dever de casa,false
+1318664,criação/ficção e roleplay,false
+1319723,escrita e tradução,false
+1322380,trabalho/negócios,false
+1322400,informação geral/curiosidade,false
+1323545,programação/TI,false
+1323658,programação/TI,false
+1323920,trabalho/negócios,false
 1325566,estudo/dever de casa,false
+1327874,criação/ficção e roleplay,false
+1327991,escrita e tradução,false
+1328023,escrita e tradução,false
+1328076,estudo/dever de casa,false
+1328207,informação geral/curiosidade,false
+1328478,criação/ficção e roleplay,false
+1328604,criação/ficção e roleplay,false
+1329381,conversa pessoal/conselho,false
+1329495,estudo/dever de casa,false
+1329518,informação geral/curiosidade,false
+1329584,estudo/dever de casa,false
+1329727,escrita e tradução,false
+1330130,conversa pessoal/conselho,false
+1331553,outros/indefinido,false
+1334647,programação/TI,false
+1335301,criação/ficção e roleplay,false
+1335740,estudo/dever de casa,false
+1335856,estudo/dever de casa,false
+1335883,estudo/dever de casa,false
+1337465,escrita e tradução,false
+1337492,informação geral/curiosidade,false
+1337502,estudo/dever de casa,false
+1338743,trabalho/negócios,false
+1338811,estudo/dever de casa,false
+1339547,informação geral/curiosidade,false
+1343959,conversa pessoal/conselho,false
 1344167,conversa pessoal/conselho,false
+1346711,criação/ficção e roleplay,true
+1346937,informação geral/curiosidade,false
+1348160,informação geral/curiosidade,false
+1348276,escrita e tradução,false
+1348420,informação geral/curiosidade,false
+1348637,conversa pessoal/conselho,false
+1348668,criação/ficção e roleplay,false
+1348671,conversa pessoal/conselho,false
+1348710,estudo/dever de casa,false
 1348732,estudo/dever de casa,false
+1348973,trabalho/negócios,false
+1349022,escrita e tradução,false
+1349265,informação geral/curiosidade,false
+1349309,outros/indefinido,false
+1350067,informação geral/curiosidade,false
+1350111,conversa pessoal/conselho,false
+1351581,criação/ficção e roleplay,false
+1352017,trabalho/negócios,false
+1352093,trabalho/negócios,false
+1354027,escrita e tradução,false
+1354140,criação/ficção e roleplay,false
+1354784,trabalho/negócios,false
 1357458,informação geral/curiosidade,false
 1357675,escrita e tradução,false
+1358369,programação/TI,false
+1359307,informação geral/curiosidade,false
+1359391,outros/indefinido,false
+1361667,estudo/dever de casa,false
+1362104,informação geral/curiosidade,false
+1363308,informação geral/curiosidade,false
 1363609,criação/ficção e roleplay,false
+1364013,conversa pessoal/conselho,false
+1364197,criação/ficção e roleplay,false
+1364313,conversa pessoal/conselho,false
+1364481,outros/indefinido,false
+1366311,conversa pessoal/conselho,false
+1366685,escrita e tradução,false
+1367022,escrita e tradução,false
+1367490,estudo/dever de casa,false
+1369086,conversa pessoal/conselho,false
+1369807,conversa pessoal/conselho,false
 1371265,programação/TI,false
+1371429,informação geral/curiosidade,false
+1371601,criação/ficção e roleplay,false
+1371697,trabalho/negócios,true
+1372243,informação geral/curiosidade,false
+1372853,criação/ficção e roleplay,false
+1376154,criação/ficção e roleplay,false
+1376476,criação/ficção e roleplay,false
+1377148,criação/ficção e roleplay,false
+1377870,informação geral/curiosidade,false
+1378509,criação/ficção e roleplay,false
+1379295,trabalho/negócios,false
+1379468,programação/TI,false
+1380757,escrita e tradução,false
+1381258,estudo/dever de casa,false
+1381705,trabalho/negócios,false
+1381936,estudo/dever de casa,false
+1382559,estudo/dever de casa,false
+1382672,escrita e tradução,false
+1383160,informação geral/curiosidade,false
+1383236,escrita e tradução,false
+1383427,conversa pessoal/conselho,false
+1383536,conversa pessoal/conselho,false
+1383574,informação geral/curiosidade,false
+1386644,informação geral/curiosidade,false
+1386827,conversa pessoal/conselho,false
+1387206,conversa pessoal/conselho,false
+1387238,estudo/dever de casa,false
+1387595,informação geral/curiosidade,false
+1387718,informação geral/curiosidade,false
+1387905,escrita e tradução,false
+1389001,conversa pessoal/conselho,false
+1389699,informação geral/curiosidade,false
+1391165,informação geral/curiosidade,false
+1391435,programação/TI,false
+1391554,programação/TI,false
+1391923,conversa pessoal/conselho,false
+1391977,estudo/dever de casa,false
+1392711,criação/ficção e roleplay,false
+1392988,outros/indefinido,false
+1393597,programação/TI,false
 1395745,escrita e tradução,false
+1396683,conversa pessoal/conselho,false
+1397273,programação/TI,false
+1398334,programação/TI,false
+1398799,escrita e tradução,false
+1402574,informação geral/curiosidade,false
+1406968,estudo/dever de casa,false
+1407166,trabalho/negócios,false
+1407215,criação/ficção e roleplay,false
+1409445,criação/ficção e roleplay,false
+1409547,criação/ficção e roleplay,false
+1409551,informação geral/curiosidade,false
+1409600,programação/TI,false
+1411529,estudo/dever de casa,false
 1411679,trabalho/negócios,false
 1412958,criação/ficção e roleplay,false
+1413301,escrita e tradução,false
+1414365,trabalho/negócios,false
+1414631,criação/ficção e roleplay,false
+1417431,estudo/dever de casa,false
+1418790,conversa pessoal/conselho,false
+1419477,programação/TI,false
+1420078,trabalho/negócios,false
+1420124,informação geral/curiosidade,false
+1420201,trabalho/negócios,false
+1420499,conversa pessoal/conselho,false
+1421005,estudo/dever de casa,false
 1422921,escrita e tradução,false
+1423031,estudo/dever de casa,false
+1423399,outros/indefinido,false
+1423459,trabalho/negócios,false
+1423838,escrita e tradução,false
+1424142,estudo/dever de casa,false
+1424486,conversa pessoal/conselho,false
+1428572,estudo/dever de casa,false
+1428913,criação/ficção e roleplay,false
+1428981,programação/TI,false
+1429385,criação/ficção e roleplay,false
+1429828,informação geral/curiosidade,false
+1430010,criação/ficção e roleplay,false
+1431973,estudo/dever de casa,false
+1432040,estudo/dever de casa,false
+1432461,escrita e tradução,false
+1432922,estudo/dever de casa,false
+1433428,programação/TI,false
+1436928,estudo/dever de casa,false
+1437415,criação/ficção e roleplay,false
+1437865,trabalho/negócios,false
+1438178,escrita e tradução,false
+1439169,escrita e tradução,false
+1439462,programação/TI,true
+1439970,criação/ficção e roleplay,false
+1441313,criação/ficção e roleplay,false
+1443791,informação geral/curiosidade,false
+1443823,conversa pessoal/conselho,false
+1446532,informação geral/curiosidade,false
+1448977,escrita e tradução,false
+1451604,trabalho/negócios,false
 1452070,escrita e tradução,false
+1452108,outros/indefinido,false
+1453918,programação/TI,false
+1454072,trabalho/negócios,false
+1457243,conversa pessoal/conselho,false
+1457857,estudo/dever de casa,false
+1458044,escrita e tradução,false
+1458881,outros/indefinido,true
+1459388,conversa pessoal/conselho,false
+1459398,escrita e tradução,false
+1462222,estudo/dever de casa,false
+1463327,criação/ficção e roleplay,false
+1463427,estudo/dever de casa,false
+1463727,programação/TI,false
+1464917,informação geral/curiosidade,false
+1466534,escrita e tradução,false
+1467256,estudo/dever de casa,false
+1467865,conversa pessoal/conselho,false
+1468012,criação/ficção e roleplay,false
+1468039,conversa pessoal/conselho,false
+1468204,conversa pessoal/conselho,false
+1469139,criação/ficção e roleplay,false
+1469206,informação geral/curiosidade,false
+1469402,criação/ficção e roleplay,false
+1469453,conversa pessoal/conselho,false
+1469906,trabalho/negócios,true
+1470264,informação geral/curiosidade,false
+1472502,escrita e tradução,false
+1473039,escrita e tradução,false
+1473718,outros/indefinido,false
+1473979,informação geral/curiosidade,false
+1474948,criação/ficção e roleplay,false
+1475017,criação/ficção e roleplay,false
+1475789,programação/TI,false
+1478329,conversa pessoal/conselho,false
+1479237,informação geral/curiosidade,false
+1479491,informação geral/curiosidade,false
+1480341,criação/ficção e roleplay,false
+1481512,estudo/dever de casa,false
+1484445,conversa pessoal/conselho,false
+1485910,escrita e tradução,false
+1486223,conversa pessoal/conselho,false
+1486481,informação geral/curiosidade,false
+1486774,criação/ficção e roleplay,false
+1490401,programação/TI,false
+1490411,escrita e tradução,false
+1490508,estudo/dever de casa,false
+1490922,informação geral/curiosidade,false
+1491763,conversa pessoal/conselho,false
+1493609,conversa pessoal/conselho,false
+1494006,programação/TI,false
 1494253,estudo/dever de casa,false
+1494747,conversa pessoal/conselho,false
+1495207,escrita e tradução,false
+1495230,criação/ficção e roleplay,false
+1497484,criação/ficção e roleplay,false
+1497793,criação/ficção e roleplay,false
+1497795,escrita e tradução,false
+1498145,outros/indefinido,false
+1498352,estudo/dever de casa,false
+1499065,programação/TI,false
+1499100,programação/TI,false
+1499294,criação/ficção e roleplay,false
+1499866,outros/indefinido,false
+1499890,estudo/dever de casa,false
+1501355,criação/ficção e roleplay,false
+1502489,escrita e tradução,false
+1503645,estudo/dever de casa,false
+1503648,criação/ficção e roleplay,false
+1503962,informação geral/curiosidade,false
+1504386,escrita e tradução,false
+1504651,informação geral/curiosidade,false
+1506440,conversa pessoal/conselho,false
+1507385,conversa pessoal/conselho,false
+1508064,informação geral/curiosidade,false
+1508152,estudo/dever de casa,false
+1508244,conversa pessoal/conselho,false
+1508424,informação geral/curiosidade,false
+1508510,estudo/dever de casa,false
+1510187,informação geral/curiosidade,false
+1510379,estudo/dever de casa,false
+1510444,estudo/dever de casa,false
+1510874,criação/ficção e roleplay,false
+1510949,informação geral/curiosidade,false
+1511344,criação/ficção e roleplay,false
+1515365,estudo/dever de casa,false
+1516628,outros/indefinido,false
+1516888,estudo/dever de casa,false
+1517633,conversa pessoal/conselho,false
 1519170,escrita e tradução,false
+1520947,estudo/dever de casa,false
+1521076,programação/TI,false
+1521102,conversa pessoal/conselho,false
 1521242,estudo/dever de casa,false
+1521325,conversa pessoal/conselho,false
+1521554,conversa pessoal/conselho,false
+1523337,escrita e tradução,false
+1523596,informação geral/curiosidade,false
+1523627,programação/TI,false
+1524345,estudo/dever de casa,false
+1525213,informação geral/curiosidade,false
+1525497,conversa pessoal/conselho,false
+1525644,informação geral/curiosidade,false
 1528457,escrita e tradução,false
 1529017,estudo/dever de casa,false
+1529170,conversa pessoal/conselho,false
+1531025,estudo/dever de casa,false
+1531259,estudo/dever de casa,false
+1531304,escrita e tradução,false
+1531350,programação/TI,false
+1531740,estudo/dever de casa,false
+1532415,criação/ficção e roleplay,false
+1532839,criação/ficção e roleplay,false
+1533010,outros/indefinido,false
+1535068,informação geral/curiosidade,false
+1535296,escrita e tradução,false
+1536565,criação/ficção e roleplay,false
+1538525,estudo/dever de casa,false
+1538776,estudo/dever de casa,false
+1540082,informação geral/curiosidade,false
+1542136,trabalho/negócios,false
+1542385,conversa pessoal/conselho,false
+1542499,estudo/dever de casa,false
+1542534,escrita e tradução,false
+1544480,programação/TI,false
+1545729,programação/TI,false
+1545796,trabalho/negócios,false
 1547289,estudo/dever de casa,false
+1547620,escrita e tradução,false
+1547667,programação/TI,false
+1547789,informação geral/curiosidade,false
+1550341,escrita e tradução,false
+1551314,conversa pessoal/conselho,false
+1551665,conversa pessoal/conselho,false
+1552038,outros/indefinido,false
 1554090,escrita e tradução,false
+1554249,programação/TI,false
+1554433,programação/TI,false
+1556163,criação/ficção e roleplay,false
 1556286,criação/ficção e roleplay,false
+1556634,informação geral/curiosidade,false
+1560732,conversa pessoal/conselho,false
 1561478,estudo/dever de casa,false
+1561735,outros/indefinido,true
+1563249,informação geral/curiosidade,false
+1563275,escrita e tradução,false
+1563504,informação geral/curiosidade,false
+1563849,conversa pessoal/conselho,false
+1568741,conversa pessoal/conselho,false
+1568847,conversa pessoal/conselho,false
+1569305,informação geral/curiosidade,false
+1569537,estudo/dever de casa,false
+1569650,conversa pessoal/conselho,false
+1569729,criação/ficção e roleplay,false
+1569861,trabalho/negócios,false
+1570632,conversa pessoal/conselho,false
+1570715,criação/ficção e roleplay,false
+1571161,estudo/dever de casa,false
+1572730,trabalho/negócios,false
 1573290,estudo/dever de casa,false
+1573401,estudo/dever de casa,false
+1573402,programação/TI,false
+1574028,escrita e tradução,false
+1577119,criação/ficção e roleplay,false
+1577903,outros/indefinido,false
+1580283,criação/ficção e roleplay,false
+1581475,escrita e tradução,false
+1581656,escrita e tradução,false
+1582434,programação/TI,false
+1582487,conversa pessoal/conselho,false
+1583597,conversa pessoal/conselho,false
 1585668,escrita e tradução,false
+1586303,conversa pessoal/conselho,false
+1586370,estudo/dever de casa,false
+1586487,criação/ficção e roleplay,false
+1586960,escrita e tradução,false
+1587361,trabalho/negócios,false
+1587425,programação/TI,false
+1587768,estudo/dever de casa,false
+1588801,estudo/dever de casa,false
 1589199,escrita e tradução,false
+1590639,escrita e tradução,false
+1595044,outros/indefinido,true
+1596366,informação geral/curiosidade,false
+1596733,escrita e tradução,false
+1597036,escrita e tradução,false
+1598452,escrita e tradução,false
+1599973,conversa pessoal/conselho,false
+1600030,estudo/dever de casa,false
+1600873,escrita e tradução,false
+1601107,estudo/dever de casa,false
 1601119,estudo/dever de casa,false
+1601238,estudo/dever de casa,false
+1601362,estudo/dever de casa,false
+1601530,conversa pessoal/conselho,false
+1601534,informação geral/curiosidade,false
+1604684,escrita e tradução,false
+1605826,programação/TI,false
+1606219,estudo/dever de casa,false
+1606391,conversa pessoal/conselho,false
+1607702,informação geral/curiosidade,false
+1609654,escrita e tradução,false
+1610334,programação/TI,false
+1612368,escrita e tradução,false
+1614228,conversa pessoal/conselho,false
+1614313,programação/TI,false
+1614503,escrita e tradução,false
 1614892,informação geral/curiosidade,false
 1615576,conversa pessoal/conselho,false
+1615767,informação geral/curiosidade,false
+1616522,trabalho/negócios,false
+1617076,conversa pessoal/conselho,false
 1617351,informação geral/curiosidade,false
+1619030,estudo/dever de casa,false
+1622630,programação/TI,false
 1622860,conversa pessoal/conselho,false
+1626110,criação/ficção e roleplay,false
+1626633,programação/TI,false
+1627116,programação/TI,false
+1627222,trabalho/negócios,false
+1627251,escrita e tradução,false
+1627301,conversa pessoal/conselho,false
+1627383,programação/TI,true
+1628332,criação/ficção e roleplay,false
+1630824,conversa pessoal/conselho,false
+1631918,escrita e tradução,false
 1632269,criação/ficção e roleplay,false
+1632341,informação geral/curiosidade,false
+1633971,estudo/dever de casa,false
+1636942,informação geral/curiosidade,false
+1637501,conversa pessoal/conselho,false
+1642807,escrita e tradução,false
+1643397,escrita e tradução,false
+1645021,outros/indefinido,false
+1649282,conversa pessoal/conselho,false
+1649994,informação geral/curiosidade,false
+1653388,conversa pessoal/conselho,false
+1656403,trabalho/negócios,false
+1658153,escrita e tradução,false
+1659236,estudo/dever de casa,false
+1660029,conversa pessoal/conselho,false
+1660105,conversa pessoal/conselho,false
+1662130,conversa pessoal/conselho,false
 1662225,outros/indefinido,true
+1662509,conversa pessoal/conselho,false
+1665729,estudo/dever de casa,false
+1667548,estudo/dever de casa,false
+1668022,criação/ficção e roleplay,false
+1669266,informação geral/curiosidade,false
+1670588,conversa pessoal/conselho,false
+1672771,informação geral/curiosidade,false
+1672881,estudo/dever de casa,false
 1672965,escrita e tradução,false
+1673436,estudo/dever de casa,false
+1673582,trabalho/negócios,false
+1673675,conversa pessoal/conselho,false
+1673927,trabalho/negócios,false
+1674020,estudo/dever de casa,false
+1675171,escrita e tradução,false
+1675820,estudo/dever de casa,false
+1676991,programação/TI,false
+1678874,criação/ficção e roleplay,false
+1679039,informação geral/curiosidade,false
+1680013,programação/TI,false
+1680035,escrita e tradução,false
+1684330,criação/ficção e roleplay,false
+1685606,conversa pessoal/conselho,false
+1686910,trabalho/negócios,false
+1688518,programação/TI,false
+1689247,escrita e tradução,false
+1689542,trabalho/negócios,false
+1691530,trabalho/negócios,false
+1692559,estudo/dever de casa,false
+1692585,programação/TI,false
+1692628,estudo/dever de casa,false
+1692634,estudo/dever de casa,false
+1693130,programação/TI,false
+1693339,escrita e tradução,false
+1693414,programação/TI,false
+1694282,programação/TI,false
+1695884,criação/ficção e roleplay,false
+1697349,escrita e tradução,false
+1698202,trabalho/negócios,false
+1698203,escrita e tradução,false
+1698215,informação geral/curiosidade,false
+1698234,estudo/dever de casa,false
+1698277,escrita e tradução,false
+1698380,trabalho/negócios,false
+1698400,estudo/dever de casa,false
+1698464,escrita e tradução,false
+1698529,trabalho/negócios,false
+1698926,criação/ficção e roleplay,false
+1702891,estudo/dever de casa,false
+1704184,criação/ficção e roleplay,true
+1706192,criação/ficção e roleplay,false
+1706565,criação/ficção e roleplay,false
+1706700,estudo/dever de casa,false
+1707038,conversa pessoal/conselho,false
+1707424,estudo/dever de casa,false
+1707695,conversa pessoal/conselho,false
+1708493,conversa pessoal/conselho,false
+1708529,escrita e tradução,false
+1708657,informação geral/curiosidade,false
+1708758,estudo/dever de casa,false
+1708778,informação geral/curiosidade,false
+1710781,trabalho/negócios,false
+1711433,escrita e tradução,false
+1712306,criação/ficção e roleplay,false
+1712806,estudo/dever de casa,false
+1712990,conversa pessoal/conselho,false
+1713499,estudo/dever de casa,false
+1713648,informação geral/curiosidade,false
+1714693,escrita e tradução,false
+1715201,programação/TI,false
+1715573,criação/ficção e roleplay,false
+1724082,informação geral/curiosidade,false
+1724464,estudo/dever de casa,false
+1725715,criação/ficção e roleplay,false
+1725740,escrita e tradução,false
+1726602,estudo/dever de casa,false
+1727522,conversa pessoal/conselho,false
+1727628,trabalho/negócios,false
+1727984,escrita e tradução,false
+1732165,estudo/dever de casa,false
+1732355,escrita e tradução,false
+1732473,informação geral/curiosidade,false
+1732579,estudo/dever de casa,false
+1732683,conversa pessoal/conselho,false
+1733288,estudo/dever de casa,false
+1733933,conversa pessoal/conselho,false
+1733943,escrita e tradução,false
+1733960,criação/ficção e roleplay,false
+1734333,informação geral/curiosidade,false
+1734385,criação/ficção e roleplay,false
+1734582,escrita e tradução,false
+1735039,conversa pessoal/conselho,false
+1736184,trabalho/negócios,false
+1738047,programação/TI,false
+1739220,conversa pessoal/conselho,false
+1739350,escrita e tradução,false
+1739825,conversa pessoal/conselho,false
+1740455,trabalho/negócios,false
+1740456,criação/ficção e roleplay,false
 1740679,programação/TI,true
+1744613,escrita e tradução,false
+1745009,informação geral/curiosidade,false
+1745099,estudo/dever de casa,false
+1745536,outros/indefinido,false
 1745554,outros/indefinido,true
 1747065,escrita e tradução,false
+1749667,estudo/dever de casa,false
+1750354,estudo/dever de casa,false
+1750879,conversa pessoal/conselho,false
+1750969,trabalho/negócios,false
+1751373,programação/TI,false
+1751985,estudo/dever de casa,false
+1752051,estudo/dever de casa,false
+1752190,trabalho/negócios,false
+1752418,criação/ficção e roleplay,true
+1752426,trabalho/negócios,false
+1755028,escrita e tradução,false
+1755934,escrita e tradução,false
+1756505,outros/indefinido,false
+1756791,escrita e tradução,false
+1756996,criação/ficção e roleplay,false
+1757158,estudo/dever de casa,false
+1757315,programação/TI,true
 1757631,programação/TI,false
+1758621,outros/indefinido,false
+1758999,escrita e tradução,false
+1760252,conversa pessoal/conselho,false
+1761322,criação/ficção e roleplay,false
+1762063,escrita e tradução,false
+1762296,criação/ficção e roleplay,false
+1763015,trabalho/negócios,false
+1763992,estudo/dever de casa,false
 1764348,estudo/dever de casa,false
 1764840,programação/TI,false
+1766031,escrita e tradução,false
+1767145,trabalho/negócios,false
+1767681,programação/TI,false
+1767689,estudo/dever de casa,false
+1767956,escrita e tradução,false
+1768152,conversa pessoal/conselho,false
+1768342,estudo/dever de casa,false
+1768584,conversa pessoal/conselho,false
+1769206,estudo/dever de casa,false
+1769278,escrita e tradução,false
+1769666,programação/TI,false
+1769691,programação/TI,false
+1770047,informação geral/curiosidade,false
+1771164,conversa pessoal/conselho,false
+1772627,criação/ficção e roleplay,false
+1774213,escrita e tradução,false
+1774461,criação/ficção e roleplay,false
+1774743,estudo/dever de casa,false
+1774898,estudo/dever de casa,false
+1775771,informação geral/curiosidade,false
 1776702,informação geral/curiosidade,false
+1777298,trabalho/negócios,false
+1778886,estudo/dever de casa,false
+1779013,conversa pessoal/conselho,false
+1779476,programação/TI,false
+1781180,conversa pessoal/conselho,false
+1782225,trabalho/negócios,false
+1787040,programação/TI,false
+1788018,trabalho/negócios,false
+1789401,criação/ficção e roleplay,true
+1789423,informação geral/curiosidade,false
+1789615,estudo/dever de casa,false
+1790518,programação/TI,false
+1792153,escrita e tradução,false
+1792777,programação/TI,false
+1793844,estudo/dever de casa,false
+1795018,informação geral/curiosidade,false
+1795033,programação/TI,false
+1795308,informação geral/curiosidade,false
+1797587,conversa pessoal/conselho,false
+1799477,programação/TI,false
+1799663,informação geral/curiosidade,false
+1800462,escrita e tradução,false
+1801369,informação geral/curiosidade,false
+1801513,conversa pessoal/conselho,false
+1802822,programação/TI,false
+1803540,escrita e tradução,false
+1803633,conversa pessoal/conselho,false
+1804310,conversa pessoal/conselho,false
+1804797,criação/ficção e roleplay,true
+1807831,informação geral/curiosidade,true
+1808572,estudo/dever de casa,false
+1809354,escrita e tradução,false
 1809533,conversa pessoal/conselho,false
+1809613,estudo/dever de casa,false
+1812763,conversa pessoal/conselho,false
+1812946,informação geral/curiosidade,false
+1812989,programação/TI,false
+1813592,conversa pessoal/conselho,false
+1813859,conversa pessoal/conselho,false
+1813987,escrita e tradução,false
+1814155,programação/TI,false
+1814250,informação geral/curiosidade,false
+1814986,outros/indefinido,false
+1815383,conversa pessoal/conselho,false
+1815487,programação/TI,false
+1816409,conversa pessoal/conselho,false
+1820139,escrita e tradução,false
+1821419,programação/TI,false
+1821459,informação geral/curiosidade,false
+1821870,informação geral/curiosidade,false
+1821941,escrita e tradução,false
+1823430,estudo/dever de casa,false
+1824388,programação/TI,false
+1824549,informação geral/curiosidade,false
+1827556,trabalho/negócios,false
 1827878,escrita e tradução,false
+1828684,escrita e tradução,false
+1830277,criação/ficção e roleplay,false
+1830291,estudo/dever de casa,false
 1830330,criação/ficção e roleplay,false
+1830381,programação/TI,false
+1830740,estudo/dever de casa,false
+1831111,criação/ficção e roleplay,false
+1833369,informação geral/curiosidade,false
+1834373,informação geral/curiosidade,false
+1835235,outros/indefinido,false
 1835696,conversa pessoal/conselho,false
+1835794,trabalho/negócios,false
+1836055,criação/ficção e roleplay,false
+1836574,escrita e tradução,false
+1836716,informação geral/curiosidade,false
+1837082,outros/indefinido,false
+1837163,conversa pessoal/conselho,false
+1837397,conversa pessoal/conselho,false
+1837566,conversa pessoal/conselho,false
+1838447,programação/TI,false
+1840829,conversa pessoal/conselho,false
+1840970,outros/indefinido,false
+1841115,escrita e tradução,false
+1841172,conversa pessoal/conselho,false
+1841321,programação/TI,false
+1841837,escrita e tradução,false
+1842046,criação/ficção e roleplay,false
+1843696,programação/TI,true
+1846454,conversa pessoal/conselho,false
+1847154,conversa pessoal/conselho,false
+1847271,trabalho/negócios,false
+1849060,trabalho/negócios,false
+1849247,programação/TI,false
+1849887,escrita e tradução,false
+1851296,conversa pessoal/conselho,false
+1857350,conversa pessoal/conselho,false
+1857419,escrita e tradução,false
+1857548,conversa pessoal/conselho,false
+1857754,escrita e tradução,false
+1860517,estudo/dever de casa,false
+1861178,escrita e tradução,false
+1861485,conversa pessoal/conselho,false
+1861512,programação/TI,false
+1864099,estudo/dever de casa,false
+1864189,estudo/dever de casa,false
+1864718,estudo/dever de casa,false
+1864874,trabalho/negócios,false
+1865444,criação/ficção e roleplay,false
+1868308,escrita e tradução,false
+1868421,trabalho/negócios,false
+1868582,informação geral/curiosidade,false
+1870138,programação/TI,true
+1870501,informação geral/curiosidade,false
+1870583,informação geral/curiosidade,false
+1871247,estudo/dever de casa,false
+1871250,trabalho/negócios,false
+1871291,conversa pessoal/conselho,false
+1871296,informação geral/curiosidade,false
+1871317,criação/ficção e roleplay,false
+1871345,informação geral/curiosidade,false
+1871355,estudo/dever de casa,false
+1871417,trabalho/negócios,false
+1871419,conversa pessoal/conselho,false
+1871445,informação geral/curiosidade,false
+1871526,estudo/dever de casa,false
+1871627,estudo/dever de casa,false
+1871721,escrita e tradução,false
+1871757,estudo/dever de casa,false
+1872016,programação/TI,false
+1872094,trabalho/negócios,false
+1872112,criação/ficção e roleplay,false
+1872124,estudo/dever de casa,false
+1872144,estudo/dever de casa,false
+1872361,conversa pessoal/conselho,false
+1875016,estudo/dever de casa,false
+1875151,estudo/dever de casa,false
+1875229,informação geral/curiosidade,false
+1876119,programação/TI,false
+1876324,trabalho/negócios,false
+1876796,programação/TI,false
+1878203,estudo/dever de casa,false
 1878712,trabalho/negócios,true
+1879753,estudo/dever de casa,false
+1880723,criação/ficção e roleplay,false
+1881364,informação geral/curiosidade,false
+1882207,informação geral/curiosidade,false
 1885787,estudo/dever de casa,false
+1886671,escrita e tradução,false
+1886755,estudo/dever de casa,false
+1889275,programação/TI,false
+1889480,criação/ficção e roleplay,false
+1895067,outros/indefinido,false
+1895407,trabalho/negócios,false
+1895625,conversa pessoal/conselho,false
+1895866,estudo/dever de casa,false
+1896654,criação/ficção e roleplay,true
+1896825,estudo/dever de casa,false
+1897808,conversa pessoal/conselho,false
+1897948,escrita e tradução,false
+1898387,conversa pessoal/conselho,false
+1899026,conversa pessoal/conselho,false
+1902116,estudo/dever de casa,false
+1903277,informação geral/curiosidade,false
+1903838,estudo/dever de casa,false
+1905514,estudo/dever de casa,false
+1907493,programação/TI,false
+1911054,programação/TI,false
+1911806,outros/indefinido,false
 1913367,estudo/dever de casa,false
+1913803,programação/TI,false
+1914389,conversa pessoal/conselho,false
+1920434,outros/indefinido,false
+1921711,conversa pessoal/conselho,false
+1922193,estudo/dever de casa,false
+1923086,escrita e tradução,false
+1924133,outros/indefinido,false
+1924447,escrita e tradução,false
+1925680,estudo/dever de casa,false
+1928673,programação/TI,false
+1931564,escrita e tradução,false
+1932565,conversa pessoal/conselho,false
+1933108,estudo/dever de casa,false
+1933122,trabalho/negócios,false
+1933919,estudo/dever de casa,true
+1935328,estudo/dever de casa,false
+1935621,criação/ficção e roleplay,false
+1935771,programação/TI,false
+1936122,conversa pessoal/conselho,false
+1936312,programação/TI,false
+1940287,trabalho/negócios,false
+1941215,outros/indefinido,false
+1941709,conversa pessoal/conselho,false
+1942292,criação/ficção e roleplay,true
+1943259,conversa pessoal/conselho,false
+1944842,conversa pessoal/conselho,false
+1945151,trabalho/negócios,false
+1945569,outros/indefinido,false
+1945782,estudo/dever de casa,false
+1946356,programação/TI,false
+1952423,conversa pessoal/conselho,false
+1953827,conversa pessoal/conselho,false
+1953892,conversa pessoal/conselho,false
+1953990,trabalho/negócios,false
+1954467,estudo/dever de casa,false
+1955302,conversa pessoal/conselho,false
+1955369,escrita e tradução,false
+1955908,conversa pessoal/conselho,false
+1956649,informação geral/curiosidade,false
+1956807,conversa pessoal/conselho,false
+1956959,criação/ficção e roleplay,false
+1957420,conversa pessoal/conselho,false
+1958153,informação geral/curiosidade,false
+1958971,criação/ficção e roleplay,false
+1959266,informação geral/curiosidade,false
+1962408,escrita e tradução,false
+1962419,trabalho/negócios,false
+1963020,criação/ficção e roleplay,false
+1963101,estudo/dever de casa,false
+1964070,outros/indefinido,false
+1964104,escrita e tradução,false
+1964148,conversa pessoal/conselho,false
+1964538,outros/indefinido,false
+1965758,escrita e tradução,false
+1965784,conversa pessoal/conselho,false
+1966087,informação geral/curiosidade,false
+1966778,criação/ficção e roleplay,true
 1967146,criação/ficção e roleplay,false
+1967298,conversa pessoal/conselho,false
+1968448,estudo/dever de casa,false
+1969840,conversa pessoal/conselho,false
+1972238,estudo/dever de casa,false
+1973477,criação/ficção e roleplay,false
+1973941,escrita e tradução,false
+1974966,criação/ficção e roleplay,false
+1976132,programação/TI,false
+1976638,conversa pessoal/conselho,false
+1976719,estudo/dever de casa,false
+1978766,conversa pessoal/conselho,false
+1978822,conversa pessoal/conselho,false
+1979436,escrita e tradução,false
+1986579,estudo/dever de casa,false
+1988039,estudo/dever de casa,false
+1988883,conversa pessoal/conselho,false
+1990758,outros/indefinido,false
+1991338,outros/indefinido,false
+1998966,estudo/dever de casa,false
+1999911,criação/ficção e roleplay,false
+1999991,programação/TI,false
+2000596,criação/ficção e roleplay,false
+2003228,criação/ficção e roleplay,false
+2004096,criação/ficção e roleplay,false
+2005472,escrita e tradução,false
+2006768,trabalho/negócios,false
+2012955,conversa pessoal/conselho,false
+2014322,estudo/dever de casa,false
+2014833,programação/TI,true
 2014841,criação/ficção e roleplay,true
+2015131,escrita e tradução,false
+2015273,escrita e tradução,false
+2016330,criação/ficção e roleplay,false
+2016581,criação/ficção e roleplay,false
+2017850,estudo/dever de casa,true
+2018133,escrita e tradução,false
+2018487,informação geral/curiosidade,false
 2018585,estudo/dever de casa,true
+2018864,conversa pessoal/conselho,false
+2020006,informação geral/curiosidade,false
+2022107,conversa pessoal/conselho,false
+2024598,estudo/dever de casa,false
+2024963,conversa pessoal/conselho,false
+2025184,conversa pessoal/conselho,false
+2026925,trabalho/negócios,false
+2027604,criação/ficção e roleplay,false
 2027713,conversa pessoal/conselho,false
+2030884,criação/ficção e roleplay,false
+2031719,estudo/dever de casa,false
 2032279,programação/TI,false
+2037586,programação/TI,false
+2039264,trabalho/negócios,false
+2041919,estudo/dever de casa,false
+2042499,criação/ficção e roleplay,false
+2043119,criação/ficção e roleplay,false
+2043401,conversa pessoal/conselho,false
+2043462,estudo/dever de casa,false
+2043704,criação/ficção e roleplay,true
+2043755,trabalho/negócios,false
+2044606,conversa pessoal/conselho,false
+2046289,escrita e tradução,false
+2046432,conversa pessoal/conselho,false
+2047205,conversa pessoal/conselho,false
+2047881,conversa pessoal/conselho,false
+2048570,programação/TI,false
+2048959,escrita e tradução,true
+2049132,escrita e tradução,false
+2049182,programação/TI,true
+2050043,outros/indefinido,true
+2050133,criação/ficção e roleplay,false
+2050415,informação geral/curiosidade,false
+2052102,informação geral/curiosidade,true
+2052180,programação/TI,false
+2052621,outros/indefinido,false
+2054389,estudo/dever de casa,false
+2055017,escrita e tradução,false
 2055400,escrita e tradução,false
+2055937,conversa pessoal/conselho,false
+2056628,informação geral/curiosidade,false
+2056864,conversa pessoal/conselho,false
+2056878,criação/ficção e roleplay,true
 2057140,criação/ficção e roleplay,false
+2060986,conversa pessoal/conselho,false
+2061558,programação/TI,false
+2063535,conversa pessoal/conselho,false
+2064099,informação geral/curiosidade,false
+2064242,programação/TI,false
+2064278,trabalho/negócios,false
+2065683,programação/TI,false
+2067158,outros/indefinido,false
+2067322,conversa pessoal/conselho,false
+2067885,informação geral/curiosidade,false
+2069006,conversa pessoal/conselho,false
+2069373,conversa pessoal/conselho,false
+2069464,conversa pessoal/conselho,false
+2075385,programação/TI,false
+2077089,conversa pessoal/conselho,false
+2077840,conversa pessoal/conselho,false
+2080761,programação/TI,false
+2084538,outros/indefinido,false
+2093154,informação geral/curiosidade,false
+2093481,criação/ficção e roleplay,false
+2096291,escrita e tradução,false
+2097970,programação/TI,false
 2098022,escrita e tradução,false
 2099310,estudo/dever de casa,false
+2099664,conversa pessoal/conselho,false
+2104890,conversa pessoal/conselho,false
+2110067,programação/TI,false
 2110977,criação/ficção e roleplay,false
+2111065,escrita e tradução,false
+2111251,conversa pessoal/conselho,false
+2111441,estudo/dever de casa,false
+2113325,programação/TI,false
+2116255,conversa pessoal/conselho,false
+2116457,estudo/dever de casa,false
+2116792,conversa pessoal/conselho,false
+2117056,programação/TI,false
+2119322,programação/TI,true
+2119741,conversa pessoal/conselho,false
+2120472,informação geral/curiosidade,false
+2120722,criação/ficção e roleplay,true
+2122071,informação geral/curiosidade,false
+2128864,conversa pessoal/conselho,false
+2129143,conversa pessoal/conselho,false
+2129167,informação geral/curiosidade,false
+2129694,trabalho/negócios,false
+2135264,informação geral/curiosidade,false
+2135393,escrita e tradução,false
+2139444,conversa pessoal/conselho,false
+2140057,informação geral/curiosidade,false
+2140334,criação/ficção e roleplay,false
+2142279,conversa pessoal/conselho,false
+2143709,programação/TI,false
+2143858,conversa pessoal/conselho,false
+2144119,conversa pessoal/conselho,false
+2144125,trabalho/negócios,false
+2144255,criação/ficção e roleplay,false
+2144355,conversa pessoal/conselho,false
+2144915,programação/TI,false
+2144978,trabalho/negócios,false
+2146494,conversa pessoal/conselho,false
+2147225,criação/ficção e roleplay,true
+2147605,programação/TI,false
 2147722,informação geral/curiosidade,false
+2151978,conversa pessoal/conselho,false
 2157417,criação/ficção e roleplay,false
+2159103,conversa pessoal/conselho,false
+2162183,conversa pessoal/conselho,false
+2165890,informação geral/curiosidade,false
+2166299,conversa pessoal/conselho,false
+2167006,criação/ficção e roleplay,false
+2167100,programação/TI,false
+2167116,conversa pessoal/conselho,false
+2168323,informação geral/curiosidade,false
+2168435,criação/ficção e roleplay,false
+2168548,informação geral/curiosidade,false
+2169146,informação geral/curiosidade,false
+2169895,criação/ficção e roleplay,false
+2169900,conversa pessoal/conselho,false
+2171910,programação/TI,false
+2172954,criação/ficção e roleplay,false
+2173330,criação/ficção e roleplay,false
+2175003,outros/indefinido,true
+2175443,conversa pessoal/conselho,false
+2175546,informação geral/curiosidade,false
+2178242,informação geral/curiosidade,false
+2178479,informação geral/curiosidade,false
+2180706,trabalho/negócios,false
+2181056,conversa pessoal/conselho,false
+2182103,informação geral/curiosidade,false
+2185141,programação/TI,false
+2185360,informação geral/curiosidade,false
+2185510,conversa pessoal/conselho,false
+2185757,programação/TI,false
+2186070,programação/TI,false
+2186460,informação geral/curiosidade,false
+2186546,conversa pessoal/conselho,false
+2186566,criação/ficção e roleplay,true
+2187119,escrita e tradução,false
+2187407,informação geral/curiosidade,false
+2187463,informação geral/curiosidade,false
+2187486,programação/TI,false
+2187715,conversa pessoal/conselho,false
+2187826,criação/ficção e roleplay,false
+2188194,informação geral/curiosidade,false
+2188979,informação geral/curiosidade,false
+2190947,criação/ficção e roleplay,false
+2191196,criação/ficção e roleplay,false
+2191683,trabalho/negócios,false
+2191705,escrita e tradução,false
+2192954,trabalho/negócios,false
+2193228,conversa pessoal/conselho,false
+2195253,criação/ficção e roleplay,false
+2198444,outros/indefinido,true
+2200020,criação/ficção e roleplay,false
+2200090,outros/indefinido,true
+2207592,conversa pessoal/conselho,false
+2207797,outros/indefinido,false
+2208249,criação/ficção e roleplay,false
+2208277,informação geral/curiosidade,false
+2208288,criação/ficção e roleplay,false
+2208307,criação/ficção e roleplay,false
+2208388,criação/ficção e roleplay,false
+2208402,outros/indefinido,false
+2208428,criação/ficção e roleplay,false
+2211017,criação/ficção e roleplay,false
+2212183,informação geral/curiosidade,false
+2212585,informação geral/curiosidade,false
+2213112,criação/ficção e roleplay,false
+2213901,escrita e tradução,false
+2214143,criação/ficção e roleplay,false
+2215353,criação/ficção e roleplay,false
+2215785,criação/ficção e roleplay,false
+2215971,criação/ficção e roleplay,false
+2216069,criação/ficção e roleplay,false
+2216125,escrita e tradução,false
+2216332,conversa pessoal/conselho,false
+2217571,informação geral/curiosidade,false
+2217973,informação geral/curiosidade,false
+2218424,informação geral/curiosidade,false
+2218425,trabalho/negócios,false
+2218460,trabalho/negócios,false
+2218559,informação geral/curiosidade,false
+2218861,informação geral/curiosidade,false
+2219190,criação/ficção e roleplay,false
+2219409,informação geral/curiosidade,false
+2219462,criação/ficção e roleplay,false
+2219471,programação/TI,false
+2219546,criação/ficção e roleplay,false
+2221232,informação geral/curiosidade,false
+2222183,escrita e tradução,false
 2222516,informação geral/curiosidade,false
+2222976,informação geral/curiosidade,false
+2223006,escrita e tradução,false
+2224985,conversa pessoal/conselho,false
+2225122,trabalho/negócios,false
+2225882,programação/TI,false
 2226474,criação/ficção e roleplay,true
+2227543,estudo/dever de casa,false
+2229868,programação/TI,false
+2230258,outros/indefinido,false
+2231703,programação/TI,false
+2231981,informação geral/curiosidade,false
+2234465,trabalho/negócios,false
+2234496,informação geral/curiosidade,false
+2234662,criação/ficção e roleplay,false
+2235887,informação geral/curiosidade,false
+2235992,criação/ficção e roleplay,false
+2236005,informação geral/curiosidade,false
+2236208,trabalho/negócios,false
+2236309,criação/ficção e roleplay,false
+2239034,escrita e tradução,false
+2239295,programação/TI,false
+2239441,outros/indefinido,false
+2239870,conversa pessoal/conselho,false
+2240085,informação geral/curiosidade,false
 2240165,criação/ficção e roleplay,false
+2240713,outros/indefinido,false
+2241165,outros/indefinido,false
+2243401,conversa pessoal/conselho,false
 2243560,estudo/dever de casa,false
+2243866,conversa pessoal/conselho,false
+2244159,conversa pessoal/conselho,false
+2246151,programação/TI,false
+2246344,informação geral/curiosidade,false
+2250087,informação geral/curiosidade,false
+2251933,trabalho/negócios,false
+2252105,informação geral/curiosidade,false
+2252711,conversa pessoal/conselho,false
+2252726,trabalho/negócios,true
+2252762,trabalho/negócios,false
+2254012,trabalho/negócios,false
+2255076,conversa pessoal/conselho,false
+2256655,outros/indefinido,false
+2257516,criação/ficção e roleplay,true
+2258092,informação geral/curiosidade,false
+2258142,programação/TI,false
+2259390,programação/TI,false
+2261383,criação/ficção e roleplay,false
+2263270,conversa pessoal/conselho,false
+2268663,conversa pessoal/conselho,true
+2269548,criação/ficção e roleplay,false
+2270318,conversa pessoal/conselho,false
+2270646,informação geral/curiosidade,false
+2270889,informação geral/curiosidade,true
+2276425,criação/ficção e roleplay,false
+2279144,criação/ficção e roleplay,false
+2279942,trabalho/negócios,false
+2281026,informação geral/curiosidade,false
+2283238,escrita e tradução,false
+2285591,conversa pessoal/conselho,false
+2290739,conversa pessoal/conselho,false
+2290748,conversa pessoal/conselho,false
+2293246,conversa pessoal/conselho,false
+2295637,informação geral/curiosidade,false
+2296805,trabalho/negócios,false
+2298300,programação/TI,false
+2298403,criação/ficção e roleplay,false
+2298422,programação/TI,false
+2299237,outros/indefinido,false
+2299556,informação geral/curiosidade,false
+2299983,programação/TI,false
+2300095,programação/TI,false
+2300236,trabalho/negócios,false
+2300909,programação/TI,false
+2301163,criação/ficção e roleplay,false
+2301469,informação geral/curiosidade,false
+2301500,conversa pessoal/conselho,false
+2301780,conversa pessoal/conselho,false
+2302207,criação/ficção e roleplay,false
+2304027,conversa pessoal/conselho,false
+2304494,estudo/dever de casa,true
+2305949,programação/TI,false
+2306374,informação geral/curiosidade,false
+2306388,informação geral/curiosidade,false
+2307656,programação/TI,false
+2308016,outros/indefinido,true
+2312429,informação geral/curiosidade,false
 2315195,programação/TI,true
+2316995,criação/ficção e roleplay,false
+2317039,informação geral/curiosidade,false
+2318404,conversa pessoal/conselho,false
+2319426,criação/ficção e roleplay,false
+2319555,criação/ficção e roleplay,true
 2319573,criação/ficção e roleplay,false
+2320612,outros/indefinido,false
+2322943,informação geral/curiosidade,false
+2324525,outros/indefinido,false
+2325314,informação geral/curiosidade,false
+2325888,informação geral/curiosidade,false
+2325928,programação/TI,false
+2326136,criação/ficção e roleplay,false
+2328606,informação geral/curiosidade,false
+2328811,informação geral/curiosidade,false
+2328827,informação geral/curiosidade,false
+2328892,informação geral/curiosidade,false
+2329573,informação geral/curiosidade,false
+2330254,informação geral/curiosidade,false
+2331184,estudo/dever de casa,false
+2331371,trabalho/negócios,false
+2331993,informação geral/curiosidade,false
+2333428,outros/indefinido,false
+2333996,criação/ficção e roleplay,false
+2334182,criação/ficção e roleplay,false
+2334393,informação geral/curiosidade,false
 2334768,informação geral/curiosidade,false
+2334955,criação/ficção e roleplay,false
+2335803,informação geral/curiosidade,false
+2335955,conversa pessoal/conselho,false
+2336424,estudo/dever de casa,false
+2337295,outros/indefinido,false
+2337646,criação/ficção e roleplay,false
+2339683,escrita e tradução,false
+2340555,estudo/dever de casa,false
+2341231,trabalho/negócios,false
+2342055,escrita e tradução,false
+2342277,trabalho/negócios,false
+2344479,criação/ficção e roleplay,false
 2344908,escrita e tradução,false
+2345675,informação geral/curiosidade,false
+2345922,conversa pessoal/conselho,false
+2346436,informação geral/curiosidade,false
+2347225,informação geral/curiosidade,false
+2347309,conversa pessoal/conselho,false
 2347686,informação geral/curiosidade,false
+2348521,informação geral/curiosidade,false
+2349079,trabalho/negócios,true
+2352567,criação/ficção e roleplay,false
+2352978,informação geral/curiosidade,false
+2353542,criação/ficção e roleplay,false
+2353713,criação/ficção e roleplay,false
+2353878,informação geral/curiosidade,false
+2354233,conversa pessoal/conselho,false
+2354875,informação geral/curiosidade,true
+2356157,criação/ficção e roleplay,false
+2356431,outros/indefinido,false
+2356792,programação/TI,false
+2356823,criação/ficção e roleplay,false
+2356935,estudo/dever de casa,false
+2356941,trabalho/negócios,false
+2357477,outros/indefinido,false
+2357539,outros/indefinido,false
+2357719,estudo/dever de casa,false
+2357916,outros/indefinido,false
+2357918,conversa pessoal/conselho,false
+2358058,criação/ficção e roleplay,false
+2358081,informação geral/curiosidade,false
+2358206,escrita e tradução,false
+2358431,outros/indefinido,true
+2358554,trabalho/negócios,true
+2358695,programação/TI,false
+2358771,escrita e tradução,false
+2359033,conversa pessoal/conselho,false
+2359518,outros/indefinido,false
+2360956,outros/indefinido,false
+2361695,programação/TI,false
+2362108,escrita e tradução,false
+2362269,outros/indefinido,true
+2362534,criação/ficção e roleplay,false
+2362645,outros/indefinido,true
+2362647,outros/indefinido,false
+2362652,outros/indefinido,false
 2362941,estudo/dever de casa,false
+2363109,criação/ficção e roleplay,false
+2363623,trabalho/negócios,false
+2364236,criação/ficção e roleplay,false
+2364706,outros/indefinido,false
+2365181,criação/ficção e roleplay,false
+2367183,conversa pessoal/conselho,false
+2367215,criação/ficção e roleplay,false
+2368292,programação/TI,false
+2368498,informação geral/curiosidade,false
+2369031,conversa pessoal/conselho,false
+2369448,trabalho/negócios,false
+2369508,informação geral/curiosidade,false
+2370473,trabalho/negócios,false
+2370933,informação geral/curiosidade,false
+2374086,trabalho/negócios,false
+2374141,trabalho/negócios,false
+2374377,escrita e tradução,false
+2374406,informação geral/curiosidade,false
+2375387,informação geral/curiosidade,false
+2376426,programação/TI,false
+2376536,criação/ficção e roleplay,false
+2376964,informação geral/curiosidade,false
+2377456,programação/TI,false
+2378043,informação geral/curiosidade,false
+2378322,conversa pessoal/conselho,false
+2380447,trabalho/negócios,false
+2380929,escrita e tradução,false
+2380941,escrita e tradução,false
+2381127,informação geral/curiosidade,false
+2382000,conversa pessoal/conselho,true
+2382616,estudo/dever de casa,false
+2382883,outros/indefinido,false
+2383136,criação/ficção e roleplay,false
+2383162,criação/ficção e roleplay,false
+2383870,conversa pessoal/conselho,false
+2384284,estudo/dever de casa,false
+2388063,conversa pessoal/conselho,false
+2388314,conversa pessoal/conselho,false
+2388733,criação/ficção e roleplay,false
+2389437,outros/indefinido,false
+2389569,informação geral/curiosidade,false
+2389607,escrita e tradução,false
+2390693,conversa pessoal/conselho,false
+2391359,conversa pessoal/conselho,false
+2392271,informação geral/curiosidade,false
 2392601,conversa pessoal/conselho,false
 2394259,escrita e tradução,false
+2394572,criação/ficção e roleplay,false
+2395172,criação/ficção e roleplay,false
+2395799,outros/indefinido,false
+2396428,conversa pessoal/conselho,false
+2396676,outros/indefinido,false
+2397219,criação/ficção e roleplay,false
+2397230,criação/ficção e roleplay,false
+2398288,conversa pessoal/conselho,false
 2398547,criação/ficção e roleplay,false
+2400650,outros/indefinido,false
+2401256,criação/ficção e roleplay,false
+2401928,outros/indefinido,false
+2401962,criação/ficção e roleplay,true
+2402632,outros/indefinido,false
+2402967,programação/TI,false
+2403105,informação geral/curiosidade,false
+2403271,outros/indefinido,false
+2404978,informação geral/curiosidade,true
+2405748,criação/ficção e roleplay,false
+2405767,criação/ficção e roleplay,false
+2406447,escrita e tradução,false
+2406484,outros/indefinido,false
+2406566,criação/ficção e roleplay,false
+2406599,conversa pessoal/conselho,false
+2407113,informação geral/curiosidade,false
+2407525,outros/indefinido,false
+2407795,outros/indefinido,false
 2407878,outros/indefinido,false
+2408354,escrita e tradução,false
+2408623,outros/indefinido,false
+2409004,criação/ficção e roleplay,false
+2409393,criação/ficção e roleplay,false
+2411849,outros/indefinido,false
+2412505,outros/indefinido,false
+2413126,outros/indefinido,false
 2413145,criação/ficção e roleplay,false
+2414723,criação/ficção e roleplay,false
+2415443,informação geral/curiosidade,false
+2415518,outros/indefinido,false
+2418681,criação/ficção e roleplay,false
+2418806,programação/TI,false
+2419360,outros/indefinido,false
+2420414,trabalho/negócios,false
+2421744,escrita e tradução,false
+2421935,informação geral/curiosidade,true
+2423390,outros/indefinido,false
+2425558,criação/ficção e roleplay,false
+2426097,estudo/dever de casa,false
+2426273,trabalho/negócios,true
+2426686,trabalho/negócios,false
+2427797,escrita e tradução,false
+2430013,estudo/dever de casa,false
+2433337,criação/ficção e roleplay,false
+2433849,informação geral/curiosidade,false
+2435625,outros/indefinido,false
+2436343,trabalho/negócios,false
 2439524,trabalho/negócios,false
+2439841,informação geral/curiosidade,false
+2440723,programação/TI,false
+2441089,conversa pessoal/conselho,false
 2441200,criação/ficção e roleplay,false
+2441322,criação/ficção e roleplay,false
+2441723,trabalho/negócios,false
+2441938,estudo/dever de casa,false
+2442544,conversa pessoal/conselho,false
+2442843,escrita e tradução,false
+2444219,criação/ficção e roleplay,false
+2444328,informação geral/curiosidade,false
+2447856,informação geral/curiosidade,false
+2449319,informação geral/curiosidade,false
+2450304,trabalho/negócios,false
+2451493,conversa pessoal/conselho,false
+2453769,criação/ficção e roleplay,false
+2453876,outros/indefinido,false
+2453903,escrita e tradução,false
+2454721,informação geral/curiosidade,false
+2456787,conversa pessoal/conselho,false
+2457004,informação geral/curiosidade,false
+2457400,trabalho/negócios,false
+2457631,trabalho/negócios,false
+2460560,informação geral/curiosidade,false
 2460935,programação/TI,false
+2462239,conversa pessoal/conselho,false
+2463031,informação geral/curiosidade,false
+2463761,trabalho/negócios,false
+2464993,informação geral/curiosidade,false
+2467043,outros/indefinido,false
+2467727,programação/TI,false
+2469031,conversa pessoal/conselho,false
+2469277,trabalho/negócios,false
+2469378,estudo/dever de casa,false
+2469534,criação/ficção e roleplay,true
+2469783,estudo/dever de casa,true
+2469857,trabalho/negócios,false
+2470230,criação/ficção e roleplay,false
+2471015,programação/TI,false
+2471160,programação/TI,false
+2475391,estudo/dever de casa,false
+2476316,informação geral/curiosidade,false
+2476600,criação/ficção e roleplay,false
+2476909,outros/indefinido,false
+2477565,programação/TI,false
+2477742,criação/ficção e roleplay,false
+2483460,estudo/dever de casa,false
+2485527,conversa pessoal/conselho,false
+2486463,informação geral/curiosidade,false
+2488122,conversa pessoal/conselho,false
+2489004,programação/TI,false
+2490259,trabalho/negócios,false
+2490514,informação geral/curiosidade,false
+2490522,informação geral/curiosidade,false
+2491173,informação geral/curiosidade,false
+2491316,informação geral/curiosidade,false
+2491474,criação/ficção e roleplay,false
 2492663,trabalho/negócios,false
 2493012,escrita e tradução,false
+2493476,estudo/dever de casa,false
+2493880,conversa pessoal/conselho,false
+2494508,conversa pessoal/conselho,false
 2494619,informação geral/curiosidade,false
+2495267,conversa pessoal/conselho,true
+2495388,programação/TI,false
 2496902,conversa pessoal/conselho,false
+2496936,criação/ficção e roleplay,false
+2497106,informação geral/curiosidade,false
+2497986,conversa pessoal/conselho,false
+2498058,conversa pessoal/conselho,false
+2498075,programação/TI,false
+2498365,conversa pessoal/conselho,false
+2498778,programação/TI,false
+2498887,conversa pessoal/conselho,false
+2498908,informação geral/curiosidade,false
 2499484,informação geral/curiosidade,false
+2499712,conversa pessoal/conselho,false
+2500319,programação/TI,false
+2500391,criação/ficção e roleplay,true
+2500879,outros/indefinido,false
+2501104,estudo/dever de casa,false
+2501136,conversa pessoal/conselho,false
+2501882,informação geral/curiosidade,false
+2502098,criação/ficção e roleplay,false
+2502380,estudo/dever de casa,false
+2502503,conversa pessoal/conselho,false
+2502773,outros/indefinido,false
+2502792,outros/indefinido,false
 2503601,criação/ficção e roleplay,false
+2504910,conversa pessoal/conselho,false
+2504993,trabalho/negócios,false
+2505558,escrita e tradução,false
+2505728,outros/indefinido,false
+2505784,informação geral/curiosidade,false
+2506869,escrita e tradução,false
+2508427,informação geral/curiosidade,false
+2508766,criação/ficção e roleplay,false
+2508969,programação/TI,false
+2509082,conversa pessoal/conselho,false
+2512467,estudo/dever de casa,false
+2513746,conversa pessoal/conselho,false
+2514057,criação/ficção e roleplay,false
+2514176,conversa pessoal/conselho,false
+2514184,trabalho/negócios,false
+2514361,escrita e tradução,false
+2514901,escrita e tradução,false
+2515467,criação/ficção e roleplay,false
+2515816,outros/indefinido,false
+2515895,informação geral/curiosidade,false
+2516319,estudo/dever de casa,false
+2516349,outros/indefinido,false
+2516521,escrita e tradução,false
+2516632,criação/ficção e roleplay,false
+2517117,conversa pessoal/conselho,false
+2517168,informação geral/curiosidade,false
+2520103,conversa pessoal/conselho,false
+2520349,conversa pessoal/conselho,false
+2520545,programação/TI,false
+2520671,estudo/dever de casa,false
+2520824,conversa pessoal/conselho,false
+2520990,informação geral/curiosidade,false
+2521786,outros/indefinido,false
+2523024,conversa pessoal/conselho,false
+2523054,conversa pessoal/conselho,false
+2523330,conversa pessoal/conselho,false
+2523449,criação/ficção e roleplay,false
+2523803,informação geral/curiosidade,false
+2524431,programação/TI,false
+2524731,criação/ficção e roleplay,false
+2525092,programação/TI,false
+2525483,criação/ficção e roleplay,false
+2528220,informação geral/curiosidade,false
+2528391,informação geral/curiosidade,false
+2529136,outros/indefinido,false
+2529277,outros/indefinido,false
+2529764,informação geral/curiosidade,false
+2529807,programação/TI,false
+2530368,escrita e tradução,false
+2530376,conversa pessoal/conselho,false
 2530878,programação/TI,false
+2531278,informação geral/curiosidade,false
+2531798,conversa pessoal/conselho,false
+2531842,criação/ficção e roleplay,true
+2531927,programação/TI,false
+2532330,outros/indefinido,false
+2532538,trabalho/negócios,false
+2532680,programação/TI,false
+2532766,informação geral/curiosidade,false
+2533933,estudo/dever de casa,true
+2535108,programação/TI,false
+2535160,trabalho/negócios,false
+2535229,criação/ficção e roleplay,false
+2535360,programação/TI,false
+2535692,conversa pessoal/conselho,false
+2536141,informação geral/curiosidade,false
+2536216,trabalho/negócios,false
+2536242,criação/ficção e roleplay,false
+2536394,programação/TI,false
+2536544,criação/ficção e roleplay,false
+2536656,conversa pessoal/conselho,false
+2536832,outros/indefinido,false
+2536839,informação geral/curiosidade,false
+2536866,criação/ficção e roleplay,false
+2536910,trabalho/negócios,true
+2537372,criação/ficção e roleplay,false
+2537385,criação/ficção e roleplay,false
+2537673,programação/TI,false
+2537987,criação/ficção e roleplay,false
+2538258,estudo/dever de casa,false
+2538414,conversa pessoal/conselho,false
+2538695,outros/indefinido,false
+2538978,escrita e tradução,false
+2539404,programação/TI,false
+2540219,informação geral/curiosidade,true
+2542657,conversa pessoal/conselho,false
+2543101,trabalho/negócios,false
+2543371,criação/ficção e roleplay,true
+2543856,estudo/dever de casa,false
 2544392,conversa pessoal/conselho,false
+2544518,informação geral/curiosidade,false
+2545183,conversa pessoal/conselho,false
+2545953,trabalho/negócios,false
+2545984,escrita e tradução,false
+2546295,outros/indefinido,false
+2546565,outros/indefinido,false
+2546686,outros/indefinido,false
+2546715,conversa pessoal/conselho,false
+2546755,conversa pessoal/conselho,false
+2546817,informação geral/curiosidade,false
+2547892,programação/TI,false
+2547962,escrita e tradução,false
+2548292,outros/indefinido,false
+2548520,informação geral/curiosidade,true
+2548537,criação/ficção e roleplay,false
+2548890,escrita e tradução,false
+2550263,informação geral/curiosidade,false
+2550789,estudo/dever de casa,false
+2550924,conversa pessoal/conselho,false
+2551371,informação geral/curiosidade,false
+2552014,conversa pessoal/conselho,false
+2554376,informação geral/curiosidade,false
+2554651,outros/indefinido,false
+2554710,programação/TI,false
+2554861,estudo/dever de casa,false
+2555246,criação/ficção e roleplay,false
+2555261,outros/indefinido,false
+2555496,criação/ficção e roleplay,false
+2556714,conversa pessoal/conselho,false
+2556961,conversa pessoal/conselho,false
+2557727,informação geral/curiosidade,false
+2558114,conversa pessoal/conselho,false
+2558417,criação/ficção e roleplay,true
+2558577,outros/indefinido,false
+2559542,estudo/dever de casa,false
+2560618,informação geral/curiosidade,false
+2560816,estudo/dever de casa,false
+2560922,escrita e tradução,false
+2562151,programação/TI,false
+2562593,estudo/dever de casa,false
+2562884,conversa pessoal/conselho,false
+2562900,informação geral/curiosidade,false
+2563049,criação/ficção e roleplay,false
+2563088,escrita e tradução,false
 2563301,trabalho/negócios,false
+2563385,conversa pessoal/conselho,false
+2563579,criação/ficção e roleplay,false
+2566805,outros/indefinido,false
+2567666,criação/ficção e roleplay,false
+2567832,estudo/dever de casa,false
+2568049,conversa pessoal/conselho,false
+2568250,informação geral/curiosidade,false
+2568373,conversa pessoal/conselho,false
+2568504,escrita e tradução,false
 2568603,escrita e tradução,false
+2568847,programação/TI,false
+2571915,informação geral/curiosidade,false
 2572457,informação geral/curiosidade,false
+2574463,trabalho/negócios,false
+2574695,escrita e tradução,false
+2575340,informação geral/curiosidade,false
+2576112,outros/indefinido,false
+2576323,informação geral/curiosidade,false
+2576436,criação/ficção e roleplay,false
+2577884,informação geral/curiosidade,false
+2578348,outros/indefinido,false
+2580164,trabalho/negócios,true
+2582674,informação geral/curiosidade,false
+2582889,informação geral/curiosidade,false
+2583354,informação geral/curiosidade,false
+2583700,conversa pessoal/conselho,false
 2583902,conversa pessoal/conselho,false
+2584781,criação/ficção e roleplay,false
+2586768,informação geral/curiosidade,true
+2587143,conversa pessoal/conselho,false
+2589009,trabalho/negócios,false
+2589837,escrita e tradução,false
 2590042,criação/ficção e roleplay,false
+2590829,informação geral/curiosidade,false
+2591188,escrita e tradução,false
+2591233,informação geral/curiosidade,true
+2593233,informação geral/curiosidade,false
+2593492,informação geral/curiosidade,false
+2593506,trabalho/negócios,false
+2595974,escrita e tradução,false
+2596039,informação geral/curiosidade,false
+2596086,criação/ficção e roleplay,false
+2596180,criação/ficção e roleplay,false
+2596384,outros/indefinido,false
+2599266,conversa pessoal/conselho,false
+2599507,informação geral/curiosidade,false
+2599817,informação geral/curiosidade,false
+2600147,outros/indefinido,false
+2600729,informação geral/curiosidade,false
+2601090,criação/ficção e roleplay,false
+2601278,trabalho/negócios,false
+2601764,conversa pessoal/conselho,false
+2602168,criação/ficção e roleplay,false
+2603657,conversa pessoal/conselho,false
+2603685,informação geral/curiosidade,false
+2604303,conversa pessoal/conselho,false
+2604402,escrita e tradução,false
+2604725,trabalho/negócios,false
+2604852,informação geral/curiosidade,false
+2605276,programação/TI,false
+2605754,conversa pessoal/conselho,false
+2605903,programação/TI,false
+2605943,trabalho/negócios,false
+2606182,conversa pessoal/conselho,false
+2606242,estudo/dever de casa,false
+2606600,trabalho/negócios,false
+2606777,estudo/dever de casa,false
+2607269,estudo/dever de casa,false
 2608235,informação geral/curiosidade,false
+2608303,conversa pessoal/conselho,false
+2608575,trabalho/negócios,false
+2608739,conversa pessoal/conselho,false
+2608969,programação/TI,false
+2609185,programação/TI,false
+2609451,informação geral/curiosidade,false
+2612595,programação/TI,false
+2612994,trabalho/negócios,false
+2613108,programação/TI,false
+2613332,estudo/dever de casa,false
+2613342,escrita e tradução,false
+2613436,criação/ficção e roleplay,false
+2613781,trabalho/negócios,false
+2614643,criação/ficção e roleplay,false
+2614749,escrita e tradução,true
+2615696,conversa pessoal/conselho,false
+2616854,programação/TI,false
+2620530,escrita e tradução,false
+2620820,programação/TI,false
+2622002,estudo/dever de casa,false
+2622121,programação/TI,false
+2622246,informação geral/curiosidade,false
+2622733,conversa pessoal/conselho,false
+2623676,estudo/dever de casa,false
+2623762,informação geral/curiosidade,false
+2625069,informação geral/curiosidade,false
+2625472,trabalho/negócios,false
+2627901,conversa pessoal/conselho,false
+2628779,programação/TI,false
+2629243,informação geral/curiosidade,false
+2629259,programação/TI,false
+2629578,programação/TI,false
+2630291,escrita e tradução,true
+2630435,informação geral/curiosidade,false
+2630692,criação/ficção e roleplay,false
+2633031,informação geral/curiosidade,false
+2633717,programação/TI,false
+2634007,outros/indefinido,false
+2634051,conversa pessoal/conselho,false
+2637615,outros/indefinido,false
+2638607,outros/indefinido,false
+2639300,conversa pessoal/conselho,false
+2643497,criação/ficção e roleplay,false
+2643509,programação/TI,false
+2643716,criação/ficção e roleplay,true
+2643799,trabalho/negócios,true
+2644307,escrita e tradução,false
+2644905,informação geral/curiosidade,false
+2645370,programação/TI,false
+2646487,programação/TI,false
+2646831,informação geral/curiosidade,false
+2647219,outros/indefinido,false
+2648999,escrita e tradução,false
+2651336,conversa pessoal/conselho,false
+2651853,criação/ficção e roleplay,false
+2653594,conversa pessoal/conselho,false
+2653725,criação/ficção e roleplay,false
+2657646,programação/TI,false
+2657847,trabalho/negócios,false
+2658492,conversa pessoal/conselho,false
+2658809,trabalho/negócios,false
+2660128,trabalho/negócios,false
+2660192,criação/ficção e roleplay,false
+2660275,criação/ficção e roleplay,false
+2661527,informação geral/curiosidade,false
+2662134,informação geral/curiosidade,false
+2665164,escrita e tradução,false
+2666149,trabalho/negócios,false
+2668646,programação/TI,false
+2668780,criação/ficção e roleplay,false
 2669188,programação/TI,false
+2669288,criação/ficção e roleplay,false
+2669457,criação/ficção e roleplay,false
+2672000,escrita e tradução,false
+2672913,informação geral/curiosidade,false
+2673053,conversa pessoal/conselho,false
+2674404,conversa pessoal/conselho,false
+2674995,criação/ficção e roleplay,false
+2675142,estudo/dever de casa,false
+2675180,programação/TI,false
+2675530,programação/TI,true
+2675729,informação geral/curiosidade,false
+2676093,informação geral/curiosidade,false
+2676165,conversa pessoal/conselho,false
+2677660,informação geral/curiosidade,false
+2680357,estudo/dever de casa,false
 2680614,estudo/dever de casa,false
+2680847,estudo/dever de casa,false
+2680870,conversa pessoal/conselho,false
+2680943,informação geral/curiosidade,false
+2682170,escrita e tradução,false
+2682456,criação/ficção e roleplay,false
+2683231,informação geral/curiosidade,false
+2684418,estudo/dever de casa,false
+2685009,informação geral/curiosidade,false
+2685716,programação/TI,false
+2688881,trabalho/negócios,false
+2688884,escrita e tradução,false
+2689073,trabalho/negócios,false
+2689099,informação geral/curiosidade,false
+2689213,outros/indefinido,false
+2690370,informação geral/curiosidade,false
+2690493,conversa pessoal/conselho,false
+2691240,trabalho/negócios,false
+2692650,criação/ficção e roleplay,false
+2695854,estudo/dever de casa,false
+2696410,escrita e tradução,false
+2697042,criação/ficção e roleplay,false
+2698642,conversa pessoal/conselho,false
+2698978,programação/TI,false
+2699140,informação geral/curiosidade,false
+2705508,escrita e tradução,true
+2706365,conversa pessoal/conselho,false
+2710071,informação geral/curiosidade,false
+2710276,informação geral/curiosidade,false
+2710655,estudo/dever de casa,false
+2710670,informação geral/curiosidade,false
+2711148,estudo/dever de casa,false
+2711213,informação geral/curiosidade,false
+2711864,escrita e tradução,false
+2712157,conversa pessoal/conselho,false
+2712176,trabalho/negócios,false
+2712335,informação geral/curiosidade,false
+2713054,criação/ficção e roleplay,false
+2713156,conversa pessoal/conselho,false
+2713181,criação/ficção e roleplay,false
+2713421,conversa pessoal/conselho,false
+2713604,conversa pessoal/conselho,false
+2717880,criação/ficção e roleplay,true
+2719550,estudo/dever de casa,false
+2722966,trabalho/negócios,false
+2724731,estudo/dever de casa,false
+2724966,programação/TI,false
+2725112,estudo/dever de casa,false
+2725780,estudo/dever de casa,false
+2726267,programação/TI,false
+2726390,criação/ficção e roleplay,true
 2726394,criação/ficção e roleplay,true
+2727657,trabalho/negócios,false
+2728376,informação geral/curiosidade,false
+2729203,conversa pessoal/conselho,false
+2729447,criação/ficção e roleplay,false
+2731470,outros/indefinido,true
+2732425,estudo/dever de casa,false
+2732607,programação/TI,false
+2732748,programação/TI,false
+2732778,conversa pessoal/conselho,false
+2732814,trabalho/negócios,false
+2735944,conversa pessoal/conselho,false
+2736034,estudo/dever de casa,false
+2736069,programação/TI,false
+2736126,programação/TI,false
+2736295,conversa pessoal/conselho,false
+2736759,conversa pessoal/conselho,false
+2737726,conversa pessoal/conselho,false
+2738306,informação geral/curiosidade,false
+2739517,estudo/dever de casa,false
+2739956,estudo/dever de casa,false
+2740689,estudo/dever de casa,false
+2740761,conversa pessoal/conselho,false
+2742250,conversa pessoal/conselho,false
+2743629,outros/indefinido,false
+2748063,criação/ficção e roleplay,false
+2749275,outros/indefinido,false
+2749401,conversa pessoal/conselho,false
+2749675,escrita e tradução,false
+2749759,escrita e tradução,false
 2753581,conversa pessoal/conselho,false
+2763366,estudo/dever de casa,false
+2764257,conversa pessoal/conselho,false
+2764427,estudo/dever de casa,false
 2764461,outros/indefinido,false
+2765670,escrita e tradução,false
 2778827,trabalho/negócios,false
 2798115,criação/ficção e roleplay,false
 2810318,criação/ficção e roleplay,false
