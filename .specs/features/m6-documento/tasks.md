@@ -27,7 +27,7 @@ T-603 ────────────┘
 - **Gate:** Arquitetura dimensionada ao tamanho real, com custo
 - **Reqs:** REQ-604, REQ-605
 
-## [ ] T-603 — README final (executor)
+## [x] T-603 — README final (executor)
 - **What:** README completo: pré-requisitos, um comando, o que cada serviço faz e quanto demora, endereços das telas, `make test`, FULL_REFRESH, estrutura de pastas, solução de problemas (porta ocupada, Docker no WSL), licença do dataset.
 - **Where:** `README.md`
 - **Depends on:** gates de M1..M4
