@@ -14,7 +14,7 @@ from loader.migrar import dsn
 def tudo() -> int:
     """Reexecuta toda a análise em ordem e regrava resultado.* (REQ-270). Semente fixa: duas execuções dão os mesmos números."""
     etapas = [["meta"], ["eda"], ["bruto"], ["ajustado"], ["semana"], ["propensao"], ["sensibilidade"]]
-    if validacao.ROTULOS.is_file():
+    if validacao.ROTULOS.is_file() and validacao.PREVISOES.is_file():
         etapas.append(["validacao"])
     etapas.append(["achados"])
     for e in etapas:

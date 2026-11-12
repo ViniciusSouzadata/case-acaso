@@ -26,6 +26,7 @@ REGRAS_RECUSA = RAIZ / "seeds" / "regras_recusa.yaml"
 EM_BRANCO = RAIZ / "seeds" / "validacao_manual_em_branco.csv"
 PREENCHIDA = RAIZ / "seeds" / "validacao_manual_preenchida.csv"
 ROTULOS = RAIZ / "seeds" / "validacao_manual.csv"
+PREVISOES = RAIZ / "seeds" / "validacao_previsoes.csv"   # classificador/previsoes_200.py
 
 N_AMOSTRA = 200
 N_RECUSA_PREVISTA = 50   # parte da amostra sorteada entre as respostas que a regra marcou como recusa (o resto, entre as que não marcou)
@@ -194,34 +195,42 @@ def ler_rotulos(caminho: Path = ROTULOS) -> dict[int, tuple[str, str]]:
 
 
 # ----------------------------------------------------------------------------------------------- gravação no banco
-def _recusa_prevista(conn, ids: list[int]) -> dict[int, str]:
-    rows = conn.execute("SELECT conversa_id, recusa_1 FROM stg.conversa WHERE conversa_id = ANY(%s)", (ids,)).fetchall()
-    return {c: ("sim" if r else "não") for c, r in rows}
+def ler_previsoes(caminho: Path = PREVISOES) -> dict[str, dict[int, tuple[str, str]]]:
+    """classificador -> {conversa_id: (tema, 'sim'|'não' de recusa)} nas 200; versão por classificador em `versoes`."""
+    saida: dict[str, dict[int, tuple[str, str]]] = {}
+    with Path(caminho).open(encoding="utf-8", newline="") as f:
+        for l in csv.DictReader(f):
+            saida.setdefault(l["classificador"], {})[int(l["conversa_id"])] = (l["tema"], "sim" if l["recusa"] == "true" else "não")
+    return saida
 
 
-def validar(conn, rotulos: Path = ROTULOS) -> list[dict]:
-    """Compara os rótulos do Vinícius com o seed de tema e com `stg.conversa.recusa_1` e grava em resultado.validacao_classificador."""
+def _versoes(caminho: Path = PREVISOES) -> dict[str, str]:
+    with Path(caminho).open(encoding="utf-8", newline="") as f:
+        return {l["classificador"]: l["versao"] for l in csv.DictReader(f)}
+
+
+def validar(conn, rotulos: Path = ROTULOS, previsoes: Path = PREVISOES) -> list[dict]:
+    """Compara os rótulos do Vinícius com CADA classificador nas 200 completas e grava em resultado.validacao_classificador.
+
+    Uma linha por (tipo, classificador): `classificador` = 'tema' ou 'recusa'; `modelo` = 'regras' ou 'openrouter:<modelo>'.
+    As previsões vêm de `seeds/validacao_previsoes.csv` (regras aplicadas na hora às 200; LLM do cache), não do seed de tema.
+    """
     from analise.gravar import substituir
 
     humanos = ler_rotulos(rotulos)
     ids = sorted(humanos)
-    temas = {c: (t, o) for c, t, o in conn.execute(
-        "SELECT conversa_id, tema, tema_origem FROM stg.conversa WHERE conversa_id = ANY(%s)", (ids,))}
-    recusas = _recusa_prevista(conn, ids)
-    faltando = [i for i in ids if i not in temas]
-    if faltando:
-        raise ValueError(f"{len(faltando)} conversas da validação não estão na base")
-    origem = Counter(o for _, o in temas.values()).most_common(1)[0][0]
-    versao_recusa, _ = _padroes_recusa()
+    prev = ler_previsoes(previsoes)
+    versoes = _versoes(previsoes)
     resultados = []
-    for nome, hum, maq, versao, modelo in (
-        ("tema", [humanos[i][0] for i in ids], [temas[i][0] for i in ids], origem.split(":", 1)[-1], origem),
-        ("recusa", [humanos[i][1] for i in ids], [recusas[i] for i in ids], versao_recusa, "regras"),
-    ):
-        m = resumo_metricas(hum, maq)
-        resultados.append({"classificador": nome, "n": m["n"], "acuracia": m["acuracia"], "kappa": m["kappa"],
-                           "detalhe_json": json.dumps({"matriz_confusao": m["matriz_confusao"], "por_classe": m["por_classe"]}, ensure_ascii=False),
-                           "versao_prompt": versao, "modelo": modelo})
+    for origem in sorted(prev, key=lambda o: (o != "regras", o)):
+        if set(prev[origem]) != set(ids):
+            raise ValueError(f"{origem}: previsões não cobrem as {len(ids)} conversas rotuladas")
+        v_tema, _, v_rec = versoes[origem].partition("|")
+        for nome, pos, versao in (("tema", 0, v_tema), ("recusa", 1, v_rec or v_tema)):
+            m = resumo_metricas([humanos[i][pos] for i in ids], [prev[origem][i][pos] for i in ids])
+            resultados.append({"classificador": nome, "n": m["n"], "acuracia": m["acuracia"], "kappa": m["kappa"],
+                               "detalhe_json": json.dumps({"matriz_confusao": m["matriz_confusao"], "por_classe": m["por_classe"]}, ensure_ascii=False),
+                               "versao_prompt": versao, "modelo": origem if origem != "regras" else f"regras:{v_tema}" if nome == "tema" else "regras"})
     cols = ["classificador", "n", "acuracia", "kappa", "detalhe_json", "versao_prompt", "modelo"]
     substituir(conn, "validacao_classificador", cols, [[r[c] for c in cols] for r in resultados])
     return resultados

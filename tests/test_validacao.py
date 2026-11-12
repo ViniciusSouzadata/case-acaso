@@ -96,25 +96,35 @@ def test_anonimizar_recusa_tema_fora_da_taxonomia(tmp_path):
 
 
 @pytest.mark.usefixtures("usar_real")
-def test_validar_grava_acuracia_kappa_e_matriz(tmp_path):
+def test_validar_grava_uma_linha_por_classificador_nas_200_completas(tmp_path):
+    """Cada classificador é avaliado nas mesmas conversas; o seed de tema do banco não entra na conta."""
+    ids = list(range(1000, 1060))
+    rot, prev = tmp_path / "rot.csv", tmp_path / "prev.csv"
+    with rot.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(validacao.CABECALHO_ROTULOS)
+        for i, cid in enumerate(ids):
+            w.writerow([cid, "programação/TI", "sim" if i < 10 else "não"])
+    with prev.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["conversa_id", "classificador", "versao", "tema", "recusa"])
+        for i, cid in enumerate(ids):   # regras: erra o tema nas 6 primeiras e a recusa nas 3 primeiras
+            w.writerow([cid, "regras", "9.9.9|8.8.8", "outros/indefinido" if i < 6 else "programação/TI", "false" if i < 3 else ("true" if i < 10 else "false")])
+        for i, cid in enumerate(ids):   # LLM: acerta tudo
+            w.writerow([cid, "openrouter:x/y", "or-1", "programação/TI", "true" if i < 10 else "false"])
     with psycopg.connect(dsn(), autocommit=True) as c:
-        amostra = c.execute("SELECT conversa_id, tema, recusa_1 FROM stg.conversa WHERE conta_como_uso ORDER BY conversa_id LIMIT 60").fetchall()
-        # humano concorda com a máquina em tudo, menos nas 6 primeiras (tema) e 3 primeiras (recusa) -> acurácias exatas
-        rot = tmp_path / "rot.csv"
-        with rot.open("w", encoding="utf-8", newline="") as f:
-            w = csv.writer(f, lineterminator="\n")
-            w.writerow(validacao.CABECALHO_ROTULOS)
-            for i, (cid, tema, rec) in enumerate(amostra):
-                tema_h = "outros/indefinido" if i < 6 and tema != "outros/indefinido" else tema
-                if i < 6 and tema == "outros/indefinido":
-                    tema_h = "programação/TI"
-                rec_h = ("não" if rec else "sim") if i < 3 else ("sim" if rec else "não")
-                w.writerow([cid, tema_h, rec_h])
-        r = validacao.validar(c, rot)
-        gravado = c.execute("SELECT classificador, n, acuracia, kappa, detalhe_json->'matriz_confusao' IS NOT NULL, modelo "
-                            "FROM resultado.validacao_classificador ORDER BY 1").fetchall()
-    assert [x["classificador"] for x in r] == ["tema", "recusa"]
-    assert r[0]["n"] == r[1]["n"] == 60
-    assert r[0]["acuracia"] == pytest.approx(54 / 60) and r[1]["acuracia"] == pytest.approx(57 / 60)
-    assert [g[0] for g in gravado] == ["recusa", "tema"] and all(g[4] for g in gravado)
-    assert gravado[1][5].startswith("regras:")
+        r = validacao.validar(c, rot, prev)
+        gravado = c.execute("SELECT classificador, modelo, n, acuracia FROM resultado.validacao_classificador ORDER BY modelo, classificador").fetchall()
+    assert [(x["classificador"], x["modelo"]) for x in r] == [("tema", "regras:9.9.9"), ("recusa", "regras"),
+                                                              ("tema", "openrouter:x/y"), ("recusa", "openrouter:x/y")]
+    assert all(x["n"] == 60 for x in r)
+    assert [x["acuracia"] for x in r] == [pytest.approx(54 / 60), pytest.approx(57 / 60), 1.0, 1.0]
+    assert len(gravado) == 4 and {g[2] for g in gravado} == {60}
+
+
+def test_validar_exige_previsoes_para_todas_as_rotuladas(tmp_path):
+    rot, prev = tmp_path / "rot.csv", tmp_path / "prev.csv"
+    rot.write_text("conversa_id,tema_vinicius,recusa_vinicius\n1,programação/TI,não\n2,programação/TI,não\n", encoding="utf-8")
+    prev.write_text("conversa_id,classificador,versao,tema,recusa\n1,regras,1|1,programação/TI,false\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="não cobrem"):
+        validacao.validar(None, rot, prev)

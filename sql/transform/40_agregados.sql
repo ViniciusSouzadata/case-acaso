@@ -92,6 +92,10 @@ r AS (
            c.usuarios, c.voltaram_7d, c.taxa
     FROM mart.calc_retencao('oficial', NULL, NULL, false) c
     UNION ALL
+    SELECT 'burn_in_28d', 'Descarta os primeiros 28 dias da base (em vez de ' || ops.param('burn_in_dias') || '): trata o início da coleta com mais folga (BDR-09).',
+           c.usuarios, c.voltaram_7d, c.taxa
+    FROM mart.calc_retencao('oficial', NULL, NULL, NULL, NULL, NULL, 'sessao', 28) c
+    UNION ALL
     SELECT 'com_trafego_anomalo', 'Inclui os usuários de IPs com volume anômalo (provável automação).',
            c.usuarios, c.voltaram_7d, c.taxa
     FROM mart.calc_retencao('oficial', NULL, NULL, NULL, true) c

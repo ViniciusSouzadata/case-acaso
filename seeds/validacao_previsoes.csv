@@ -1,0 +1,401 @@
+conversa_id,classificador,versao,tema,recusa
+142198,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+162376,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+178519,regras,1.1.0|1.0.0,estudo/dever de casa,true
+190571,regras,1.1.0|1.0.0,estudo/dever de casa,false
+190637,regras,1.1.0|1.0.0,estudo/dever de casa,true
+191246,regras,1.1.0|1.0.0,escrita e tradução,false
+212299,regras,1.1.0|1.0.0,trabalho/negócios,true
+217346,regras,1.1.0|1.0.0,estudo/dever de casa,false
+220890,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+231525,regras,1.1.0|1.0.0,conversa pessoal/conselho,true
+239235,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+239748,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+241393,regras,1.1.0|1.0.0,trabalho/negócios,false
+241973,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+255046,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+277499,regras,1.1.0|1.0.0,trabalho/negócios,false
+285495,regras,1.1.0|1.0.0,estudo/dever de casa,true
+285512,regras,1.1.0|1.0.0,estudo/dever de casa,false
+287432,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+287615,regras,1.1.0|1.0.0,outros/indefinido,false
+289972,regras,1.1.0|1.0.0,trabalho/negócios,true
+299495,regras,1.1.0|1.0.0,trabalho/negócios,false
+302032,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+302273,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+302717,regras,1.1.0|1.0.0,escrita e tradução,false
+307790,regras,1.1.0|1.0.0,estudo/dever de casa,true
+316600,regras,1.1.0|1.0.0,criação/ficção e roleplay,true
+325299,regras,1.1.0|1.0.0,programação/TI,true
+336457,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+337085,regras,1.1.0|1.0.0,programação/TI,false
+352250,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+373623,regras,1.1.0|1.0.0,trabalho/negócios,true
+384748,regras,1.1.0|1.0.0,trabalho/negócios,false
+399943,regras,1.1.0|1.0.0,outros/indefinido,false
+411881,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+422105,regras,1.1.0|1.0.0,conversa pessoal/conselho,true
+424632,regras,1.1.0|1.0.0,trabalho/negócios,false
+429888,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+432818,regras,1.1.0|1.0.0,conversa pessoal/conselho,true
+438766,regras,1.1.0|1.0.0,outros/indefinido,false
+445925,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+453045,regras,1.1.0|1.0.0,outros/indefinido,true
+454778,regras,1.1.0|1.0.0,programação/TI,false
+456214,regras,1.1.0|1.0.0,trabalho/negócios,true
+463927,regras,1.1.0|1.0.0,estudo/dever de casa,false
+465100,regras,1.1.0|1.0.0,programação/TI,false
+470249,regras,1.1.0|1.0.0,escrita e tradução,true
+474945,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+492899,regras,1.1.0|1.0.0,programação/TI,false
+508741,regras,1.1.0|1.0.0,programação/TI,true
+510639,regras,1.1.0|1.0.0,criação/ficção e roleplay,true
+519469,regras,1.1.0|1.0.0,informação geral/curiosidade,true
+523522,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+525004,regras,1.1.0|1.0.0,trabalho/negócios,false
+534773,regras,1.1.0|1.0.0,informação geral/curiosidade,true
+536438,regras,1.1.0|1.0.0,estudo/dever de casa,false
+537712,regras,1.1.0|1.0.0,escrita e tradução,true
+539187,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+550364,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+551452,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+558436,regras,1.1.0|1.0.0,trabalho/negócios,false
+564522,regras,1.1.0|1.0.0,programação/TI,false
+568916,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+583321,regras,1.1.0|1.0.0,programação/TI,false
+588577,regras,1.1.0|1.0.0,informação geral/curiosidade,true
+612047,regras,1.1.0|1.0.0,criação/ficção e roleplay,true
+612521,regras,1.1.0|1.0.0,informação geral/curiosidade,true
+612801,regras,1.1.0|1.0.0,trabalho/negócios,false
+629722,regras,1.1.0|1.0.0,trabalho/negócios,false
+630757,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+639468,regras,1.1.0|1.0.0,trabalho/negócios,false
+646128,regras,1.1.0|1.0.0,outros/indefinido,true
+670553,regras,1.1.0|1.0.0,escrita e tradução,true
+676687,regras,1.1.0|1.0.0,trabalho/negócios,false
+690791,regras,1.1.0|1.0.0,estudo/dever de casa,true
+691014,regras,1.1.0|1.0.0,estudo/dever de casa,false
+692769,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+702179,regras,1.1.0|1.0.0,outros/indefinido,false
+712582,regras,1.1.0|1.0.0,trabalho/negócios,false
+718682,regras,1.1.0|1.0.0,trabalho/negócios,false
+754196,regras,1.1.0|1.0.0,trabalho/negócios,true
+756803,regras,1.1.0|1.0.0,programação/TI,false
+765211,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+792346,regras,1.1.0|1.0.0,informação geral/curiosidade,true
+820499,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+834759,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+835941,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+836222,regras,1.1.0|1.0.0,outros/indefinido,false
+846728,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+847441,regras,1.1.0|1.0.0,outros/indefinido,true
+916366,regras,1.1.0|1.0.0,escrita e tradução,false
+939346,regras,1.1.0|1.0.0,outros/indefinido,true
+940139,regras,1.1.0|1.0.0,outros/indefinido,false
+957447,regras,1.1.0|1.0.0,outros/indefinido,false
+1030307,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+1045399,regras,1.1.0|1.0.0,estudo/dever de casa,false
+1139163,regras,1.1.0|1.0.0,outros/indefinido,false
+1192083,regras,1.1.0|1.0.0,conversa pessoal/conselho,true
+1211952,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+1219708,regras,1.1.0|1.0.0,escrita e tradução,true
+1247399,regras,1.1.0|1.0.0,programação/TI,false
+1251351,regras,1.1.0|1.0.0,outros/indefinido,false
+1325566,regras,1.1.0|1.0.0,estudo/dever de casa,false
+1344167,regras,1.1.0|1.0.0,outros/indefinido,false
+1348732,regras,1.1.0|1.0.0,trabalho/negócios,false
+1357458,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+1357675,regras,1.1.0|1.0.0,escrita e tradução,false
+1363609,regras,1.1.0|1.0.0,estudo/dever de casa,false
+1371265,regras,1.1.0|1.0.0,outros/indefinido,false
+1395745,regras,1.1.0|1.0.0,escrita e tradução,false
+1411679,regras,1.1.0|1.0.0,trabalho/negócios,false
+1412958,regras,1.1.0|1.0.0,criação/ficção e roleplay,true
+1422921,regras,1.1.0|1.0.0,escrita e tradução,false
+1452070,regras,1.1.0|1.0.0,escrita e tradução,false
+1494253,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+1519170,regras,1.1.0|1.0.0,escrita e tradução,false
+1521242,regras,1.1.0|1.0.0,estudo/dever de casa,false
+1528457,regras,1.1.0|1.0.0,programação/TI,false
+1529017,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+1547289,regras,1.1.0|1.0.0,estudo/dever de casa,false
+1554090,regras,1.1.0|1.0.0,escrita e tradução,false
+1556286,regras,1.1.0|1.0.0,criação/ficção e roleplay,true
+1561478,regras,1.1.0|1.0.0,outros/indefinido,false
+1573290,regras,1.1.0|1.0.0,trabalho/negócios,false
+1585668,regras,1.1.0|1.0.0,escrita e tradução,false
+1589199,regras,1.1.0|1.0.0,escrita e tradução,false
+1601119,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+1614892,regras,1.1.0|1.0.0,outros/indefinido,true
+1615576,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+1617351,regras,1.1.0|1.0.0,outros/indefinido,false
+1622860,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+1632269,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+1662225,regras,1.1.0|1.0.0,conversa pessoal/conselho,true
+1672965,regras,1.1.0|1.0.0,escrita e tradução,false
+1740679,regras,1.1.0|1.0.0,programação/TI,true
+1745554,regras,1.1.0|1.0.0,outros/indefinido,true
+1747065,regras,1.1.0|1.0.0,escrita e tradução,false
+1757631,regras,1.1.0|1.0.0,programação/TI,false
+1764348,regras,1.1.0|1.0.0,outros/indefinido,false
+1764840,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+1776702,regras,1.1.0|1.0.0,programação/TI,true
+1809533,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+1827878,regras,1.1.0|1.0.0,escrita e tradução,false
+1830330,regras,1.1.0|1.0.0,criação/ficção e roleplay,true
+1835696,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+1878712,regras,1.1.0|1.0.0,trabalho/negócios,true
+1885787,regras,1.1.0|1.0.0,estudo/dever de casa,false
+1913367,regras,1.1.0|1.0.0,estudo/dever de casa,false
+1967146,regras,1.1.0|1.0.0,conversa pessoal/conselho,true
+2014841,regras,1.1.0|1.0.0,escrita e tradução,true
+2018585,regras,1.1.0|1.0.0,programação/TI,true
+2027713,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+2032279,regras,1.1.0|1.0.0,programação/TI,false
+2055400,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+2057140,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+2098022,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+2099310,regras,1.1.0|1.0.0,programação/TI,false
+2110977,regras,1.1.0|1.0.0,criação/ficção e roleplay,true
+2147722,regras,1.1.0|1.0.0,estudo/dever de casa,false
+2157417,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+2222516,regras,1.1.0|1.0.0,outros/indefinido,false
+2226474,regras,1.1.0|1.0.0,informação geral/curiosidade,true
+2240165,regras,1.1.0|1.0.0,outros/indefinido,false
+2243560,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+2315195,regras,1.1.0|1.0.0,conversa pessoal/conselho,true
+2319573,regras,1.1.0|1.0.0,outros/indefinido,false
+2334768,regras,1.1.0|1.0.0,estudo/dever de casa,false
+2344908,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+2347686,regras,1.1.0|1.0.0,estudo/dever de casa,true
+2362941,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+2392601,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+2394259,regras,1.1.0|1.0.0,escrita e tradução,false
+2398547,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+2407878,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+2413145,regras,1.1.0|1.0.0,programação/TI,true
+2439524,regras,1.1.0|1.0.0,trabalho/negócios,false
+2441200,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+2460935,regras,1.1.0|1.0.0,programação/TI,false
+2492663,regras,1.1.0|1.0.0,programação/TI,false
+2493012,regras,1.1.0|1.0.0,escrita e tradução,false
+2494619,regras,1.1.0|1.0.0,outros/indefinido,false
+2496902,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+2499484,regras,1.1.0|1.0.0,informação geral/curiosidade,false
+2503601,regras,1.1.0|1.0.0,escrita e tradução,false
+2530878,regras,1.1.0|1.0.0,programação/TI,false
+2544392,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+2563301,regras,1.1.0|1.0.0,programação/TI,false
+2568603,regras,1.1.0|1.0.0,programação/TI,false
+2572457,regras,1.1.0|1.0.0,estudo/dever de casa,false
+2583902,regras,1.1.0|1.0.0,conversa pessoal/conselho,false
+2590042,regras,1.1.0|1.0.0,criação/ficção e roleplay,false
+2608235,regras,1.1.0|1.0.0,escrita e tradução,false
+2669188,regras,1.1.0|1.0.0,programação/TI,false
+2680614,regras,1.1.0|1.0.0,estudo/dever de casa,false
+2726394,regras,1.1.0|1.0.0,escrita e tradução,true
+2753581,regras,1.1.0|1.0.0,outros/indefinido,false
+2764461,regras,1.1.0|1.0.0,escrita e tradução,false
+2778827,regras,1.1.0|1.0.0,trabalho/negócios,false
+2798115,regras,1.1.0|1.0.0,estudo/dever de casa,false
+2810318,regras,1.1.0|1.0.0,estudo/dever de casa,false
+142198,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+162376,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+178519,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+190571,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+190637,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,true
+191246,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+212299,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,true
+217346,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+220890,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+231525,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+239235,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+239748,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+241393,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+241973,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+255046,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+277499,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+285495,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,true
+285512,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,true
+287432,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,true
+287615,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+289972,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+299495,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+302032,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+302273,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+302717,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+307790,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,true
+316600,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+325299,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+336457,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+337085,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+352250,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,false
+373623,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,true
+384748,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+399943,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+411881,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+422105,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+424632,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+429888,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+432818,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+438766,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+445925,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+453045,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,false
+454778,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+456214,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+463927,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+465100,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+470249,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+474945,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+492899,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+508741,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,false
+510639,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,true
+519469,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,true
+523522,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+525004,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+534773,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,true
+536438,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+537712,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+539187,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+550364,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+551452,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+558436,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+564522,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+568916,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+583321,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+588577,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+612047,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,true
+612521,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+612801,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+629722,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+630757,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+639468,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+646128,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+670553,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+676687,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+690791,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+691014,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,true
+692769,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+702179,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+712582,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+718682,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+754196,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+756803,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+765211,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+792346,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,true
+820499,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+834759,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+835941,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+836222,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+846728,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+847441,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+916366,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,false
+939346,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,true
+940139,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+957447,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+1030307,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+1045399,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1139163,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1192083,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+1211952,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+1219708,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,true
+1247399,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1251351,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+1325566,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1344167,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+1348732,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1357458,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+1357675,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1363609,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+1371265,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+1395745,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1411679,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+1412958,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+1422921,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1452070,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1494253,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1519170,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1521242,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1528457,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1529017,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1547289,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1554090,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1556286,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+1561478,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1573290,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1585668,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1589199,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1601119,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1614892,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+1615576,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+1617351,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+1622860,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+1632269,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+1662225,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,true
+1672965,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1740679,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,true
+1745554,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,true
+1747065,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1757631,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+1764348,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1764840,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+1776702,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+1809533,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+1827878,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+1830330,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+1835696,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+1878712,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,true
+1885787,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1913367,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+1967146,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2014841,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,true
+2018585,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,true
+2027713,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+2032279,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+2055400,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+2057140,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2098022,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+2099310,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+2110977,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2147722,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+2157417,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2222516,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+2226474,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,true
+2240165,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2243560,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+2315195,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,true
+2319573,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2334768,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+2344908,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+2347686,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+2362941,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+2392601,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+2394259,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+2398547,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2407878,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,false
+2413145,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2439524,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+2441200,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2460935,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+2492663,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+2493012,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+2494619,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+2496902,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+2499484,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+2503601,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2530878,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+2544392,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+2563301,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+2568603,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,escrita e tradução,false
+2572457,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+2583902,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+2590042,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2608235,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,informação geral/curiosidade,false
+2669188,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,programação/TI,false
+2680614,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,estudo/dever de casa,false
+2726394,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,true
+2753581,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,conversa pessoal/conselho,false
+2764461,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,outros/indefinido,false
+2778827,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,trabalho/negócios,false
+2798115,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false
+2810318,openrouter:anthropic/claude-haiku-5.5,or-1.0.0,criação/ficção e roleplay,false

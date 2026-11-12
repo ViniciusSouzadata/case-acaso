@@ -171,7 +171,7 @@ class TestSintetico:
         linhas = {r[0]: r[1:] for r in _q(
             "SELECT definicao, usuarios, voltaram_7d, taxa, delta_vs_oficial FROM mart.agg_retencao_sensibilidade")}
         assert set(linhas) == {"oficial", "so_ip", "ip_ua_completo", "sessao_60min", "outro_dia", "sem_burn_in",
-                               "com_trafego_anomalo", "com_perguntas_vazias", "fuso_utc"}
+                               "com_trafego_anomalo", "com_perguntas_vazias", "fuso_utc", "burn_in_28d"}
         assert linhas["oficial"][:2] == (20, 5)
         assert float(linhas["oficial"][2]) == pytest.approx(5 / 20)
         assert float(linhas["oficial"][3]) == 0
