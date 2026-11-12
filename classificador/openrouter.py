@@ -266,13 +266,15 @@ class ClassificadorOpenRouter:
         return (uso.tokens_entrada * self.preco_entrada_milhao + uso.tokens_saida * self.preco_saida_milhao) / 1e6
 
     def _registrar(self, n: int, uso: Uso, custo: float, latencia: float, status: str) -> None:
-        novo = not self._arq_log.is_file()
-        with self._trava, self._arq_log.open("a", encoding="utf-8", newline="") as f:
-            w = csv.writer(f, lineterminator="\n")
-            if novo:
-                w.writerow(["quando", "modelo", "n_itens", "tokens_entrada", "tokens_saida", "custo_usd", "latencia_s", "status"])
-            w.writerow([time.strftime("%Y-%m-%dT%H:%M:%S"), f"{self.provedor}:{self.modelo}", n, uso.tokens_entrada, uso.tokens_saida,
-                        f"{custo:.6f}", f"{latencia:.2f}", status])
+        with self._trava:
+            # a checagem de existência fica dentro da trava: fora dela, duas threads viam "sem arquivo" e escreviam o cabeçalho duas vezes
+            novo = not self._arq_log.is_file()
+            with self._arq_log.open("a", encoding="utf-8", newline="") as f:
+                w = csv.writer(f, lineterminator="\n")
+                if novo:
+                    w.writerow(["quando", "modelo", "n_itens", "tokens_entrada", "tokens_saida", "custo_usd", "latencia_s", "status"])
+                w.writerow([time.strftime("%Y-%m-%dT%H:%M:%S"), f"{self.provedor}:{self.modelo}", n, uso.tokens_entrada, uso.tokens_saida,
+                            f"{custo:.6f}", f"{latencia:.2f}", status])
 
     def _chamar_lote(self, itens: list[tuple[int, str, str]]) -> dict[int, tuple[str, bool]]:
         if self.gasto_usd >= self.teto_usd:
