@@ -8,19 +8,24 @@
 -- consecutivas que terminam na semana (só 'semana'; NULL se faltar semana ou ela não for madura).
 DROP TABLE IF EXISTS mart.agg_retencao_periodo_novo;
 CREATE TABLE mart.agg_retencao_periodo_novo AS
-WITH p AS (SELECT ops.param('n_minimo')::int AS n_min),
+WITH p AS (
+    SELECT ops.param('n_minimo')::int AS n_min,
+           (SELECT (min(ts_inicio) AT TIME ZONE ops.param('fuso_pais'))::date FROM stg.conversa) AS ini_coleta
+),
 u AS (
-    SELECT d.coorte_semana, d.coorte_mes, d.maduro, f.voltou_7d
+    SELECT d.coorte_semana, d.coorte_mes, d.maduro, f.voltou_7d, (d.coorte_semana < p.ini_coleta + 28) AS sem_inicio
     FROM mart.dim_usuario_novo d
+    CROSS JOIN p
     JOIN mart.fct_primeira_experiencia_novo f USING (usuario_id)
     WHERE NOT d.burn_in AND NOT d.trafego_anomalo
 ),
 per AS (
     SELECT 'semana'::text AS granularidade, coorte_semana AS periodo, count(*)::bigint AS novos,
-           bool_and(maduro) AS madura, count(*) FILTER (WHERE voltou_7d)::bigint AS vol
+           bool_and(maduro) AS madura, count(*) FILTER (WHERE voltou_7d)::bigint AS vol,
+           bool_or(sem_inicio) AS inicio
     FROM u GROUP BY coorte_semana
     UNION ALL
-    SELECT 'mes', coorte_mes, count(*)::bigint, bool_and(maduro), count(*) FILTER (WHERE voltou_7d)::bigint
+    SELECT 'mes', coorte_mes, count(*)::bigint, bool_and(maduro), count(*) FILTER (WHERE voltou_7d)::bigint, bool_or(sem_inicio)
     FROM u GROUP BY coorte_mes
 ),
 mm AS (
@@ -40,7 +45,10 @@ SELECT per.granularidade,
        CASE WHEN per.madura THEN mart.wilson_sup(per.vol, per.novos) END AS ic_sup,
        CASE WHEN per.granularidade = 'semana' THEN round(mm.taxa_mm4, 6) END AS taxa_mm4,
        per.madura,
-       (per.novos >= p.n_min) AS amostra_suficiente
+       (per.novos >= p.n_min) AS amostra_suficiente,
+       -- BDR-09: semana de coorte que começa a menos de 28 dias do 1º dado da base pode misturar usuários antigos (início da coleta).
+       -- Calculado do mínimo da base, sem data fixa. Mês: true se contém alguma coorte semanal marcada.
+       per.inicio AS inicio_coleta
 FROM per
 CROSS JOIN p
 LEFT JOIN mm ON per.granularidade = 'semana' AND mm.periodo = per.periodo;
