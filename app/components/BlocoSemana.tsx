@@ -78,6 +78,7 @@ export function BlocoSemana() {
             <div className="mt-2 space-y-2 text-xs text-slate-700">
               {resumo.p_valor !== null ? <p>{t("semana.detalheP", { p: formatarPct(resumo.p_valor, 1) })}</p> : null}
               {dados && dados.segmentos.length > 0 ? (
+                <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <caption className="sr-only">{t("semana.porGrupo")}</caption>
                   <thead>
@@ -105,6 +106,7 @@ export function BlocoSemana() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               ) : null}
             </div>
           </details>

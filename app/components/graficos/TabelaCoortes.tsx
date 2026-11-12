@@ -6,6 +6,7 @@ import { amostraPequena, imatura } from "@/lib/regras";
 /** Os mesmos dados do gráfico em tabela (acessível, REQ-411). Aplica a regra única de amostra e de coorte imatura. */
 export function TabelaCoortes({ linhas, unidade }: { linhas: LinhaGrafico[]; unidade: string }) {
   return (
+    <div className="overflow-x-auto">
     <table className="w-full text-left text-xs">
       <caption className="mb-1 text-left text-slate-600">{t("retencao.tabelaLegenda", { unidade })}</caption>
       <thead>
@@ -42,5 +43,6 @@ export function TabelaCoortes({ linhas, unidade }: { linhas: LinhaGrafico[]; uni
         })}
       </tbody>
     </table>
+    </div>
   );
 }
