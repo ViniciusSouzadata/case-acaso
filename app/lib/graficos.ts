@@ -12,6 +12,8 @@ export interface CoorteApi {
   taxa_mm4: number | null;
   madura: boolean;
   amostra_suficiente: boolean;
+  /** semana logo no início dos dados: pode incluir usuários antigos (taxa tende a sair mais alta) */
+  inicio_coleta: boolean;
 }
 
 export interface EraApi {
@@ -36,6 +38,7 @@ export interface LinhaGrafico {
   taxaFracao: number | null;
   amostraOk: boolean;
   madura: boolean;
+  inicioColeta: boolean;
 }
 
 const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
@@ -66,6 +69,7 @@ export function prepararCoortes(c: CoorteApi[], g: Granularidade): LinhaGrafico[
       taxaFracao: x.taxa,
       amostraOk: x.amostra_suficiente,
       madura: x.madura,
+      inicioColeta: x.inicio_coleta,
     };
   });
 }

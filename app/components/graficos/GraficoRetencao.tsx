@@ -32,7 +32,7 @@ interface PontoProps {
 /** Ponto cheio azul; cinza vazado quando a amostra é pequena (REQ-404). */
 function Ponto({ cx, cy, payload }: PontoProps) {
   if (cx === undefined || cy === undefined || !payload || payload.taxa === null) return <g />;
-  return payload.amostraOk ? (
+  return payload.amostraOk && !payload.inicioColeta ? (
     <circle cx={cx} cy={cy} r={3.5} fill={AZUL} stroke="#fff" strokeWidth={1} />
   ) : (
     <circle cx={cx} cy={cy} r={4} fill="#fff" stroke={CINZA} strokeWidth={1.5} />
@@ -110,6 +110,7 @@ export function GraficoRetencao({
         <li>{t("retencao.legFaixa")}</li>
         <li>{t("retencao.legMedia")}</li>
         <li>{t("retencao.legPequena")}</li>
+        {linhas.some((l) => l.inicioColeta) ? <li>{t("retencao.legInicioColeta")}</li> : null}
         <li>{t("retencao.legImatura")}</li>
         {faixas.length > 0 ? <li>{t("retencao.legEras")}:</li> : null}
         {faixas.map((f) => (

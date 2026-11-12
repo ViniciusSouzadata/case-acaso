@@ -15,13 +15,13 @@ import {
 
 afterEach(cleanup);
 
-const base = { voltaram_7d: 20, taxa: 0.25, ic_inf: 0.18, ic_sup: 0.34, taxa_mm4: 0.24, madura: true, amostra_suficiente: true };
+const base = { voltaram_7d: 20, taxa: 0.25, ic_inf: 0.18, ic_sup: 0.34, taxa_mm4: 0.24, madura: true, amostra_suficiente: true, inicio_coleta: false };
 const coortes: CoorteApi[] = [
   { periodo: "2023-04-24", novos: 70, ...base },
   { periodo: "2023-05-01", novos: 84, ...base, taxa: 0.1667, voltaram_7d: 14 },
   { periodo: "2023-05-08", novos: 12, ...base, taxa: 0.5, voltaram_7d: 6, ic_inf: 0.25, ic_sup: 0.75, amostra_suficiente: false },
-  { periodo: "2024-04-08", novos: 20, voltaram_7d: null, taxa: null, ic_inf: null, ic_sup: null, taxa_mm4: null, madura: false, amostra_suficiente: false },
-  { periodo: "2024-04-15", novos: 5, voltaram_7d: null, taxa: null, ic_inf: null, ic_sup: null, taxa_mm4: null, madura: false, amostra_suficiente: false },
+  { periodo: "2024-04-08", novos: 20, voltaram_7d: null, taxa: null, ic_inf: null, ic_sup: null, taxa_mm4: null, madura: false, amostra_suficiente: false, inicio_coleta: false },
+  { periodo: "2024-04-15", novos: 5, voltaram_7d: null, taxa: null, ic_inf: null, ic_sup: null, taxa_mm4: null, madura: false, amostra_suficiente: false, inicio_coleta: false },
 ];
 const eras: EraApi[] = [
   { era: "A", inicio: "2023-04-01", fim: "2023-04-30", descricao: "era A" },
@@ -107,5 +107,35 @@ describe("dica do ponto", () => {
   it("imatura: a dica diz que ainda não é uma queda", () => {
     render(<DicaCoorte linha={linhas[3]!} />);
     expect(screen.getByText(/não é uma queda/)).toBeTruthy();
+  });
+});
+
+describe("início da coleta", () => {
+  const inicio = [{ periodo: "2023-04-17", novos: 60, ...base, taxa: 0.31, inicio_coleta: true }];
+
+  it("tabela mostra a taxa com o aviso de início da coleta; semanas comuns não têm o aviso", () => {
+    render(<TabelaCoortes linhas={prepararCoortes([...inicio, ...coortes], "semana")} unidade="x" />);
+    const linha = document.querySelector('[data-periodo="2023-04-17"]') as HTMLElement;
+    expect(within(linha).getByText("31,0%")).toBeTruthy();
+    expect(within(linha).getByText(/Início da coleta: pode incluir usuários antigos, então a taxa tende a sair mais alta/)).toBeTruthy();
+    const comum = document.querySelector('[data-periodo="2023-05-01"]') as HTMLElement;
+    expect(within(comum).queryByText(/Início da coleta/)).toBeNull();
+  });
+
+  it("a dica do ponto traz o aviso", () => {
+    const [l] = prepararCoortes(inicio, "semana");
+    render(<DicaCoorte linha={l!} />);
+    expect(screen.getByText(/Início da coleta/)).toBeTruthy();
+    expect(l!.inicioColeta).toBe(true);
+  });
+
+  it("o contrato exige o campo inicio_coleta em cada coorte", async () => {
+    const { respostaCoortes } = await import("@/lib/esquemas");
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const ex = JSON.parse(readFileSync(resolve(process.cwd(), "exemplos/retencao-coortes.json"), "utf-8"));
+    expect(respostaCoortes.safeParse(ex).success).toBe(true);
+    delete ex.dados[0].inicio_coleta;
+    expect(respostaCoortes.safeParse(ex).success).toBe(false);
   });
 });

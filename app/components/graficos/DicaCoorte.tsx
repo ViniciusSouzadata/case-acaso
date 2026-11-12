@@ -21,6 +21,7 @@ export function DicaCoorte({ linha }: { linha: LinhaGrafico }) {
           {formatarPct(linha.taxaFracao)} ({t("numero.ic", { inf: formatarPct(linha.icInf), sup: formatarPct(linha.icSup) })})
         </div>
       )}
+      {linha.inicioColeta ? <div className="mt-1 font-medium">{t("retencao.inicioColeta")}</div> : null}
     </div>
   );
 }

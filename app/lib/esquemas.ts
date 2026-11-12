@@ -49,6 +49,7 @@ export const coorteSaida = z.strictObject({
   taxa_mm4: numOuNulo,
   madura: z.boolean(),
   amostra_suficiente: z.boolean(),
+  inicio_coleta: z.boolean(),
 });
 
 export const eraSaida = z.strictObject({

@@ -1,6 +1,6 @@
 { "dados": [
-    {"periodo":"2023-05-01","novos":84,"voltaram_7d":14,"taxa":0.1667,"ic_inf":0.1,"ic_sup":0.26,"taxa_mm4":0.22,"madura":true,"amostra_suficiente":true},
-    {"periodo":"2024-04-08","novos":20,"voltaram_7d":null,"taxa":null,"ic_inf":null,"ic_sup":null,"taxa_mm4":null,"madura":false,"amostra_suficiente":false}
+    {"periodo":"2023-05-01","novos":84,"voltaram_7d":14,"taxa":0.1667,"ic_inf":0.1,"ic_sup":0.26,"taxa_mm4":0.22,"madura":true,"amostra_suficiente":true,"inicio_coleta":false},
+    {"periodo":"2024-04-08","novos":20,"voltaram_7d":null,"taxa":null,"ic_inf":null,"ic_sup":null,"taxa_mm4":null,"madura":false,"amostra_suficiente":false,"inicio_coleta":false}
   ],
   "meta": {"versao_definicao":"1.0.0","versao_analise":"1.0.0","atualizado_em":"2026-11-14T12:00:00.000Z","lote_id":1,"request_id":"req_ab12cd","fonte":"mart.agg_retencao_periodo",
     "eras":[{"era":"2023-12+ (4 padrão)","inicio":"2023-12-01","fim":null,"descricao":"GPT-4 passa a ser o modelo padrão"}]} }

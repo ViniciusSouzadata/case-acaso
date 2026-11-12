@@ -90,7 +90,9 @@
     "colIc": "Intervalo de 95%",
     "notaPequena": "{k} dos {total} períodos têm amostra pequena e aparecem em cinza, sem número em destaque.",
     "notaImatura": "{k} dos {total} períodos ainda estão dentro dos 7 dias; não são uma queda.",
-    "tituloGraficoCarregando": "Taxa de retorno em 7 dias, período a período"
+    "tituloGraficoCarregando": "Taxa de retorno em 7 dias, período a período",
+    "inicioColeta": "Início da coleta: pode incluir usuários antigos, então a taxa tende a sair mais alta.",
+    "legInicioColeta": "Ponto cinza vazado também nas semanas do início da coleta: podem incluir usuários antigos, então a taxa tende a sair mais alta"
   },
   "sens": {
     "titulo": "E se mudarmos o que chamamos de usuário, de sessão ou de voltar?",
