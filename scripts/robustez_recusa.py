@@ -128,6 +128,36 @@ def main() -> int:
       f"{er['ame']:+.1f} | {er['inf']:+.1f} a {er['sup']:+.1f} | {er['p']:.4f} |")
     both = int(cruz.loc[True, True]) if (True in cruz.index and True in cruz.columns) else 0
     p(f"\nConcordância: as duas marcam {both}; só LLM {int(rec.sum()) - both}; só regras {br['n1'] - both}.")
+    # R6 / R7 -------------------------------------------------------------------------------------
+    c = conv[conv["conta_como_uso"]].sort_values(["usuario_id", "ts_inicio", "conversa_id"], kind="stable").copy()
+    c["dia"] = c["ts_inicio"].dt.tz_convert(par["fuso_pais"]).dt.date
+    prim = c.groupby("usuario_id").head(1).set_index("usuario_id")[["ts_inicio", "dia"]]
+    c = c.join(prim.rename(columns={"ts_inicio": "ts0", "dia": "dia0"}), on="usuario_id")
+    janela = pd.Timedelta(hours=par["janela_retorno_horas"])
+    outro = c[(c["ts_inicio"] <= c["ts0"] + janela) & (c["dia"] != c["dia0"])]["usuario_id"].unique()
+    df_o = df.copy()
+    df_o["voltou_7d"] = df_o["chave_usuario"].isin(set(outro))
+    ro = efeito_recusa(df_o, grupos, n_min)
+    bo = bruto_recusa(df_o, rec)
+    ra = efeito_recusa(df, grupos, n_min)
+    n1, n0 = int(rec.sum()), int((~rec).sum())
+    k_of_1, k_of_0 = int(df.loc[rec, "voltou_7d"].sum()), int(df.loc[~rec, "voltou_7d"].sum())
+    k_ou_1, k_ou_0 = int(df_o.loc[rec, "voltou_7d"].sum()), int(df_o.loc[~rec, "voltou_7d"].sum())
+    p("")
+    p("## R6 — Recusa com \"voltou em outro dia\" como retorno")
+    p("")
+    p(f"Retorno geral nessa regra: {int(df_o['voltou_7d'].sum())} de {len(df_o)} ({df_o['voltou_7d'].mean() * 100:.2f}%).")
+    p("")
+    p("| Definição de retorno | voltaram com recusa | voltaram sem recusa | bruto (p.p.) | IC Newcombe | ajustado (p.p.) | IC 95% | p |")
+    p("|---|---|---|---:|---|---:|---|---:|")
+    p(f"| oficial (nova sessão em 7 dias) | {k_of_1} de {n1} ({k_of_1 / n1 * 100:.1f}%) | {k_of_0} de {n0} ({k_of_0 / n0 * 100:.1f}%) | "
+      f"{b['bruto']:+.1f} | {b['inf']:+.1f} a {b['sup']:+.1f} | {ra['ame']:+.1f} | {ra['inf']:+.1f} a {ra['sup']:+.1f} | {ra['p']:.4f} |")
+    p(f"| outro dia | {k_ou_1} de {n1} ({k_ou_1 / n1 * 100:.1f}%) | {k_ou_0} de {n0} ({k_ou_0 / n0 * 100:.1f}%) | "
+      f"{bo['bruto']:+.1f} | {bo['inf']:+.1f} a {bo['sup']:+.1f} | {ro['ame']:+.1f} | {ro['inf']:+.1f} a {ro['sup']:+.1f} | {ro['p']:.4f} |")
+    p("")
+    p("## R7 — Contagens cruas (definição oficial)")
+    p("")
+    p(f"Voltaram {k_of_1} de {n1} com recusa e {k_of_0} de {n0} sem recusa.")
     (RAIZ / "docs" / "robustez_recusa.md").write_text("\n".join(saida) + "\n", encoding="utf-8")
     return 0
 

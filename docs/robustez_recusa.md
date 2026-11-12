@@ -47,3 +47,16 @@ Nota: o modelo ajustado de R1 já inclui o tema como covariável.
 | Regras | 153 | 22.2% | 24.0% | -1.8 | -7.9 a +5.7 | -3.3 | -10.1 a +3.5 | 0.3380 |
 
 Concordância: as duas marcam 90; só LLM 42; só regras 63.
+
+## R6 — Recusa com "voltou em outro dia" como retorno
+
+Retorno geral nessa regra: 400 de 2372 (16.86%).
+
+| Definição de retorno | voltaram com recusa | voltaram sem recusa | bruto (p.p.) | IC Newcombe | ajustado (p.p.) | IC 95% | p |
+|---|---|---|---:|---|---:|---|---:|
+| oficial (nova sessão em 7 dias) | 13 de 132 (9.8%) | 553 de 2240 (24.7%) | -14.8 | -19.2 a -8.3 | -16.4 | -21.4 a -11.5 | 0.0000 |
+| outro dia | 9 de 132 (6.8%) | 391 de 2240 (17.5%) | -10.6 | -14.2 a -4.8 | -11.5 | -15.7 a -7.3 | 0.0000 |
+
+## R7 — Contagens cruas (definição oficial)
+
+Voltaram 13 de 132 com recusa e 553 de 2240 sem recusa.
