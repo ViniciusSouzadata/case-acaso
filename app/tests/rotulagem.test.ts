@@ -6,9 +6,7 @@ import { describe, expect, it } from "vitest";
 // Dentro da imagem de testes só existe a pasta app/: sem o HTML (fora do app), o teste não se aplica.
 const caminho = resolve(__dirname, "../../scripts/rotulagem/rotular.html");
 const existe = existsSync(caminho);
-const html = existe ? readFileSync(caminho, "utf-8") : "<script id=\"logica\"></script>";
-const trecho = /<script id="logica">([\s\S]*?)<\/script>/.exec(html)![1]!;
-const lib = new Function(`${trecho}; return { parseCsv, gerarCsv, lerPlanilha, escreverPlanilha, chaveProgresso, TEMAS, COLUNAS };`)() as {
+type Lib = {
   parseCsv: (t: string) => string[][];
   gerarCsv: (l: string[][]) => string;
   lerPlanilha: (t: string) => Record<string, string>[];
@@ -17,6 +15,10 @@ const lib = new Function(`${trecho}; return { parseCsv, gerarCsv, lerPlanilha, e
   TEMAS: string[][];
   COLUNAS: string[];
 };
+// sem o HTML, nada é montado (o código do topo do arquivo roda mesmo com o describe pulado)
+const lib = (existe
+  ? new Function(`${/<script id="logica">([\s\S]*?)<\/script>/.exec(readFileSync(caminho, "utf-8"))![1]!}; return { parseCsv, gerarCsv, lerPlanilha, escreverPlanilha, chaveProgresso, TEMAS, COLUNAS };`)()
+  : null) as Lib;
 
 const registro = (id: string, pergunta: string, resposta: string) => ({ id_amostra: id, conversa_id: "9" + id, pergunta, resposta, tema_vinicius: "", recusa_vinicius: "" });
 
