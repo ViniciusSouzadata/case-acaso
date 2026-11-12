@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rotulagem da validação (T-205b)</title>
+<style>
+  :root { --azul:#0072b2; --borda:#cbd5e1; --fundo:#f8fafc; --texto:#0f172a; --suave:#475569; --ok:#059669; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, "Segoe UI", sans-serif; background:var(--fundo); color:var(--texto); }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 1.25rem; margin: 0 0 12px; }
+  button { font: inherit; cursor: pointer; border:1px solid var(--borda); background:#fff; border-radius:6px; padding:8px 12px; }
+  button:hover { border-color: var(--azul); }
+  button.sel { background: var(--azul); color:#fff; border-color: var(--azul); }
+  .barra-topo { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:12px; }
+  .progresso { flex:1; min-width:200px; height:10px; background:#e2e8f0; border-radius:5px; overflow:hidden; }
+  .progresso > div { height:100%; background:var(--azul); width:0; }
+  .caixas { display:grid; gap:12px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 800px) { .caixas { grid-template-columns: 1fr; } }
+  .caixa h2 { font-size: 1rem; margin:0 0 4px; }
+  .texto { background:#fff; border:1px solid var(--borda); border-radius:6px; padding:12px; font-size:1.15rem; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; height: 42vh; overflow:auto; }
+  .temas { display:grid; gap:8px; grid-template-columns: repeat(4, 1fr); margin:8px 0 16px; }
+  @media (max-width: 800px) { .temas { grid-template-columns: repeat(2, 1fr); } }
+  .tema button { width:100%; text-align:left; }
+  .tema small { display:block; color:var(--suave); margin-top:2px; font-size:.8rem; }
+  .recusa { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .recusa small { color:var(--suave); }
+  kbd { background:#e2e8f0; border-radius:3px; padding:0 4px; font-size:.85em; }
+  .rodape { margin-top:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  #aviso { color:var(--suave); }
+  .oculto { display:none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Rotulagem da validação</h1>
+
+  <div class="barra-topo">
+    <label><button type="button" id="abrir">Abrir planilha</button>
+      <input type="file" id="arquivo" accept=".csv,text/csv" class="oculto"></label>
+    <span id="contador">Nenhuma planilha aberta.</span>
+    <div class="progresso" aria-hidden="true"><div id="barra"></div></div>
+  </div>
+
+  <div id="tela" class="oculto">
+    <div class="caixas">
+      <div class="caixa"><h2>Pergunta</h2><div class="texto" id="pergunta"></div></div>
+      <div class="caixa"><h2>Resposta</h2><div class="texto" id="resposta"></div></div>
+    </div>
+
+    <h2 style="font-size:1rem;margin:16px 0 0">Qual é o assunto principal da pergunta? <small>(teclas 1 a 8)</small></h2>
+    <div class="temas" id="temas"></div>
+
+    <div class="recusa">
+      <strong>O assistente recusou o pedido?</strong>
+      <button type="button" id="sim"><kbd>S</kbd> Sim</button>
+      <button type="button" id="nao"><kbd>N</kbd> Não</button>
+      <small>atendeu com um aviso no meio = Não</small>
+    </div>
+
+    <div class="rodape">
+      <button type="button" id="voltar">← Voltar</button>
+      <button type="button" id="baixar">Baixar resultado</button>
+      <span id="aviso"></span>
+    </div>
+  </div>
+</main>
+
+<script id="logica">
+/* ---- CSV (UTF-8 com BOM, separador ";", aspas duplas, quebras de linha dentro de campos) ---- */
+const SEP = ";";
+const COLUNAS = ["id_amostra", "conversa_id", "pergunta", "resposta", "tema_vinicius", "recusa_vinicius"];
+const TEMAS = [
+  ["estudo/dever de casa", "escola, prova, matéria"],
+  ["programação/TI", "código, erro, computador"],
+  ["escrita e tradução", "redigir, revisar, traduzir"],
+  ["trabalho/negócios", "empresa, e-mail, vendas"],
+  ["criação/ficção e roleplay", "história, personagem, jogo de papéis"],
+  ["informação geral/curiosidade", "fatos, \"como funciona\""],
+  ["conversa pessoal/conselho", "sentimentos, \"oi, tudo bem?\""],
+  ["outros/indefinido", "sem sentido ou impossível de entender"],
+];
+
+function parseCsv(texto) {
+  if (texto.charCodeAt(0) === 0xFEFF) texto = texto.slice(1);
+  const linhas = [];
+  let campo = "", linha = [], aspas = false, i = 0;
+  while (i < texto.length) {
+    const c = texto[i];
+    if (aspas) {
+      if (c === '"') {
+        if (texto[i + 1] === '"') { campo += '"'; i += 2; continue; }
+        aspas = false; i++; continue;
+      }
+      campo += c; i++; continue;
+    }
+    if (c === '"') { aspas = true; i++; continue; }
+    if (c === SEP) { linha.push(campo); campo = ""; i++; continue; }
+    if (c === "\r" || c === "\n") {
+      if (c === "\r" && texto[i + 1] === "\n") i++;
+      linha.push(campo); linhas.push(linha); campo = ""; linha = []; i++; continue;
+    }
+    campo += c; i++;
+  }
+  if (campo !== "" || linha.length > 0) { linha.push(campo); linhas.push(linha); }
+  return linhas.filter((l) => !(l.length === 1 && l[0] === ""));
+}
+
+function gerarCsv(linhas) {
+  const q = (v) => '"' + String(v ?? "").replace(/"/g, '""') + '"';
+  return "﻿" + linhas.map((l) => l.map(q).join(SEP)).join("\r\n") + "\r\n";
+}
+
+/** Converte as linhas do CSV em registros {coluna: valor}; confere o cabeçalho. */
+function lerPlanilha(texto) {
+  const l = parseCsv(texto);
+  if (l.length === 0) throw new Error("Planilha vazia.");
+  const cab = l[0];
+  if (cab.join(SEP) !== COLUNAS.join(SEP)) throw new Error("Cabeçalho inesperado. Esperado: " + COLUNAS.join(SEP));
+  return l.slice(1).map((r) => Object.fromEntries(COLUNAS.map((c, k) => [c, r[k] ?? ""])));
+}
+
+function escreverPlanilha(registros) {
+  return gerarCsv([COLUNAS, ...registros.map((r) => COLUNAS.map((c) => r[c]))]);
+}
+
+/** Chave do progresso: só depende dos ids (nunca do texto). */
+function chaveProgresso(registros) {
+  let h = 5381;
+  for (const r of registros) for (const ch of r.id_amostra + "|") h = ((h * 33) ^ ch.charCodeAt(0)) >>> 0;
+  return "rotulagem:" + registros.length + ":" + h;
+}
+
+function validaTema(t) { return TEMAS.some((x) => x[0] === t); }
+function normalizaRecusa(v) {
+  const s = String(v || "").trim().toLowerCase();
+  return s === "sim" ? "sim" : (s === "não" || s === "nao") ? "não" : "";
+}
+</script>
+
+<script id="interface">
+if (typeof document !== "undefined" && document.getElementById("abrir")) {
+  const $ = (id) => document.getElementById(id);
+  let registros = [], rotulos = {}, atual = 0, chave = "";
+
+  const salvar = () => { try { localStorage.setItem(chave, JSON.stringify(rotulos)); } catch (e) {} };
+  const carregar = () => { try { return JSON.parse(localStorage.getItem(chave) || "{}"); } catch (e) { return {}; } };
+  const completo = (id) => rotulos[id] && rotulos[id].tema && rotulos[id].recusa;
+  const feitos = () => registros.filter((r) => completo(r.id_amostra)).length;
+
+  function desenhar() {
+    const r = registros[atual];
+    const rot = rotulos[r.id_amostra] || {};
+    $("pergunta").textContent = r.pergunta;
+    $("resposta").textContent = r.resposta;
+    $("contador").textContent = (atual + 1) + " de " + registros.length + " · " + feitos() + " rotuladas";
+    $("barra").style.width = (100 * feitos() / registros.length) + "%";
+    [...document.querySelectorAll("#temas button")].forEach((b, i) => b.classList.toggle("sel", rot.tema === TEMAS[i][0]));
+    $("sim").classList.toggle("sel", rot.recusa === "sim");
+    $("nao").classList.toggle("sel", rot.recusa === "não");
+    const falta = registros.length - feitos();
+    $("aviso").textContent = falta > 0 ? "Faltam " + falta + " conversas." : "Tudo rotulado.";
+    document.querySelectorAll(".texto").forEach((e) => (e.scrollTop = 0));
+  }
+
+  function marcar(campo, valor) {
+    if (!registros.length) return;
+    const id = registros[atual].id_amostra;
+    rotulos[id] = Object.assign({}, rotulos[id], { [campo]: valor });
+    salvar();
+    if (completo(id) && atual < registros.length - 1) atual++;
+    desenhar();
+  }
+
+  TEMAS.forEach(([nome, dica], i) => {
+    const d = document.createElement("div");
+    d.className = "tema";
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = (i + 1) + " · " + nome;
+    b.addEventListener("click", () => marcar("tema", nome));
+    const s = document.createElement("small");
+    s.textContent = dica;
+    d.append(b, s);
+    $("temas").append(d);
+  });
+
+  $("abrir").addEventListener("click", () => $("arquivo").click());
+  $("arquivo").addEventListener("change", async (ev) => {
+    const f = ev.target.files[0];
+    if (!f) return;
+    try {
+      registros = lerPlanilha(await f.text());
+      if (!registros.length) throw new Error("A planilha não tem conversas.");
+    } catch (e) { alert(e.message); return; }
+    chave = chaveProgresso(registros);
+    rotulos = carregar();
+    // rótulos já preenchidos na própria planilha entram se ainda não houver progresso salvo
+    for (const r of registros) {
+      if (!rotulos[r.id_amostra] && validaTema(r.tema_vinicius) && normalizaRecusa(r.recusa_vinicius)) {
+        rotulos[r.id_amostra] = { tema: r.tema_vinicius, recusa: normalizaRecusa(r.recusa_vinicius) };
+      }
+    }
+    const prox = registros.findIndex((r) => !completo(r.id_amostra));
+    atual = prox === -1 ? 0 : prox;
+    $("tela").classList.remove("oculto");
+    desenhar();
+  });
+
+  $("sim").addEventListener("click", () => marcar("recusa", "sim"));
+  $("nao").addEventListener("click", () => marcar("recusa", "não"));
+  $("voltar").addEventListener("click", () => { if (atual > 0) { atual--; desenhar(); } });
+
+  $("baixar").addEventListener("click", () => {
+    if (!registros.length) return;
+    const falta = registros.length - feitos();
+    if (falta > 0 && !confirm("Faltam " + falta + " conversas. Baixar mesmo assim?")) return;
+    const saida = registros.map((r) => {
+      const rot = rotulos[r.id_amostra] || {};
+      return Object.assign({}, r, { tema_vinicius: rot.tema || "", recusa_vinicius: rot.recusa || "" });
+    });
+    const blob = new Blob([escreverPlanilha(saida)], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "validacao_manual_preenchida.csv";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+
+  document.addEventListener("keydown", (ev) => {
+    if (!registros.length || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    if (/^[1-8]$/.test(ev.key)) marcar("tema", TEMAS[Number(ev.key) - 1][0]);
+    else if (ev.key === "s" || ev.key === "S") marcar("recusa", "sim");
+    else if (ev.key === "n" || ev.key === "N") marcar("recusa", "não");
+    else if (ev.key === "Backspace" || ev.key === "ArrowLeft") { if (atual > 0) { atual--; desenhar(); } }
+  });
+}
+</script>
+</body>
+</html>
