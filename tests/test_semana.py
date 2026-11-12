@@ -127,3 +127,29 @@ def test_semanas_reais_gravadas_e_fecham():
     for _, total, pb, ps in segs:
         assert float(pb) == pytest.approx(1.0, abs=1e-4) and float(ps) == pytest.approx(1.0, abs=1e-4)
     assert {s[0]: float(s[1]) for s in segs}.keys() == {r[0] for r in res}
+
+
+def _df_semanas(semanas):
+    """semanas: [(data, inicio_coleta, n, k)] -> df de 1 segmento por semana."""
+    linhas = []
+    for sem, ini, n, k in semanas:
+        linhas += [{"semana": sem, "dispositivo": "pc", "modelo_familia": "gpt-4", "voltou_7d": i < k, "inicio_coleta": ini} for i in range(n)]
+    return pd.DataFrame(linhas)
+
+
+def test_semana_de_inicio_de_coleta_nao_serve_de_base_e_usa_as_seguintes():
+    from datetime import date as d
+    df = _df_semanas([(d(2023, 4, 24), True, 100, 34), (d(2023, 5, 1), True, 100, 17),
+                      (d(2023, 5, 8), False, 100, 25), (d(2023, 5, 15), False, 100, 25)])
+    assert semana._base_da_semana(df, d(2023, 5, 1)).empty                        # a base anterior é toda de início de coleta
+    with pytest.raises(ValueError):
+        semana.decompor(df, d(2023, 5, 1), 30)
+    r, _ = semana.decompor(df, d(2023, 5, 1), 30, contra_seguintes=True)
+    assert r["n_base"] == 200 and r["taxa_base"] == pytest.approx(0.25) and r["delta_pp"] == pytest.approx(-8.0)
+    assert "seguintes" in r["base_descricao"] and "nas semanas seguintes" in r["conclusao"]
+
+
+def test_base_anterior_ignora_semanas_marcadas_mas_mantem_as_limpas():
+    from datetime import date as d
+    df = _df_semanas([(d(2023, 4, 24), True, 100, 34), (d(2023, 5, 8), False, 100, 25), (d(2023, 5, 15), False, 100, 20)])
+    assert sorted(semana._base_da_semana(df, d(2023, 5, 15))["semana"].unique()) == [d(2023, 5, 8)]

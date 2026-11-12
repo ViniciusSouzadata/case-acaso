@@ -28,8 +28,9 @@ SEMANAS_BASE = 4
 ROTULO_RARO = "outros"
 
 SQL = """
-SELECT d.coorte_semana AS semana, f.dispositivo, f.modelo_familia, f.voltou_7d
+SELECT d.coorte_semana AS semana, f.dispositivo, f.modelo_familia, f.voltou_7d, a.inicio_coleta
 FROM mart.fct_primeira_experiencia f JOIN mart.dim_usuario d USING (usuario_id)
+JOIN mart.agg_retencao_periodo a ON a.granularidade = 'semana' AND a.periodo = d.coorte_semana
 WHERE f.elegivel
 """
 
@@ -81,7 +82,7 @@ def agrupar_segmentos_raros(base: dict, semana: dict, n_min: int) -> tuple[dict,
 
 
 def veredito(taxa_base: float, taxa_semana: float, n_base: int, n_semana: int, mix_pp: float, taxa_pp: float, p: float,
-             n_semanas: int, n_sig: int) -> str:
+             n_semanas: int, n_sig: int, base_rotulo: str = "nas semanas anteriores") -> str:
     """Texto para o cliente (sem jargão estatístico): quanto voltou, de onde veio a diferença e se dá para distinguir de ruído.
 
     Os números técnicos (mix, taxa, p-valor, IC) ficam nas colunas numéricas da tabela; aqui só linguagem simples.
@@ -89,7 +90,7 @@ def veredito(taxa_base: float, taxa_semana: float, n_base: int, n_semana: int, m
     por_100 = lambda x: f"{round(x * 100):d}"  # noqa: E731
     queda = taxa_semana < taxa_base
     s1 = (f"Nesta semana, {por_100(taxa_semana)} de cada 100 novos usuários ({n_semana} no total) voltaram, contra "
-          f"{por_100(taxa_base)} de cada 100 nas semanas anteriores ({n_base} usuários).")
+          f"{por_100(taxa_base)} de cada 100 {base_rotulo} ({n_base} usuários).")
     total = abs(mix_pp) + abs(taxa_pp)
     parte_comportamento = abs(taxa_pp) / total if total else 0.0
     movimento = "queda" if queda else "subida"
@@ -118,9 +119,19 @@ def _contagens(df: pd.DataFrame) -> dict[str, tuple[int, int]]:
     return {s: (int(r["size"]), int(r["sum"])) for s, r in g.iterrows()}
 
 
+def _limpas(df: pd.DataFrame) -> pd.DataFrame:
+    """BDR-09: semanas que começam a menos de 28 dias do 1º dado (inicio_coleta) nunca servem de base: podem ter usuários antigos como novos."""
+    return df[~df["inicio_coleta"].astype(bool)] if "inicio_coleta" in df.columns else df
+
+
 def _base_da_semana(df: pd.DataFrame, semana: date) -> pd.DataFrame:
     ini = semana - timedelta(weeks=SEMANAS_BASE)
-    return df[(df["semana"] >= ini) & (df["semana"] < semana)]
+    return _limpas(df[(df["semana"] >= ini) & (df["semana"] < semana)])
+
+
+def _base_seguintes(df: pd.DataFrame, semana: date) -> pd.DataFrame:
+    fim = semana + timedelta(weeks=SEMANAS_BASE + 1)
+    return _limpas(df[(df["semana"] > semana) & (df["semana"] < fim)])
 
 
 def contar_semanas_significativas(df: pd.DataFrame, n_min: int) -> tuple[int, int]:
@@ -136,10 +147,11 @@ def contar_semanas_significativas(df: pd.DataFrame, n_min: int) -> tuple[int, in
     return testadas, sig
 
 
-def decompor(df: pd.DataFrame, semana: date, n_min: int) -> tuple[dict, list[dict]]:
-    """Resumo + linhas por segmento da `semana` contra as semanas de coorte anteriores (até 4, as presentes entre elegíveis)."""
+def decompor(df: pd.DataFrame, semana: date, n_min: int, contra_seguintes: bool = False) -> tuple[dict, list[dict]]:
+    """Resumo + linhas por segmento da `semana` contra as 4 semanas de coorte anteriores sem início de coleta (ou, com
+    `contra_seguintes`, as 4 seguintes: usado quando a semana é do início da coleta e não há base anterior limpa)."""
     sem = df[df["semana"] == semana]
-    base = _base_da_semana(df, semana)
+    base = _base_seguintes(df, semana) if contra_seguintes else _base_da_semana(df, semana)
     if sem.empty or base.empty:
         raise ValueError(f"semana {semana} sem usuários elegíveis ou sem base de comparação")
     b_cont, s_cont = agrupar_segmentos_raros(_contagens(base), _contagens(sem), n_min)
@@ -150,12 +162,14 @@ def decompor(df: pd.DataFrame, semana: date, n_min: int) -> tuple[dict, list[dic
     testadas, sig = contar_semanas_significativas(df, n_min)
     delta, mix, taxa = (round(tot[k] * 100, 4) for k in ("delta", "mix", "taxa"))
     semanas_base = sorted(base["semana"].unique())
+    qual = "seguintes (a semana é do início da coleta; não há base anterior limpa)" if contra_seguintes else "anteriores"
     resumo = {
         "semana": semana,
-        "base_descricao": f"{len(semanas_base)} semanas de coorte anteriores ({semanas_base[0]:%d/%m/%Y} a {semanas_base[-1]:%d/%m/%Y}), só elegíveis",
+        "base_descricao": f"{len(semanas_base)} semanas de coorte {qual} ({semanas_base[0]:%d/%m/%Y} a {semanas_base[-1]:%d/%m/%Y}), só elegíveis, sem início de coleta",
         "n_base": n_b, "n_semana": n_s, "taxa_base": round(tot["taxa_base"], 6), "taxa_semana": round(tot["taxa_semana"], 6),
         "delta_pp": delta, "mix_pp": mix, "taxa_pp": taxa, "p_valor": round(p, 6),
-        "conclusao": veredito(tot["taxa_base"], tot["taxa_semana"], n_b, n_s, mix, taxa, p, testadas, sig),
+        "conclusao": veredito(tot["taxa_base"], tot["taxa_semana"], n_b, n_s, mix, taxa, p, testadas, sig,
+                              "nas semanas seguintes" if contra_seguintes else "nas semanas anteriores"),
     }
     segs = [{"semana": semana, "segmento": l["segmento"], "peso_base": round(l["peso_base"], 6), "peso_semana": round(l["peso_semana"], 6),
              "taxa_base": round(l["taxa_base"], 6), "taxa_semana": round(l["taxa_semana"], 6),
@@ -174,7 +188,10 @@ def gravar(conn: psycopg.Connection, semanas: list[date] | None = None) -> list[
     n_min = n_minimo(conn)
     resumos, segs = [], []
     for s in semanas or SEMANAS_CANDIDATAS:
-        r, l = decompor(df, s, n_min)
+        try:
+            r, l = decompor(df, s, n_min)
+        except ValueError:  # sem base anterior limpa (semana de início da coleta): compara com as seguintes
+            r, l = decompor(df, s, n_min, contra_seguintes=True)
         resumos.append(r)
         segs += l
     substituir(conn, "decomposicao_resumo", COLUNAS_RESUMO, [[r[c] for c in COLUNAS_RESUMO] for r in resumos])
