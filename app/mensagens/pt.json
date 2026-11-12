@@ -110,6 +110,7 @@
       "sessao_60min": "Sessão de 60 minutos",
       "outro_dia": "Voltou = em outro dia",
       "sem_burn_in": "Sem descartar o início da base",
+      "burn_in_28d": "Descartando os primeiros 28 dias da base",
       "com_trafego_anomalo": "Com tráfego fora do comum",
       "com_perguntas_vazias": "Contando perguntas vazias",
       "fuso_utc": "Dia contado em UTC"

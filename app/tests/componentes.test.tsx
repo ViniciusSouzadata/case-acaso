@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { AvisoAmostra } from "@/components/AvisoAmostra";
 import { Estado } from "@/components/Estado";
 import { Numero } from "@/components/Numero";
-import { todasAsMensagens } from "@/lib/mensagens";
+import { t, todasAsMensagens } from "@/lib/mensagens";
 import { cruzaZero, formatarPP, formatarPct } from "@/lib/regras";
 
 afterEach(() => {
@@ -133,5 +133,11 @@ describe("mensagens (REQ-409: linguagem simples)", () => {
     percorrer(todasAsMensagens);
     expect(todos.length).toBeGreaterThan(10);
     for (const s of todos) expect(s).not.toMatch(/regress[ãa]o|propens[ãa]o|p-valor|p valor/i);
+  });
+});
+
+describe("sensibilidade: todo nome de definição tem texto em pt.json", () => {
+  it.each(["oficial", "so_ip", "ip_ua_completo", "sessao_60min", "outro_dia", "sem_burn_in", "burn_in_28d", "com_trafego_anomalo", "com_perguntas_vazias", "fuso_utc"])("%s", (d) => {
+    expect(t(`sens.nomes.${d}`)).not.toBe(`sens.nomes.${d}`);
   });
 });
