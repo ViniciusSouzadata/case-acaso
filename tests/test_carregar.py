@@ -15,7 +15,7 @@ COLUNAS_STG = {
     "modelo_versao", "modelo_familia", "ts_inicio", "ts_fim", "n_turnos", "idioma_conversa",
     "idioma_pergunta_1", "idioma_resposta_1", "idioma_divergente", "estado", "fuso", "chars_pergunta_1",
     "chars_resposta_1", "recusa_1", "pergunta_vazia", "conta_como_uso", "ip_mudou", "redacted", "tema",
-    "tema_origem", "lote_id",
+    "tema_origem", "recusa_origem", "lote_id",   # recusa_origem: migração 009 (origem do rótulo de recusa)
 }
 
 

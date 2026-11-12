@@ -45,6 +45,7 @@ def _conn():
         pytest.skip("banco indisponível")
 
 
+@pytest.mark.usefixtures("usar_real")
 def test_numero_oficial_nao_muda_com_o_seed_do_llm():
     with _conn() as c:
         if c.execute("SELECT count(*) FROM stg.conversa").fetchone()[0] < 10000:
@@ -58,6 +59,7 @@ def test_numero_oficial_nao_muda_com_o_seed_do_llm():
         assert c.execute("SELECT count(*) FROM mart.fct_primeira_experiencia WHERE elegivel").fetchone()[0] == 2372
 
 
+@pytest.mark.usefixtures("usar_real")
 def test_reconciliacao_continua_9_de_9():
     with _conn() as c:
         linhas = c.execute("SELECT * FROM ops.reconciliacao WHERE 1 = (SELECT 1) ORDER BY 1 DESC").fetchall()

@@ -119,7 +119,8 @@ def _seed():
 
 def test_contrato_do_seed():
     linhas = _seed()
-    assert list(linhas[0].keys()) == tema.CABECALHO
+    # o seed ganhou recusa e recusa_origem com a rodada do LLM (T-205); as 4 primeiras seguem o cabeçalho do gerador
+    assert list(linhas[0].keys()) == tema.CABECALHO + ["recusa", "recusa_origem"]
     ids = [l["conversa_id"] for l in linhas]
     assert len(ids) == len(set(ids)) and all(i.isdigit() for i in ids)
     assert {l["tema"] for l in linhas} <= set(TAXONOMIA)

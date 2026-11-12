@@ -276,7 +276,8 @@ class TestReal:
     def test_sensibilidade_valores_do_state(self):
         d = {r[0]: r[1:] for r in _q("SELECT definicao, usuarios, voltaram_7d FROM mart.agg_retencao_sensibilidade")}
         assert d["so_ip"] == (2239, 536) and d["ip_ua_completo"] == (2657, 668) and d["sessao_60min"] == (2372, 511)
-        assert len(d) == 9
+        assert len(d) == 10   # as 9 de antes + burn_in_28d (migração 011)
+        assert d["burn_in_28d"] == (2232, 529)
 
     def test_fuso_utc_descricao_confere_com_conta_independente(self):
         n = _um("SELECT count(*) FROM mart.dim_usuario WHERE elegivel AND "

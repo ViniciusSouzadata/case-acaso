@@ -27,7 +27,7 @@ T-503 ──────────┘
 - **Gate:** Correção concreta, não descrição
 - **Reqs:** REQ-513
 
-## [ ] T-503 — Teste de regressão do incidente na suíte
+## [x] T-503 — Teste de regressão do incidente na suíte
 - **What:** `tests/test_regressao_incidente.py`: na base sintética, o IP com 12 user-agents (caso E) e a troca de versão do navegador (caso D) não podem inflar "novos" pela chave oficial; o teste mostra que pela chave `hashed_ip|user-agent` inflaria.
 - **Where:** `tests/`
 - **Depends on:** T-109

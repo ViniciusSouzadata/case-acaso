@@ -1,5 +1,5 @@
 <!-- RASCUNHO da Sessão A (T-604), em revisão pelo planejador e pelo Vinícius. Marcas "[EM REVISÃO]" = o número ou a frase pode mudar:
-     (a) semana de 01/05/2023 sob suspeita de artefato do burn-in; (b) tema e recusa mudam depois da rodada com LLM; (c) preços da AWS "a conferir".
+     (a) achados, resumo e sugestões a reescrever com a recusa do LLM (`.specs/project/ACHADOS-PROPOSTA.md`); (b) preços da AWS "a conferir"; (c) horas.
      Cada seção cita o C-nn do enunciado que responde. Números vêm de resultado.*, mart.* e do STATE; nada sobre clientes da Acaso. -->
 
 # Retenção de um assistente de IA: o que faz a pessoa voltar em 7 dias
@@ -25,7 +25,7 @@ Cada linha: o que escolhi e o que muda se estiver errado (taxa recalculada com a
 | O que é sessão | intervalo ≤ 30 min entre o fim de uma conversa e o início da próxima | 60 min: 21,54% | BDR-02 |
 | O que é "voltar" | nova sessão com início em até 7 dias (168 h) do início da 1ª | "só em outro dia": 16,86% (cerca de 166 dos 566 retornos são outra sessão no mesmo dia) | BDR-02 |
 | O que conta como uso | ao menos 1 pergunta não vazia e 1 resposta; 141 perguntas vazias e 76 conversas fora | contando as vazias: 23,69% | BDR-03 |
-| Burn-in e coortes imaturas | 14 dias iniciais e quem não tem 7 dias completos ficam fora (64 e 51 usuários) | sem burn-in: 24,01% [EM REVISÃO: testar 28 dias] | BDR-04 |
+| Burn-in e coortes imaturas | 14 dias iniciais e quem não tem 7 dias completos ficam fora (64 e 51 usuários) | sem burn-in: 24,01%; com burn-in de 28 dias: 23,70% (2.232 usuários) | BDR-04 |
 | Tráfego anômalo | IP com 200+ conversas ou 10+ user-agents fica fora (11 usuários, 7 IPs) | com eles: 24,08% | BDR-05 |
 | Fuso | America/Sao_Paulo | UTC: mesma taxa; 44 usuários mudam de semana | BDR-06 |
 | Amostra mínima | toda taxa com intervalo e n; abaixo do mínimo, "amostra insuficiente" | — | BDR-07 |
@@ -42,7 +42,7 @@ Só os gráficos que levaram a uma conclusão (`docs/figuras/`, frases em `concl
 
 **Variáveis da primeira experiência** (C-17): modelo (família), tema, tamanho da pergunta e da resposta, recusa, idioma, idioma divergente, dispositivo, período do dia, fim de semana, região, era do modelo, e (como engajamento) turnos e conversas na 1ª sessão. Cada uma é derivada na carga, com o código em `loader/derivar.py` e o dicionário na tela "Posso confiar nestes números?".
 
-**Como conferi a IA que classifica** (C-18): 200 conversas rotuladas por mim, sem ver o que a máquina respondeu. Com palavras-chave (`regras`): tema com 36,5% de acerto (kappa 0,27) e recusa com 81,0% (kappa 0,37); na população, a revocação da recusa é de 48,8% (pega metade das recusas reais) e só 30,2% do que marca como recusa é recusa. Portanto **tema é descritivo e recusa é aproximada**. [EM REVISÃO: números do LLM — Bedrock e OpenRouter — a preencher após a rodada; ADR-09.]
+**Como conferi a IA que classifica** (C-18): 200 conversas rotuladas por mim, sem ver o que a máquina respondeu. Com palavras-chave (`regras`): tema com 36,5% de acerto (kappa 0,27) e recusa com 81,0% (kappa 0,37); na população, a revocação da recusa é de 48,8% (pega metade das recusas reais) e só 30,2% do que marca como recusa é recusa. Com o LLM (Claude Haiku 5.5, pela OpenRouter; o Bedrock da minha conta devolveu `ValidationException: Operation not allowed` e não rodou), nas mesmas 200: tema com 56,0% de acerto (kappa 0,48) e recusa com 92,0% (kappa 0,59; precisão ponderada 81%, revocação ponderada 86%). **Tema continua descritivo** (kappa moderado); a recusa ficou bem mais confiável, e isso **muda o efeito da recusa** (seção 4). Um segundo modelo (Nova Lite) foi descartado: 40% dos itens sem resposta válida. Números e custo: ADR-09, `docs/validacao_llm.md`.
 
 **Problemas de qualidade e tratamento** (C-19): 141 perguntas vazias (não contam como uso), 76 conversas sem uso, 93 conversas com texto repetido, 175 IPs que mudam, 56 conversas com dado removido pelos autores, 0 marcadas como tóxicas (removidas na origem), idioma divergente em pergunta curta (restrito). Tela "Posso confiar nestes números?" lista cada um com o tratamento.
 
@@ -67,18 +67,19 @@ Efeito = diferença na taxa de retorno em pontos percentuais, com intervalo de 9
 
 **O que prova e o que não prova:** mostra que, com estes dados, não há evidência de que o assistente mude o retorno, e que um efeito grande (acima de cerca de 5 pontos) é improvável. Não prova que não exista efeito pequeno, nem que o efeito seja causal; para isso, teste controlado (BDR-08, ADR-10).
 
-## 5. A semana de 01/05/2023 e a de 20/11/2023  (C-25)  [EM REVISÃO]
+## 5. A semana de 20/11/2023 e a de 01/05/2023  (C-25)
 
-Cada semana foi comparada às anteriores com decomposição em **mudança de público (mix)** e **mudança de taxa dentro do público**.
+Cada semana foi comparada a 4 semanas de coorte **limpas** (que começam pelo menos 28 dias depois do primeiro dado), com decomposição em **mudança de público (mix)** e **mudança de taxa dentro do público**.
 
 | Semana | Retorno | Base | Diferença | Mix / taxa | p |
 |---|---|---|---:|---|---:|
-| 20/11/2023 (a do case) | 21,5% (n=65) | 26,4% (n=197) | −4,9 pontos | −0,4 / −4,4 | 0,43 |
-| **01/05/2023** | 16,7% (n=84) | 33,8% (n=74) | −17,1 | +0,7 / −17,8 | 0,013 |
-| 17/07/2023 (só na tabela) | 9,1% (n=33) | 22,5% (n=178) | −13,4 | −0,5 / −12,9 | 0,08 |
+| **20/11/2023** (a do case) | 21,5% (n=65) | 26,4% (n=197), 4 semanas anteriores | −4,9 pontos | −0,4 / −4,4 | 0,43 |
+| 01/05/2023 | 16,7% (n=84) | 24,4% (n=340), 4 semanas **seguintes** | −7,7 | −0,6 / −7,1 | 0,13 |
+| 17/07/2023 (só na tabela) | 9,1% (n=33) | 22,5% (n=178), 4 semanas anteriores | −13,4 | −0,5 / −12,9 | 0,08 |
 
-- 20/11/2023 está **dentro do ruído**: o método não confirma queda.
-- 01/05/2023 é a única que se distingue de ruído isolado, e é queda de **taxa**, não de público. Mas, aplicando o mesmo teste às 35 semanas com amostra suficiente, 2 deram p < 0,05 e o acaso sozinho produz cerca de 2. Além disso, a base de comparação de 01/05 são só as 2 semanas depois do burn-in (74 usuários), o que pode inflar a taxa-base: **conferir com burn-in de 28 dias antes de afirmar**.
+- **20/11/2023 está dentro do ruído:** quase toda a diferença é de taxa, e o método não confirma queda.
+- **01/05/2023 era um artefato do início da coleta.** Na primeira leitura (base = as 2 semanas anteriores, 33,8%) era a maior queda da série (−17,1 pontos, p = 0,013). Com burn-in de 28 dias as duas semanas de base caem fora e, contra as semanas seguintes, a queda vira −7,7 pontos (p = 0,13).
+- Em todas as semanas com amostra suficiente e base limpa (33), só 1 teve p < 0,05; o acaso sozinho produz cerca de 2. **Queda semanal isolada não sustenta conclusão.** Regra adotada: semana de base começa pelo menos 28 dias depois do primeiro dado (BDR-09).
 
 ## 6. Dashboard  (C-07, C-12, C-27, C-28)
 
@@ -96,7 +97,7 @@ Três telas, cada uma com uma pergunta, em português simples; cada número tem 
 
 - **Fluxo:** arquivo bruto → carga (papel `loader_rw`) → `stg` (restrito) → `mart` e `resultado` → API (papel `app_ro`, só leitura) → telas. Diagrama e modelo da base em `docs/arquitetura/arquitetura.md`.
 - **Pré-cálculo e cache:** os indicadores são pré-agregados na carga; a API guarda em cache e invalida quando muda o lote (ADR-07). Tempos medidos em `docs/desempenho.md`.
-- **AWS (desenho, não implantado):** RDS PostgreSQL, containers para app e carga, balanceador, S3 para o bruto, Secrets Manager, CloudWatch e **Bedrock** para o LLM (ADR-08, ADR-09). **Custo mensal estimado: cerca de US$ 43 [a conferir no AWS Pricing Calculator]**, mais o LLM, medido separadamente (`docs/custo_llm.md`, a preencher após a rodada).
+- **AWS (desenho, não implantado):** RDS PostgreSQL, containers para app e carga, balanceador, S3 para o bruto, Secrets Manager, CloudWatch e **Bedrock** para o LLM (ADR-08, ADR-09). **Custo mensal estimado: cerca de US$ 43 [a conferir no AWS Pricing Calculator]**, mais o LLM, medido: **US$ 0,24 para classificar 2.657 conversas (≈US$ 0,08 por 1.000; a base Brasil inteira ≈US$ 0,94; o WildChat inteiro ≈US$ 68)**, `docs/custo_llm.md`.
 - **Outros países:** o país é parâmetro (uma carga por país no mesmo banco), com idioma da interface, fuso por país e comparação padronizada pelo mix; amostras pequenas aparecem como "amostra pequena" (seção 4 de `arquitetura.md`).
 
 ## 8. Sustentação: como eu saberia que um número está errado  (C-32, C-33, C-34)
@@ -187,7 +188,7 @@ Os dois arquivos têm um comentário `DEFEITO:` em cada linha corrigida, e passa
 |---|---|
 | Não há ID de usuário: a identidade por IP + navegador erra nos dois sentidos | **Qual é a definição oficial de usuário?** O ideal é um ID de login; até lá, IP + família do navegador, com a sensibilidade sempre visível |
 | O dado tem texto de conversa e IP (mesmo anonimizado) | **Política de retenção e base legal (LGPD):** por quanto tempo guardar, quem acessa, o que pode ir para um LLM. Com dado de cliente, só LLM dentro da conta (Bedrock) |
-| Custo do LLM cresce com a base | **Orçamento de LLM** e quem aprova; o custo medido por 1.000 conversas está em `docs/custo_llm.md` [a preencher após a rodada] |
+| Custo do LLM cresce com a base | **Orçamento de LLM** e quem aprova; o custo medido é ≈US$ 0,08 por 1.000 conversas (`docs/custo_llm.md`) |
 | Mudar a definição de "voltar" muda o número oficial | **Quem aprova a mudança de definição** e como se comunica (a versão da definição fica no rodapé de toda tela) |
 | A base é pequena (cerca de 2.400 usuários elegíveis): só se enxerga efeito grande | **O que é efeito que vale agir** e se vale um teste controlado no produto |
 | Carga atualizada em lote | **SLA de atualização** (diária?) e o que o painel mostra quando a carga atrasa |
