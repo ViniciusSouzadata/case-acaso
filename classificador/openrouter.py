@@ -94,6 +94,32 @@ def chave_existe(env: dict | None = None, arquivo_env: Path = RAIZ / ".env") -> 
         return False
 
 
+def credenciais_aws_existem(env: dict | None = None, arquivo_env: Path = RAIZ / ".env") -> bool:
+    """Só diz se AWS_ACCESS_KEY_ID e AWS_SECRET_ACCESS_KEY existem (ambiente ou .env); nunca devolve valores. Se estiverem só no
+    `.env`, `carregar_env_aws` as coloca no ambiente do processo para o boto3."""
+    env = os.environ if env is None else env
+    return all(_valor_env(env, arquivo_env, k) for k in ("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"))
+
+
+def _valor_env(env: dict, arquivo_env: Path, chave: str) -> str | None:
+    if env.get(chave):
+        return env[chave]
+    if arquivo_env.is_file():
+        for linha in arquivo_env.read_text(encoding="utf-8").splitlines():
+            m = re.match(rf"\s*{chave}\s*=\s*(.*)\s*$", linha)
+            if m and m.group(1).strip().strip("'\""):
+                return m.group(1).strip().strip("'\"")
+    return None
+
+
+def carregar_env_aws(arquivo_env: Path = RAIZ / ".env") -> None:
+    """Coloca no ambiente do processo as variáveis AWS que só estão no .env (para o boto3). Não imprime nada."""
+    for k in ("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN", "AWS_REGION"):
+        v = _valor_env(os.environ, arquivo_env, k)
+        if v:
+            os.environ[k] = v
+
+
 def listar_modelos(timeout: int = 60) -> list[dict]:
     """GET /api/v1/models (público): [{id, preco_entrada_por_milhao, preco_saida_por_milhao, contexto}]. Preços em USD."""
     import urllib.request
@@ -123,6 +149,53 @@ def chamada_real(chave: str, timeout: int = 120) -> Chamar:
             r = json.loads(resp.read())
         u = r.get("usage") or {}
         return r["choices"][0]["message"]["content"] or "", Uso(int(u.get("prompt_tokens", 0)), int(u.get("completion_tokens", 0)))
+    return chamar
+
+
+# ----------------------------------------------------------------------------------------------- Bedrock (provedor principal)
+ERROS_DE_COTA = ("ThrottlingException", "ServiceUnavailableException", "ModelTimeoutException", "TooManyRequestsException")
+
+
+def com_recuo(fn: Callable[[], tuple[str, Uso]], tentativas: int = 5, base_s: float = 2.0, dormir: Callable[[float], None] = time.sleep,
+              eh_cota: Callable[[Exception], bool] | None = None) -> tuple[str, Uso]:
+    """Espera com recuo exponencial (2, 4, 8, 16 s) só nos erros de cota/limite; qualquer outro erro sobe na hora."""
+    eh_cota = eh_cota or (lambda e: getattr(e, "response", {}).get("Error", {}).get("Code") in ERROS_DE_COTA)
+    for t in range(tentativas):
+        try:
+            return fn()
+        except Exception as e:  # noqa: BLE001
+            if not eh_cota(e) or t == tentativas - 1:
+                raise
+            dormir(base_s * 2**t)
+    raise AssertionError("inalcançável")
+
+
+def listar_modelos_bedrock(regiao: str) -> list[dict]:
+    """Modelos de fundação da região (API do Bedrock; sem id de memória). [{id, nome, provedor}] com saída em texto."""
+    import boto3  # fora da imagem do compose (classificador/requirements.txt)
+
+    carregar_env_aws()
+    r = boto3.client("bedrock", region_name=regiao).list_foundation_models(byOutputModality="TEXT")
+    return [{"id": m["modelId"], "nome": m.get("modelName"), "provedor": m.get("providerName")} for m in r["modelSummaries"]]
+
+
+def chamada_bedrock(regiao: str = "us-east-1") -> Chamar:
+    """Mesma interface da chamada OpenRouter: (modelo, mensagens) -> (texto, uso), via API Converse, com espera em caso de cota."""
+    import boto3
+
+    carregar_env_aws()
+    cliente = boto3.client("bedrock-runtime", region_name=regiao)
+
+    def chamar(modelo: str, mensagens: list[dict]) -> tuple[str, Uso]:
+        sistema = [{"text": m["content"]} for m in mensagens if m["role"] == "system"]
+        conversa = [{"role": m["role"], "content": [{"text": m["content"]}]} for m in mensagens if m["role"] != "system"]
+
+        def uma() -> tuple[str, Uso]:
+            r = cliente.converse(modelId=modelo, system=sistema, messages=conversa,
+                                 inferenceConfig={"maxTokens": 1500, "temperature": 0})
+            u = r.get("usage") or {}
+            return r["output"]["message"]["content"][0]["text"], Uso(int(u.get("inputTokens", 0)), int(u.get("outputTokens", 0)))
+        return com_recuo(uma)
     return chamar
 
 
@@ -165,13 +238,14 @@ class ClassificadorOpenRouter:
     teto_usd: float = TETO_PADRAO_USD
     pasta: Path = PASTA_CACHE
     recusa_por_regra: Callable[[str | None], bool] = lambda _r: False
+    provedor: str = "openrouter"  # "bedrock" usa a mesma classe e o mesmo prompt, só muda a chamada
     gasto_usd: float = 0.0
     cache: dict[int, tuple[str, bool]] = field(default_factory=dict)
     nome = "openrouter"
 
     def __post_init__(self) -> None:
         self.pasta.mkdir(parents=True, exist_ok=True)
-        self._arq_cache = self.pasta / f"{re.sub(r'[^A-Za-z0-9_.-]', '_', self.modelo)}__{PROMPT_VERSAO}.csv"
+        self._arq_cache = self.pasta / f"{self.provedor}__{re.sub(r'[^A-Za-z0-9_.-]', '_', self.modelo)}__{PROMPT_VERSAO}.csv"
         self._arq_log = self.pasta / "chamadas.csv"
         if self._arq_cache.is_file():
             with self._arq_cache.open(encoding="utf-8", newline="") as f:
@@ -179,11 +253,11 @@ class ClassificadorOpenRouter:
                     self.cache[int(l["conversa_id"])] = (l["tema"], l["recusa"] == "true")
         if self._arq_log.is_file():  # o teto vale para o gasto acumulado deste modelo no log, não só desta execução
             with self._arq_log.open(encoding="utf-8", newline="") as f:
-                self.gasto_usd = sum(float(l["custo_usd"]) for l in csv.DictReader(f) if l["modelo"] == self.modelo)
+                self.gasto_usd = sum(float(l["custo_usd"]) for l in csv.DictReader(f) if l["modelo"] == f"{self.provedor}:{self.modelo}")
 
     @property
     def origem(self) -> str:
-        return f"openrouter:{self.modelo}"
+        return f"{self.provedor}:{self.modelo}"
 
     def _custo(self, uso: Uso) -> float:
         return (uso.tokens_entrada * self.preco_entrada_milhao + uso.tokens_saida * self.preco_saida_milhao) / 1e6
@@ -194,7 +268,7 @@ class ClassificadorOpenRouter:
             w = csv.writer(f, lineterminator="\n")
             if novo:
                 w.writerow(["quando", "modelo", "n_itens", "tokens_entrada", "tokens_saida", "custo_usd", "latencia_s", "status"])
-            w.writerow([time.strftime("%Y-%m-%dT%H:%M:%S"), self.modelo, n, uso.tokens_entrada, uso.tokens_saida,
+            w.writerow([time.strftime("%Y-%m-%dT%H:%M:%S"), f"{self.provedor}:{self.modelo}", n, uso.tokens_entrada, uso.tokens_saida,
                         f"{custo:.6f}", f"{latencia:.2f}", status])
 
     def _chamar_lote(self, itens: list[tuple[int, str, str]]) -> dict[int, tuple[str, bool]]:
@@ -262,3 +336,11 @@ def criar(modelo: str, preco_entrada_milhao: float, preco_saida_milhao: float, e
     env = os.environ if env is None else env
     teto = float(env.get("LLM_TETO_USD") or TETO_PADRAO_USD)
     return ClassificadorOpenRouter(modelo, chamada_real(ler_chave(env)), preco_entrada_milhao, preco_saida_milhao, teto_usd=teto, **kw)
+
+
+def criar_bedrock(modelo: str, preco_entrada_milhao: float, preco_saida_milhao: float, env: dict | None = None, **kw) -> ClassificadorOpenRouter:
+    """Provedor principal da entrega: mesmo classificador, chamada via Bedrock (credenciais AWS no ambiente/.env, região AWS_REGION)."""
+    env = os.environ if env is None else env
+    teto = float(env.get("LLM_TETO_USD") or TETO_PADRAO_USD)
+    return ClassificadorOpenRouter(modelo, chamada_bedrock(env.get("AWS_REGION", "us-east-1")), preco_entrada_milhao, preco_saida_milhao,
+                                   teto_usd=teto, provedor="bedrock", **kw)

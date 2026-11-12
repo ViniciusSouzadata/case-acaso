@@ -2,7 +2,10 @@
 
 Roda local (DuckDB no snapshot, sem banco). Imprime e grava `docs/validacao_llm.md` com agregados: nenhum texto de conversa.
 
-Uso:  python -m classificador.validar_llm <modelo>[,<modelo>...]      (precisa de OPENROUTER_API_KEY; nunca é impressa)
+Uso:  python -m classificador.validar_llm <especificação>[,<especificação>...]
+  openrouter:  <id da OpenRouter>                          ex.: anthropic/claude-haiku-5.5      (OPENROUTER_API_KEY)
+  bedrock:     bedrock:<id do Bedrock>@<id OpenRouter>     o id depois do @ só empresta o PREÇO (o Bedrock não lista preço pela API de modelos)
+               (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION no ambiente ou .env; as chaves nunca são impressas)
 Preços por milhão de tokens vêm de GET /api/v1/models na hora (nada de preço de memória).
 
 Duas leituras de cada métrica:
@@ -109,11 +112,13 @@ def tabela(linhas: list[dict]) -> str:
 
 
 # ----------------------------------------------------------------------------------------------- execução
-def rodar_modelo(modelo: str, preco_in: float, preco_out: float, textos, pasta: Path | None = None) -> tuple[dict[int, O.Resultado], O.ClassificadorOpenRouter]:
+def rodar_modelo(modelo: str, preco_in: float, preco_out: float, textos, pasta: Path | None = None,
+                 provedor: str = "openrouter") -> tuple[dict[int, O.Resultado], O.ClassificadorOpenRouter]:
     from loader.derivar import detectar_recusa
 
     _, padroes = V._padroes_recusa()
-    cl = O.criar(modelo, preco_in, preco_out, recusa_por_regra=lambda r: detectar_recusa(r, padroes), **({"pasta": pasta} if pasta else {}))
+    fabrica = O.criar_bedrock if provedor == "bedrock" else O.criar
+    cl = fabrica(modelo, preco_in, preco_out, recusa_por_regra=lambda r: detectar_recusa(r, padroes), **({"pasta": pasta} if pasta else {}))
     itens = [(cid, p, r) for cid, (p, r) in sorted(textos.items())]
     return cl.classificar_lote(itens), cl
 
@@ -122,23 +127,31 @@ def main(argv: list[str]) -> int:
     if not argv:
         print("uso: python -m classificador.validar_llm <modelo>[,<modelo>...]", file=sys.stderr)
         return 2
-    if not O.chave_existe():
+    especs = argv[0].split(",")
+    if any(not e.startswith("bedrock:") for e in especs) and not O.chave_existe():
         print("OPENROUTER_API_KEY não encontrada (ambiente ou .env)", file=sys.stderr)
+        return 1
+    if any(e.startswith("bedrock:") for e in especs) and not O.credenciais_aws_existem():
+        print("credenciais AWS não encontradas (AWS_ACCESS_KEY_ID e AWS_SECRET_ACCESS_KEY no ambiente ou .env)", file=sys.stderr)
         return 1
     humanos, textos, regras, populacao = carregar_amostra()
     peso = pesos_por_estrato({i: regras[i][::-1] for i in humanos}, populacao)  # estrato = (recusa prevista, tema previsto)
     # a chave do estrato na população é (recusa, tema); na amostra, regras[i] = (tema, recusa) -> inverter
     linhas = [avaliar("regras (linha de base)", humanos, regras, peso)]
     precos = {m["id"]: m for m in O.listar_modelos()}
-    for modelo in argv[0].split(","):
-        if modelo not in precos:
-            print(f"modelo {modelo!r} não está em GET /api/v1/models", file=sys.stderr)
+    for espec in especs:
+        provedor, modelo, preco_id = "openrouter", espec, espec
+        if espec.startswith("bedrock:"):
+            provedor, resto = "bedrock", espec[len("bedrock:"):]
+            modelo, _, preco_id = resto.partition("@")
+        if preco_id not in precos:
+            print(f"id {preco_id!r} (para o preço) não está em GET /api/v1/models", file=sys.stderr)
             return 1
-        pr = precos[modelo]
-        res, cl = rodar_modelo(modelo, pr["preco_entrada_por_milhao"], pr["preco_saida_por_milhao"], textos)
+        pr = precos[preco_id]
+        res, cl = rodar_modelo(modelo, pr["preco_entrada_por_milhao"], pr["preco_saida_por_milhao"], textos, provedor=provedor)
         previsto = {i: (res[i].tema, res[i].recusa) for i in humanos}
         n_fallback = sum(1 for r in res.values() if r.origem == "regras-fallback")
-        linhas.append(avaliar(modelo, humanos, previsto, peso, {
+        linhas.append(avaliar(f"{provedor}:{modelo}", humanos, previsto, peso, {
             "falhas": f"{n_fallback}/{len(res)} em fallback", "custo": f"US$ {cl.gasto_usd:.4f}".replace(".", ",")}))
         print(f"{modelo}: preço por milhão (entrada/saída) US$ {pr['preco_entrada_por_milhao']:.3f} / {pr['preco_saida_por_milhao']:.3f}; "
               f"gasto US$ {cl.gasto_usd:.4f}; fallback {n_fallback}/{len(res)}")

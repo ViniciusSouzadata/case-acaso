@@ -72,7 +72,7 @@ def test_resultado_cache_e_log_sem_texto(tmp_path):
     log = (tmp_path / "chamadas.csv").read_text(encoding="utf-8")
     assert log.splitlines()[0] == "quando,modelo,n_itens,tokens_entrada,tokens_saida,custo_usd,latencia_s,status"
     assert "pergunta" not in log and "resposta" not in log
-    assert "100,programação/TI,false" in (tmp_path / "anthropic_modelo-x__or-1.0.0.csv").read_text(encoding="utf-8")
+    assert "100,programação/TI,false" in (tmp_path / "openrouter__anthropic_modelo-x__or-1.0.0.csv").read_text(encoding="utf-8")
 
 
 def test_custo_estimado_por_tokens(tmp_path):
@@ -136,3 +136,46 @@ def test_chave_so_do_ambiente_ou_env_e_nunca_vaza(tmp_path):
     with pytest.raises(RuntimeError) as e:
         O.ler_chave({}, tmp_path / "nao_existe")
     assert "sk-" not in str(e.value)
+
+
+# ----------------------------------------------------------------------------------------------- Bedrock: espera com recuo
+class _Cota(Exception):
+    response = {"Error": {"Code": "ThrottlingException"}}
+
+
+def test_recuo_espera_so_em_erro_de_cota_e_dobra_o_tempo():
+    esperas, n = [], {"i": 0}
+
+    def fn():
+        n["i"] += 1
+        if n["i"] < 4:
+            raise _Cota()
+        return "ok", O.Uso(1, 1)
+    assert O.com_recuo(fn, dormir=esperas.append)[0] == "ok" and esperas == [2.0, 4.0, 8.0]
+
+
+def test_recuo_desiste_depois_das_tentativas_e_nao_espera_em_outro_erro():
+    esperas = []
+    with pytest.raises(_Cota):
+        O.com_recuo(lambda: (_ for _ in ()).throw(_Cota()), tentativas=3, dormir=esperas.append)
+    assert esperas == [2.0, 4.0]
+    esperas.clear()
+    with pytest.raises(ValueError):
+        O.com_recuo(lambda: (_ for _ in ()).throw(ValueError("x")), dormir=esperas.append)
+    assert esperas == []
+
+
+def test_credenciais_aws_so_existencia(tmp_path):
+    envf = tmp_path / ".env"
+    envf.write_text("AWS_ACCESS_KEY_ID=AKIAEXEMPLO\nAWS_SECRET_ACCESS_KEY=segredo\n", encoding="utf-8")
+    assert O.credenciais_aws_existem({}, envf) and not O.credenciais_aws_existem({}, tmp_path / "nada")
+    assert O.credenciais_aws_existem({"AWS_ACCESS_KEY_ID": "a", "AWS_SECRET_ACCESS_KEY": "b"}, tmp_path / "nada")
+    envf.write_text("AWS_ACCESS_KEY_ID=AKIAEXEMPLO\n", encoding="utf-8")
+    assert not O.credenciais_aws_existem({}, envf)                                # falta a secreta
+
+
+def test_bedrock_usa_o_mesmo_classificador_e_marca_a_origem(tmp_path):
+    c = O.ClassificadorOpenRouter("amazon.modelo-v1", Falso(), 1.0, 5.0, pasta=tmp_path, provedor="bedrock")
+    r = c.classificar_lote(_itens(2))
+    assert all(v.origem == "bedrock:amazon.modelo-v1" for v in r.values())
+    assert "bedrock:amazon.modelo-v1" in (tmp_path / "chamadas.csv").read_text(encoding="utf-8")
