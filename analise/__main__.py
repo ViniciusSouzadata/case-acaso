@@ -2,12 +2,28 @@
 from __future__ import annotations
 
 import sys
+import time
 from datetime import date
 
 import psycopg
 
-from analise import ajustado, bruto, eda, meta, propensao, semana, sensibilidade, validacao
+from analise import achados, ajustado, bruto, eda, meta, propensao, semana, sensibilidade, validacao
 from loader.migrar import dsn
+
+
+def tudo() -> int:
+    """Reexecuta toda a análise em ordem e regrava resultado.* (REQ-270). Semente fixa: duas execuções dão os mesmos números."""
+    etapas = [["meta"], ["eda"], ["bruto"], ["ajustado"], ["semana"], ["propensao"], ["sensibilidade"]]
+    if validacao.ROTULOS.is_file():
+        etapas.append(["validacao"])
+    etapas.append(["achados"])
+    for e in etapas:
+        t0 = time.time()
+        if main(e) != 0:
+            print(f"ERRO: etapa de análise '{e[0]}' falhou", file=sys.stderr)
+            return 1
+        print(f"[ok] análise: {e[0]:<14} {time.time() - t0:6.1f}s", flush=True)
+    return 0
 
 
 def main(argv: list[str]) -> int:
@@ -62,7 +78,13 @@ def main(argv: list[str]) -> int:
             for r in validacao.validar(conn):
                 print(f"validação de {r['classificador']}: n={r['n']}, acurácia {r['acuracia']:.3f}, kappa {r['kappa']:.3f} ({r['modelo']})")
         return 0
-    print("uso: python -m analise meta | eda | bruto | ajustado | semana [AAAA-MM-DD ...] | propensao | sensibilidade | validacao", file=sys.stderr)
+    if comando == "achados":
+        with psycopg.connect(dsn(), autocommit=True) as conn:
+            print(f"resultado.achado: {len(achados.gravar(conn))} achados")
+        return 0
+    if comando == "tudo":
+        return tudo()
+    print("uso: python -m analise meta | eda | bruto | ajustado | semana [AAAA-MM-DD ...] | propensao | sensibilidade | validacao | achados | tudo", file=sys.stderr)
     return 2
 
 

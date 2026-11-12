@@ -1,0 +1,58 @@
+# RASCUNHO (T-209): revisão no ponto de controle 1. Só números que existem em resultado.*.
+# Taxa de retorno em 7 dias: 23,9% (IC 22,2% a 25,6%; 2.372 usuários elegíveis; 566 voltaram).
+# Efeito mínimo detectável: 4,9 p.p. com grupos iguais.
+- ordem: 1
+  titulo: "O que o assistente faz na primeira conversa não muda, de forma que dê para afirmar, se a pessoa volta"
+  evidencia: >-
+    Em 2.372 novos usuários, 23,9% voltaram em até 7 dias (IC 22,2% a 25,6%). Olhei quatro características da primeira
+    resposta do assistente (seis comparações). Nenhuma se distingue de zero. Depois de comparar pessoas de perfil parecido: modelo mais
+    novo (GPT-4) em vez do GPT-3.5, 3,3 pontos a menos de retorno a cada 100 usuários (de −8,4 a +1,8); o mesmo
+    modelo por um segundo método (comparação ponderada), 5,4 pontos a menos (de −12,0 a +0,9); recusa na primeira
+    resposta, 3,2 pontos a menos (de −9,9 a +3,6; só 153 usuários); resposta de 301 a 1.000 caracteres, 3,7 pontos a mais
+    (de −2,4 a +9,7). Em todos os casos o intervalo cruza zero e nenhum dos 25 testes passa na correção para muitos testes.
+    O resultado se repete em quatro formas de definir usuário e sessão (mesmo sinal em 24 de 25, 20 de 23 e 24 de 25 casos).
+  decisao: >-
+    Não priorizar trabalho no assistente (trocar de modelo, encurtar ou alongar respostas, reduzir recusas) esperando
+    mais retorno com base nestes dados. Sugestão para o assistente: se houver desejo de mexer em recusa ou modelo,
+    fazer como teste controlado (metade dos usuários com cada versão), que é o que permite afirmar causa. Sugestão
+    para o dashboard: mostrar sempre o intervalo ao lado de cada efeito e o aviso "não se distingue de zero".
+  limite: >-
+    Os dados só permitem enxergar diferenças a partir de uns 5 pontos; efeitos menores que isso podem existir e
+    passar despercebidos. A comparação é de pessoas que escolheram ou receberam situações diferentes, então não prova
+    causa. A recusa foi identificada por regras que pegam cerca de 80% das recusas reais, com muitos falsos alarmes
+    (validação manual de 200 conversas), e para recusa e idioma divergente não foi possível montar um grupo de
+    comparação equilibrado com cerca de 150 usuários: o resultado fica no modelo ajustado, e lá não se distingue de zero.
+- ordem: 2
+  titulo: "A semana de 1º de maio de 2023 teve queda no retorno, mas uma semana entre 35 não é conclusão"
+  evidencia: >-
+    Na semana de 1º/05/2023, 17 de cada 100 novos usuários voltaram (84 usuários), contra 34 de cada 100 nas duas
+    semanas anteriores (74 usuários): 17,1 pontos a menos, e quase todo vindo de as pessoas voltarem menos, não de ter
+    chegado um público diferente (mudança de público: +0,7 ponto). Diferença maior que a variação normal (p = 0,013).
+    Mas, nas 35 semanas com amostra suficiente, 2 tiveram diferença assim, e só pelo acaso se esperam cerca de 2.
+    Contraponto: na semana de 20/11/2023, 22 de cada 100 voltaram (65 usuários) contra 26 de cada 100 (197 usuários):
+    4,9 pontos a menos, dentro da variação normal (p = 0,43). O mesmo método separou um caso do outro.
+  decisao: >-
+    Tratar a queda de 1º/05 como alerta para olhar de perto, não como problema confirmado: checar se houve mudança
+    de produto ou de canal de entrada naquela semana antes de agir. Sugestão para o dashboard: sinalizar semanas só
+    quando a diferença passar da variação normal e mostrar quantas semanas passariam por acaso.
+  limite: >-
+    Escolhi a semana de maior efeito entre as candidatas, o que exagera a chance de achar algo; por isso a leitura
+    acima conta quantas semanas passariam por acaso. Semanas têm poucos usuários (de 65 a 197 aqui), então só quedas grandes
+    aparecem.
+- ordem: 3
+  titulo: "Quem tem sessão mais longa na primeira visita volta mais, mas isso descreve, não prova causa"
+  evidencia: >-
+    Quem teve 4 ou mais mensagens na sessão de entrada voltou em 32,9% dos casos (694 usuários), contra 17,2% de quem teve
+    1 mensagem (848 usuários): 15,6 pontos a mais (de 11,3 a 19,9). Quem fez 3 ou mais conversas na mesma sessão voltou
+    em 41,9% (198 usuários), contra 21,1% de quem fez 1 (1.871 usuários): 20,8 pontos a mais (de 13,9 a 28,0).
+    Sobre o tema da conversa (classificação por regras, só descritiva): criação/ficção ficou com 7,5 pontos a mais (de 0,9 a 14,1)
+    e conversa pessoal com 6,9 a menos (de −12,6 a −1,2), em relação aos demais temas.
+  decisao: >-
+    Usar o tamanho da primeira sessão como sinal de acompanhamento no dashboard (quem está engajado tende a voltar),
+    não como meta a forçar. Sugestão para o assistente: não alongar a conversa artificialmente com a ideia de
+    aumentar retorno; antes, testar de forma controlada se algo que estimula a segunda mensagem muda o retorno.
+  limite: >-
+    A sessão longa acontece junto da volta, no mesmo período de uso: quem já tem interesse conversa mais e volta mais,
+    então não dá para dizer que conversar mais faz voltar. Por isso esses fatores não entram no modelo ajustado. O tema foi
+    marcado por regras que acertam 36,5% das conversas em uma validação manual de 200 (kappa 0,27), então serve só para
+    descrever o conjunto, nunca como fator firme.

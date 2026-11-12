@@ -98,7 +98,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** Sabemos quais conclusões resistem à mudança de definição
 - **Reqs:** REQ-240
 
-## [ ] T-209 — Achados, sugestões e encadeamento (gate do M2)
+## [x] T-209 — Achados, sugestões e encadeamento (gate do M2)
 - **What:** `python -m analise tudo` roda tudo em ordem e é chamado pelo `loader` depois dos marts. **Os 3 achados, as decisões e as sugestões são escritos pelo planejador com o Vinícius a partir dos números** (não pelo executor) e gravados em `resultado.achado` a partir de `seeds/achados.yaml`.
 - **Where:** `analise/__main__.py`, `seeds/achados.yaml`, `loader/cli.py`
 - **Depends on:** T-207, T-208

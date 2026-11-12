@@ -40,6 +40,12 @@ def _bruto():
     extrair.verificar_snapshot(extrair.SNAPSHOT)
 
 
+def _analise():
+    from analise.__main__ import tudo
+    if tudo() != 0:
+        raise RuntimeError("python -m analise tudo terminou com erro")
+
+
 def _resumo(carga: dict, linhas_reconc: list[tuple], total: float) -> str:
     with psycopg.connect(dsn(), autocommit=True) as c:
         um = lambda q: c.execute(q).fetchone()  # noqa: E731
@@ -73,6 +79,7 @@ def main() -> int:
         carga = _etapa("carregar", carregar.carregar)
         _etapa("transformar", transformar.transformar)
         linhas = _etapa("reconciliar", reconciliar.reconciliar)
+        _etapa("analise", _analise)
         print(_resumo(carga, linhas, time.time() - t0))
     except EtapaFalhou as e:
         print(f"ERRO: {e}", file=sys.stderr)
