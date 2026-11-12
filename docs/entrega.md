@@ -1,9 +1,105 @@
-<!-- RASCUNHO da Sessão A (T-505): só as seções do §4 (sustentação e incidente). Revisão do planejador e do Vinícius antes de entrar no documento final (T-604).
-     Os números do incidente do case (1.210, 1.188, 2.034 novos) vêm do enunciado; os do WildChat vêm de docs/incidente/evidencia.md. -->
+<!-- RASCUNHO da Sessão A (T-604), em revisão pelo planejador e pelo Vinícius. Marcas "[EM REVISÃO]" = o número ou a frase pode mudar:
+     (a) semana de 01/05/2023 sob suspeita de artefato do burn-in; (b) tema e recusa mudam depois da rodada com LLM; (c) preços da AWS "a conferir".
+     Cada seção cita o C-nn do enunciado que responde. Números vêm de resultado.*, mart.* e do STATE; nada sobre clientes da Acaso. -->
 
-# §4 — Sustentação e investigação de falhas
+# Retenção de um assistente de IA: o que faz a pessoa voltar em 7 dias
 
-## 4.1 Como eu saberia que um número está errado
+## 1. Resumo  (C-02, C-05, C-26)
+
+De cada 100 pessoas que experimentam o assistente pela primeira vez, **24 voltam em até 7 dias** (23,86%; intervalo de 95%: 22,19% a 25,62%; 2.372 usuários, 566 voltaram). Se "voltar" exigir outro dia, a taxa é de 17% (16,86%): a manchete honesta é **"entre 17% e 24%, conforme o que o cliente chama de voltar"**. Base: WildChat, conversas do Brasil de abr/2023 a abr/2024.
+
+Três achados [EM REVISÃO: o rascunho completo está em `seeds/achados.yaml`]:
+1. **O que o assistente faz na primeira resposta não muda, de forma que dê para afirmar, quem volta.** Modelo, recusa, tamanho da resposta e idioma: nenhum se distingue de zero por dois métodos, e a leitura se repete em quatro definições de usuário. *Decisão:* não priorizar trabalho no assistente esperando mais retorno com base nestes dados; se houver vontade de mexer, fazer teste controlado.
+2. **A semana de 01/05/2023 teve queda de retorno, mas uma semana entre 35 não é conclusão.** *Decisão:* tratar como alerta para olhar, não como problema confirmado. [EM REVISÃO: a base de comparação dessa semana pode estar contaminada pelo burn-in.]
+3. **Quem tem sessão mais longa na primeira visita volta mais, mas isso descreve, não prova causa.** *Decisão:* usar como sinal de acompanhamento no painel, não como meta a forçar.
+
+O que **os dados não permitem**: separar causa de seleção (é observacional), enxergar efeito menor que cerca de 5 pontos (4,9 com grupos iguais), nem reconhecer a mesma pessoa que troca de rede ou de aparelho.
+
+## 2. Definições e premissas  (C-09, C-13, C-16)
+
+Cada linha: o que escolhi e o que muda se estiver errado (taxa recalculada com a mesma função; oficial 23,86%). Detalhe em `docs/decisoes/`.
+
+| Premissa | Escolha | Se estiver errada | Registro |
+|---|---|---|---|
+| Quem é um usuário | IP + família do navegador (sem versão) | só IP: 23,94%; IP + user-agent completo: 25,14% (e +21% de usuários) | BDR-01 |
+| O que é sessão | intervalo ≤ 30 min entre o fim de uma conversa e o início da próxima | 60 min: 21,54% | BDR-02 |
+| O que é "voltar" | nova sessão com início em até 7 dias (168 h) do início da 1ª | "só em outro dia": 16,86% (cerca de 166 dos 566 retornos são outra sessão no mesmo dia) | BDR-02 |
+| O que conta como uso | ao menos 1 pergunta não vazia e 1 resposta; 141 perguntas vazias e 76 conversas fora | contando as vazias: 23,69% | BDR-03 |
+| Burn-in e coortes imaturas | 14 dias iniciais e quem não tem 7 dias completos ficam fora (64 e 51 usuários) | sem burn-in: 24,01% [EM REVISÃO: testar 28 dias] | BDR-04 |
+| Tráfego anômalo | IP com 200+ conversas ou 10+ user-agents fica fora (11 usuários, 7 IPs) | com eles: 24,08% | BDR-05 |
+| Fuso | America/Sao_Paulo | UTC: mesma taxa; 44 usuários mudam de semana | BDR-06 |
+| Amostra mínima | toda taxa com intervalo e n; abaixo do mínimo, "amostra insuficiente" | — | BDR-07 |
+
+## 3. O que os dados mostram  (C-17, C-18, C-19, C-20, C-21)
+
+Só os gráficos que levaram a uma conclusão (`docs/figuras/`, frases em `conclusoes.md`):
+- **Volume:** mediana de 163 conversas por semana (de 40 a 616). 4 semanas com queda forte (10/04/2023, 09/10/2023, 29/01/2024, 05/02/2024).
+- **Concentração:** 2.385 IPs; o 1% mais ativo (24 IPs) responde por 41% das conversas; o mais ativo sozinho, por 13,4% (1.557 conversas). Por isso o tráfego anômalo fica fora (BDR-05).
+- **Retorno por semana:** a faixa de incerteza de cada ponto tem em média 22 pontos de largura; boa parte da variação semanal é ruído.
+- **Turnos:** 56% das conversas têm um único turno e 84% têm até três. O engajamento vem depois da resposta, então vira sinal de engajamento, não fator do assistente (BDR-08).
+- **Idioma:** 70% das conversas em português. O idioma "divergente" aparece em 61% das perguntas de até 30 caracteres contra 10% nas mais longas: em pergunta curta é erro de detecção, então o fator só vale para perguntas com mais de 30 caracteres.
+- **Tema** [EM REVISÃO: depende do classificador]: o retorno vai de 31% (criação/ficção) a 16% (conversa pessoal) nas regras atuais.
+
+**Variáveis da primeira experiência** (C-17): modelo (família), tema, tamanho da pergunta e da resposta, recusa, idioma, idioma divergente, dispositivo, período do dia, fim de semana, região, era do modelo, e (como engajamento) turnos e conversas na 1ª sessão. Cada uma é derivada na carga, com o código em `loader/derivar.py` e o dicionário na tela "Posso confiar nestes números?".
+
+**Como conferi a IA que classifica** (C-18): 200 conversas rotuladas por mim, sem ver o que a máquina respondeu. Com palavras-chave (`regras`): tema com 36,5% de acerto (kappa 0,27) e recusa com 81,0% (kappa 0,37); na população, a revocação da recusa é de 48,8% (pega metade das recusas reais) e só 30,2% do que marca como recusa é recusa. Portanto **tema é descritivo e recusa é aproximada**. [EM REVISÃO: números do LLM — Bedrock e OpenRouter — a preencher após a rodada; ADR-09.]
+
+**Problemas de qualidade e tratamento** (C-19): 141 perguntas vazias (não contam como uso), 76 conversas sem uso, 93 conversas com texto repetido, 175 IPs que mudam, 56 conversas com dado removido pelos autores, 0 marcadas como tóxicas (removidas na origem), idioma divergente em pergunta curta (restrito). Tela "Posso confiar nestes números?" lista cada um com o tratamento.
+
+**O que dá e o que não dá para medir; que dados faltam** (C-21): dá para medir associação entre a primeira experiência e o retorno. Não dá para provar causa, identificar a mesma pessoa em redes ou aparelhos diferentes, nem saber o que mudou no produto em cada semana. Faltam: ID de login, versão do produto por data, satisfação declarada e o motivo de a pessoa ter parado.
+
+## 4. Efeitos  (C-05, C-06, C-23, C-24)
+
+Efeito = diferença na taxa de retorno em pontos percentuais, com intervalo de 95%. "Ajustado" compara pessoas parecidas nos outros fatores (regressão logística com erro agrupado por IP). **Nenhum dos 25 efeitos ajustados passa a correção para muitos testes (Benjamini-Hochberg, 5%).**
+
+| Fator (contra a referência) | Bruto | Ajustado (IC 95%) | Leitura |
+|---|---:|---|---|
+| Modelo GPT-4 (contra GPT-3.5) | +0,1 | −3,3 (−8,4 a +1,8) | não se distingue de zero; pelo 2º método (comparação ponderada): −5,4 (−12,0 a +0,9) |
+| Recusa na 1ª resposta | −1,8 | −3,2 (−9,9 a +3,6) | não se distingue de zero; 153 usuários |
+| Idioma divergente (pergunta > 30 caracteres) | +3,0 | +1,5 (−6,4 a +9,5) | não se distingue de zero; 158 usuários |
+| Resposta de 301 a 1.000 caracteres (contra até 300) | +8,8 | +3,7 (−2,4 a +9,7) | o bruto engana: boa parte era perfil e era do modelo |
+| Resposta com mais de 2.500 caracteres | +7,9 | +1,0 (−5,6 a +7,7) | idem |
+| Tema: criação/ficção [EM REVISÃO] | — | +7,5 (+0,9 a +14,1) | intervalo exclui zero, mas não passa a correção; tema é descritivo |
+| Tema: conversa pessoal [EM REVISÃO] | — | −6,9 (−12,6 a −1,2) | idem |
+| Engajamento: 4+ turnos na 1ª sessão (descrição) | +15,6 (11,3 a 19,9) | fora do modelo | sinal, não causa (BDR-08) |
+
+**Fatores de confusão e como tratei** (C-24): perfil e era do modelo entram como controle; para modelo, recusa, idioma divergente e a "virada" de dez/2023 comparei pessoas de perfil parecido (ponderação por propensão, balanço conferido e erro por bootstrap agrupado por IP). A virada de dez/2023, quando o GPT-4 virou o padrão, não mostra mudança: +1,7 (−2,1 a +5,5). Para recusa e idioma divergente **não deu para montar um grupo de comparação equilibrado** (cerca de 150 usuários em cada grupo): o resultado fica no modelo ajustado, e lá não se distingue de zero. É limite do dado, não do método. A leitura é a mesma nas 4 definições de usuário e sessão.
+
+**O que prova e o que não prova:** mostra que, com estes dados, não há evidência de que o assistente mude o retorno, e que um efeito grande (acima de cerca de 5 pontos) é improvável. Não prova que não exista efeito pequeno, nem que o efeito seja causal; para isso, teste controlado (BDR-08, ADR-10).
+
+## 5. A semana de 01/05/2023 e a de 20/11/2023  (C-25)  [EM REVISÃO]
+
+Cada semana foi comparada às anteriores com decomposição em **mudança de público (mix)** e **mudança de taxa dentro do público**.
+
+| Semana | Retorno | Base | Diferença | Mix / taxa | p |
+|---|---|---|---:|---|---:|
+| 20/11/2023 (a do case) | 21,5% (n=65) | 26,4% (n=197) | −4,9 pontos | −0,4 / −4,4 | 0,43 |
+| **01/05/2023** | 16,7% (n=84) | 33,8% (n=74) | −17,1 | +0,7 / −17,8 | 0,013 |
+| 17/07/2023 (só na tabela) | 9,1% (n=33) | 22,5% (n=178) | −13,4 | −0,5 / −12,9 | 0,08 |
+
+- 20/11/2023 está **dentro do ruído**: o método não confirma queda.
+- 01/05/2023 é a única que se distingue de ruído isolado, e é queda de **taxa**, não de público. Mas, aplicando o mesmo teste às 35 semanas com amostra suficiente, 2 deram p < 0,05 e o acaso sozinho produz cerca de 2. Além disso, a base de comparação de 01/05 são só as 2 semanas depois do burn-in (74 usuários), o que pode inflar a taxa-base: **conferir com burn-in de 28 dias antes de afirmar**.
+
+## 6. Dashboard  (C-07, C-12, C-27, C-28)
+
+Três telas, cada uma com uma pergunta, em português simples; cada número tem definição, fonte e intervalo.
+
+| Tela | Pergunta | Gráfico e por quê |
+|---|---|---|
+| **Retenção** | "De cada 100 pessoas que experimentam o assistente, quantas voltam em até 7 dias? E isso está mudando?" | linha por semana com faixa de incerteza (mostra tendência sem enganar com ponto solto); pontos de sensibilidade (a taxa muda pouco com a definição); cascata para a semana (separa público de taxa) |
+| **Fatores** | "Quais fatores da primeira experiência mais pesam para a pessoa voltar, e quanto disso é efeito do assistente?" | "floresta" (um ponto por fator com o intervalo; o que cruza o zero é visível de relance), em 3 grupos: assistente, perfil, engajamento |
+| **Posso confiar nestes números?** | idem | carga, reconciliação, problemas de qualidade, validação do classificador e dicionário de indicadores, em tabelas |
+
+**Regra de amostra pequena:** abaixo do n mínimo o painel mostra "amostra insuficiente" no lugar do número; coortes sem 7 dias completos aparecem marcadas. **O que mostra:** só agregados. **Nunca mostra:** texto de conversa, IP, user-agent (BDR-10). Ficha dos indicadores (definição, fórmula, denominador, período e SQL): `mart.dicionario_indicador` e tela de dados.
+
+## 7. Arquitetura, implantação e custo  (C-11, C-29, C-30, C-31)
+
+- **Fluxo:** arquivo bruto → carga (papel `loader_rw`) → `stg` (restrito) → `mart` e `resultado` → API (papel `app_ro`, só leitura) → telas. Diagrama e modelo da base em `docs/arquitetura/arquitetura.md`.
+- **Pré-cálculo e cache:** os indicadores são pré-agregados na carga; a API guarda em cache e invalida quando muda o lote (ADR-07). Tempos medidos em `docs/desempenho.md`.
+- **AWS (desenho, não implantado):** RDS PostgreSQL, containers para app e carga, balanceador, S3 para o bruto, Secrets Manager, CloudWatch e **Bedrock** para o LLM (ADR-08, ADR-09). **Custo mensal estimado: cerca de US$ 43 [a conferir no AWS Pricing Calculator]**, mais o LLM, medido separadamente (`docs/custo_llm.md`, a preencher após a rodada).
+- **Outros países:** o país é parâmetro (uma carga por país no mesmo banco), com idioma da interface, fuso por país e comparação padronizada pelo mix; amostras pequenas aparecem como "amostra pequena" (seção 4 de `arquitetura.md`).
+
+## 8. Sustentação: como eu saberia que um número está errado  (C-32, C-33, C-34)
 
 ### O que registramos em cada camada
 | Camada | O que fica registrado | Para que serve |
@@ -36,7 +132,7 @@
 5. **Reversão:** voltar para a imagem anterior; se a migração mudou dados, restaurar pelo backup (ou pelo passo inverso, quando existir). Reconstruir os marts a partir do bruto é seguro porque a carga é idempotente.
 6. **CI:** rodar lint e testes antes de aceitar a mudança (workflow descrito; ainda não configurado).
 
-## 4.2 Incidente: a retenção do dashboard caiu de 31% para 18%
+## 9. Incidente: a retenção do dashboard caiu de 31% para 18%  (C-35 a C-39)
 
 ### Pergunta 1 — Por onde eu começaria e por quê
 Reconciliando as duas fontes **na mesma granularidade** (semana). A tabela do enunciado já aponta o caminho:
@@ -84,3 +180,41 @@ Os dois arquivos têm um comentário `DEFEITO:` em cada linha corrigida, e passa
 > "A causa foi a forma como o dashboard identifica uma pessoa nova: uma troca de navegador estava contando como usuário novo. Com a regra corrigida, a retenção da semana de 20/11 é [X%], com margem de [±Y pontos]. As semanas anteriores tinham um erro pequeno (cerca de 5%), que também foi corrigido. A contagem agora é conferida automaticamente com o relatório do time de dados, e há um teste que impede esse erro de voltar. Os números que você já mostrou para outras pessoas: [lista], com a versão corrigida."
 
 <!-- Os campos [horário], [X%] e [Y pontos] dependem de rodar a regra corrigida nos dados reais do cliente; no case não existem. -->
+
+## 10. Riscos e decisões a levar ao time e ao cliente antes de implementar  (C-40)
+
+| Risco | Decisão que não é minha |
+|---|---|
+| Não há ID de usuário: a identidade por IP + navegador erra nos dois sentidos | **Qual é a definição oficial de usuário?** O ideal é um ID de login; até lá, IP + família do navegador, com a sensibilidade sempre visível |
+| O dado tem texto de conversa e IP (mesmo anonimizado) | **Política de retenção e base legal (LGPD):** por quanto tempo guardar, quem acessa, o que pode ir para um LLM. Com dado de cliente, só LLM dentro da conta (Bedrock) |
+| Custo do LLM cresce com a base | **Orçamento de LLM** e quem aprova; o custo medido por 1.000 conversas está em `docs/custo_llm.md` [a preencher após a rodada] |
+| Mudar a definição de "voltar" muda o número oficial | **Quem aprova a mudança de definição** e como se comunica (a versão da definição fica no rodapé de toda tela) |
+| A base é pequena (cerca de 2.400 usuários elegíveis): só se enxerga efeito grande | **O que é efeito que vale agir** e se vale um teste controlado no produto |
+| Carga atualizada em lote | **SLA de atualização** (diária?) e o que o painel mostra quando a carga atrasa |
+
+## 11. Sugestões  (C-22)
+
+**Para o assistente** (com a cautela de que os dados não provam causa):
+- **Recusa:** acontece em cerca de 6% das primeiras respostas (aproximado: validação manual mostra que as regras também marcam recusa onde não há). Os dados não mostram que ela afaste a pessoa (−3,2 pontos, de −9,9 a +3,6). Se houver desejo de reduzir recusas, fazer como teste controlado.
+- **Resposta muito curta (até 300 caracteres):** retorno mais baixo no bruto (19,5%). No ajuste o efeito encolhe e o intervalo cruza zero: não é onde priorizar.
+- **Tema** [EM REVISÃO]: conversas de criação/ficção voltam mais e conversas pessoais menos; usar para entender o público, não para mudar o assistente.
+
+**Para o dashboard** (indicadores pensados depois de ver os dados):
+- Mostrar sempre o intervalo e o n ao lado de cada taxa e de cada efeito, com o aviso "não se distingue de zero".
+- Mostrar "voltou em outro dia" ao lado da taxa oficial (17% × 24%).
+- Sinalizar uma semana só quando a diferença passar da variação normal, e dizer quantas semanas passariam por acaso.
+- Indicador de **tamanho da primeira sessão** como sinal de engajamento.
+- Painel de reconciliação (bruto × base) visível ao cliente, para o número ser conferível.
+
+## 12. O que eu faria diferente  (C-04, C-15)
+
+- Com ID de login, trocaria a identidade por IP pela do usuário real e refaria toda a análise (o código recalcula tudo com um comando).
+- Pediria dado de versão do produto por data, para explicar semanas como a de 01/05 em vez de só descrevê-las.
+- Faria um teste controlado de recusa e de modelo: é a única forma de provar causa.
+- Passaria os testes de definição para dbt se o time de dados já o usar (hoje: SQL versionado + pytest, ADR-03).
+- Implantaria de fato na AWS; neste case é um desenho, com custo estimado (ADR-08).
+- Carga incremental por lote, mantendo a mesma reconciliação (ADR-01).
+
+## 13. Uso de IA  (C-41)
+
+Usei assistentes de IA (Claude, pelo Claude Code) em duas funções: **planejamento** (especificações, desenho das decisões e revisão) e **execução** (código e testes, uma tarefa por vez), mais um LLM dentro do produto para classificar tema e recusa (Bedrock; OpenRouter como reserva). **Conferi** com testes e com os meus rótulos: 200 conversas rotuladas por mim contra a máquina (ADR-09), uma base sintética de resposta conhecida e reconciliação do bruto com a base (9 métricas, diferença 0). **Corrigi ou descartei**: o efeito marginal gerado na 1ª versão estimava +7,0 pontos onde o verdadeiro era +10,1 numa simulação (o teste pegou, corrigido); o "idioma divergente" bruto era ruído de detecção em pergunta curta (restrito); um teste de borda foi acrescentado porque trocar `<=` por `<` passava despercebido; a consulta de retenção levava 12 s por chamada e passou a 0,33 s depois de achar uma subconsulta repetida. Mais casos em `docs/conferi_da_ia.md`. **Horas aproximadas:** [a preencher a partir de `docs/horas.md`; não estimei de memória].
