@@ -2,7 +2,7 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { Floresta } from "@/components/graficos/Floresta";
-import { contarDistinguiveis, contarDoGrupo, prepararFloresta, type EfeitoApi } from "@/lib/floresta";
+import { contarDistinguiveis, contarDoGrupo, fraseResposta, prepararFloresta, type EfeitoApi } from "@/lib/floresta";
 
 afterEach(cleanup);
 
@@ -140,5 +140,27 @@ describe("tema descritivo (grupo à parte)", () => {
     expect(l.querySelector('[data-ponto="ajustado"]')).toBeNull();
     expect(within(l).getByText(/sem ajuste/)).toBeTruthy();
     expect(within(l).queryByText(/pode ser acaso/)).toBeNull();
+  });
+});
+
+describe("frase-resposta: concordância", () => {
+  it("singular quando é 1 (k = 1 e f = 1)", () => {
+    const frase = fraseResposta(1, 27, 1);
+    expect(frase).toContain("1 tem intervalo");
+    expect(frase).toContain("1 continua diferente de zero");
+    expect(frase).not.toMatch(/1 têm|1 continuam/);
+  });
+
+  it("plural quando é mais de 1 (k > 1 e f > 1)", () => {
+    const frase = fraseResposta(5, 27, 3);
+    expect(frase).toContain("5 têm intervalo");
+    expect(frase).toContain("3 continuam diferentes de zero");
+    expect(frase).toContain("27 comparações");
+  });
+
+  it("mistura: k plural com f singular, e o caso f = 0 (nenhuma continua)", () => {
+    expect(fraseResposta(5, 27, 1)).toMatch(/5 têm .* 1 continua diferente de zero/);
+    expect(fraseResposta(1, 27, 0)).toMatch(/1 tem intervalo.*nenhuma continua diferente de zero/);
+    expect(fraseResposta(0, 0, 0)).toBe("Ainda não há comparações para mostrar.");
   });
 });

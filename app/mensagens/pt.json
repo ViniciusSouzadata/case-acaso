@@ -145,7 +145,15 @@
   },
   "fatores": {
     "pergunta": "Quais fatores da primeira experiência mais pesam para a pessoa voltar, e quanto disso é efeito do assistente?",
-    "resposta": "Entre {m} comparações do assistente e do perfil, {k} têm intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, {f} continuam diferentes de zero.",
+    "resposta": "Entre {m} {comparacoes} do assistente e do perfil, {k} {kTem} intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, {f} {fContinua} de zero.",
+    "concordancia": {
+      "comparacao1": "comparação",
+      "comparacaoN": "comparações",
+      "tem1": "tem",
+      "temN": "têm",
+      "continua1": "continua diferente",
+      "continuaN": "continuam diferentes"
+    },
     "respostaSemDados": "Ainda não há comparações para mostrar.",
     "abas": {
       "assistente": "Assistente",
@@ -212,7 +220,7 @@
       "n_conversas_sessao": "conversas na visita",
       "tema_descritivo": "tema"
     },
-    "respostaNenhuma": "Entre {m} comparações do assistente e do perfil, {k} têm intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, nenhuma continua diferente de zero. Não dá para afirmar um efeito com segurança.",
+    "respostaNenhuma": "Entre {m} {comparacoes} do assistente e do perfil, {k} {kTem} intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, nenhuma continua diferente de zero. Não dá para afirmar um efeito com segurança.",
     "naoResiste": "o intervalo não inclui o zero, mas não resiste à correção para muitas comparações: pode ser acaso",
     "tituloGrupoDesc": "Estas são diferenças brutas por tema, só para descrever, não efeitos do assistente"
   },

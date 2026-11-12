@@ -1,4 +1,5 @@
 // Preparação do gráfico de floresta da Tela 2 (funções puras).
+import { t } from "./mensagens";
 import { amostraPequena, cruzaZero } from "./regras";
 
 /** "descritivo": comparações só descritivas (tema), nunca misturadas com os fatores do assistente nem do perfil. */
@@ -117,6 +118,16 @@ export function contarDistinguiveis(efeitos: EfeitoApi[]): { k: number; m: numbe
   const fora = validos.filter((e) => !cruzaZero(e.ajustado_ic_inf, e.ajustado_ic_sup));
   // f: as que continuam depois da correção para comparações múltiplas (Benjamini-Hochberg, feita na análise)
   return { k: fora.length, m: validos.length, f: fora.filter((e) => e.significativo_fdr === true).length };
+}
+
+/** Frase-resposta da Tela 2, com a concordância certa (1 tem / 2 têm; 1 continua diferente / 2 continuam diferentes). */
+export function fraseResposta(k: number, m: number, f: number): string {
+  const comparacoes = t(m === 1 ? "fatores.concordancia.comparacao1" : "fatores.concordancia.comparacaoN");
+  const kTem = t(k === 1 ? "fatores.concordancia.tem1" : "fatores.concordancia.temN");
+  if (m === 0) return t("fatores.respostaSemDados");
+  if (f === 0) return t("fatores.respostaNenhuma", { k, m, comparacoes, kTem });
+  const fContinua = t(f === 1 ? "fatores.concordancia.continua1" : "fatores.concordancia.continuaN");
+  return t("fatores.resposta", { k, m, f, comparacoes, kTem, fContinua });
 }
 
 export function contarDoGrupo(linhas: LinhaFloresta[]): { k: number; m: number } {

@@ -5,7 +5,7 @@ import { Achados } from "@/components/Achados";
 import { DetalheBalanco } from "@/components/DetalheBalanco";
 import { Estado } from "@/components/Estado";
 import { Floresta } from "@/components/graficos/Floresta";
-import { contarDistinguiveis, contarDoGrupo, prepararFloresta, type EfeitoApi, type GrupoFator } from "@/lib/floresta";
+import { contarDistinguiveis, contarDoGrupo, fraseResposta, prepararFloresta, type EfeitoApi, type GrupoFator } from "@/lib/floresta";
 import { t } from "@/lib/mensagens";
 import { useApi } from "@/lib/useApi";
 
@@ -25,7 +25,7 @@ export default function PaginaFatores() {
       <header>
         <h1 className="text-xl font-semibold text-slate-900">{t("fatores.pergunta")}</h1>
         <p className="mt-2 text-base text-slate-800" data-testid="frase-resposta">
-          {r.estado === "ok" ? (m === 0 ? t("fatores.respostaSemDados") : f === 0 ? t("fatores.respostaNenhuma", { k, m }) : t("fatores.resposta", { k, m, f })) : ""}
+          {r.estado === "ok" ? fraseResposta(k, m, f) : ""}
         </p>
       </header>
 
