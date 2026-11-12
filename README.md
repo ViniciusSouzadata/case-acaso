@@ -12,15 +12,16 @@ O Docker é só o Docker Engine com o plugin Compose (Docker Desktop **ou** Engi
 ### Subir do zero (um comando)
 ```
 docker compose up -d --build
-docker compose logs -f loader
+docker compose ps -a
+docker compose logs loader
 ```
-`up -d` sobe o `db` (Postgres 16) e o `loader`, que migra, verifica o bruto, carrega, transforma e reconcilia, e então **termina**.
-O `db` continua de pé (o app do M3 vai depender dele). `logs -f loader` acompanha e **volta sozinho** quando o loader acaba;
-para saber que deu certo: a última linha é `loader-1 exited with code 0` (ou `docker compose ps -a` mostra `loader  exited (0)`).
-Também funciona só `docker compose up --build` em primeiro plano (ele não devolve o prompt porque o `db` segue rodando:
-espere a linha `exited with code 0` e use Ctrl+C, que também para o `db`; para o dia a dia prefira o `up -d`).
+`up -d` sobe o `db` (Postgres 16), depois o `loader` (migra, verifica o bruto, carrega, transforma e reconcilia, e então **termina**) e, quando o loader termina com sucesso, o `app`. **O comando só devolve o prompt depois disso**, então não há o que esperar a mais.
+Para saber que deu certo: `docker compose ps -a` mostra `loader` como `Exited (0)` e `db` e `app` de pé; `docker compose logs loader` mostra as etapas e o resumo da seção "O que aparece no fim". Se o loader falhar, o `app` não sobe: a causa está em `docker compose logs loader`.
+Também funciona só `docker compose up --build` em primeiro plano (ele não devolve o prompt porque o `db` e o `app` seguem rodando: espere a linha `exited with code 0` do loader e use Ctrl+C, que também para os dois; para o dia a dia prefira o `up -d`).
 
-No WSL2 desta máquina, prefixe com `wsl -d Ubuntu-22.04 -- bash -lc "cd '/mnt/c/Users/VINICIUS/Desktop/Meus agentes/case_acaso' && <comando>"`.
+**Subindo em etapas** (pouca memória): `docker compose up -d db loader` devolve o prompt com o loader ainda rodando; aí `docker compose wait loader` espera ele terminar e imprime `container "<id>" exited with status code 0` quando deu certo; depois `docker compose logs loader` e `docker compose up -d app`. O `wait` só funciona com o loader em execução: se ele já terminou, responde `no containers for project`; nesse caso use `docker compose ps -a`.
+
+No WSL2, rode os mesmos comandos dentro da sua distribuição WSL (ex.: Ubuntu), na pasta do repositório: `wsl -d <sua distribuição WSL> -- bash -lc "cd '<pasta do repositório>' && <comando>"` (uma pasta do Windows aparece no WSL como `/mnt/c/...`).
 Se o daemon não responder: `sudo service docker start`.
 
 ### Tempos esperados (máquina de dev, WSL2)
@@ -67,7 +68,7 @@ docker compose --profile testes run --build --rm app-testes
 ```
 (`make test` chama os dois.) Sem Docker, só o app: `cd app && npm ci && npx tsc --noEmit && npx vitest run`; com `DATABASE_URL=postgres://app_ro:<senha>@localhost:5433/acaso` entram também os testes de fumaça contra o banco real.
 
-161 testes; ~70 s na primeira vez (monta o banco real em segundo plano), e menos com o banco de testes em cache (o volume do `db` sobrevive; `down -v` ou `TESTES_SEM_CACHE=1` forçam a reconstrução).
+Todos os testes devem passar. O que cada suíte faz: o `loader` roda o **pytest** (carga, transformações, análise estatística e classificador); o `app-testes` roda o **vitest** do app (API, componentes, telas e a **fumaça** das três telas contra o banco do compose). O volume do `db` sobrevive entre execuções; `down -v` ou `TESTES_SEM_CACHE=1` forçam a reconstrução do banco de testes.
 
 ### Zerar tudo
 ```
@@ -100,14 +101,14 @@ Remove containers, rede e o volume do banco. A porta do Postgres no host é `POS
 | `.specs/` | Especificações, decisões e registro de execução |
 
 ## Solução de problemas
-- **Porta ocupada** (`bind: address already in use`): defina `POSTGRES_HOST_PORT` ou `APP_HOST_PORT` no `.env` e suba de novo.
+- **Porta ocupada** (`bind: address already in use`): se outra stack estiver usando as portas `5433` ou `3000`, pare-a antes (`docker compose down` na pasta dela) ou defina `POSTGRES_HOST_PORT` e `APP_HOST_PORT` no `.env` deste repositório (o `docker-compose.yml` lê as duas) e suba de novo.
 - **Docker no WSL não responde:** `sudo service docker start`; rode os comandos dentro do WSL (ver "Subir do zero").
 - **Painel mostra "Não foi possível carregar":** confira `docker compose ps -a` (o loader deve estar `exited (0)`) e `docker compose logs app`; a mensagem de erro na tela traz um código `request_id` que aparece também nos logs.
-- **Pouca memória:** suba um serviço por vez (`docker compose up -d db`, depois `loader`, depois `app`) e evite builds em paralelo.
+- **Pouca memória:** suba um serviço por vez (`docker compose up -d db`, depois `docker compose up -d loader` e `docker compose wait loader`, depois `docker compose up -d app`) e evite builds em paralelo.
 - **Recomeçar do zero:** `docker compose down -v` apaga o volume do banco.
 
 ## Estado
-M1 (base analítica): carga, marts e reconciliação sobem com um comando. M3/M4: API e três telas conferidas com dados reais; a prova de `docker compose up` do zero com o app e `make test` completo ainda será feita numa rodada única (ver `docs/gate_m4.md`).
+M1 (base analítica) e M3/M4 (API e três telas) prontos. A subida do zero foi provada em 12/11/2026 num clone limpo do repositório, sem `.env`: `docker compose down -v` e um único `docker compose up -d --build`; o loader terminou com código 0, as três telas e `/api/saude` responderam 200 e o resumo bateu com o da seção "O que aparece no fim". Conferência de layout em 390 px e 1280 px: `docs/capturas_m4/`; checklist do gate: `docs/gate_m4.md`.
 
 ## Dados brutos (`data/bruto/`)
 - `wildchat_brasil.parquet`: snapshot do extrato Brasil (`country = 'Brazil'`, 11.621 conversas, ~22 MB) do dataset [allenai/WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M), versão com toxicidade e PII removidas pelos autores. Snapshot gerado em **10/11/2026**. Integridade em `wildchat_brasil.sha256`.
