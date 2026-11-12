@@ -16,6 +16,18 @@ const NOMES: Record<DegrauCascata["chave"], string> = {
   semana: "semana.degrauSemana",
 };
 
+/** Nome da categoria quebrado por palavra, para caber em telas estreitas (390 px). */
+function TickQuebrado({ x, y, payload }: { x?: number; y?: number; payload?: { value: string } }) {
+  const partes = String(payload?.value ?? "").split(" ");
+  return (
+    <text x={x} y={y} textAnchor="middle" fontSize={10} fill="#475569">
+      {partes.map((p, i) => (
+        <tspan key={i} x={x} dy={i === 0 ? 12 : 11}>{p}</tspan>
+      ))}
+    </text>
+  );
+}
+
 /** Cascata: barras flutuantes (base invisível + altura). */
 export function Cascata({ degraus }: { degraus: DegrauCascata[] }) {
   const dados = degraus.map((d) => ({
@@ -30,7 +42,7 @@ export function Cascata({ degraus }: { degraus: DegrauCascata[] }) {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={dados} margin={{ top: 22, right: 16, bottom: 4, left: 8 }}>
           <CartesianGrid stroke="#e2e8f0" vertical={false} />
-          <XAxis dataKey="rotulo" tick={{ fontSize: 11 }} interval={0} />
+          <XAxis dataKey="rotulo" tick={<TickQuebrado />} interval={0} height={40} />
           <YAxis width={52} unit="%" tick={{ fontSize: 11 }} domain={[0, "auto"]} label={{ value: t("semana.eixo"), angle: -90, position: "insideLeft", fontSize: 11, dx: 4 }} />
           <Bar dataKey="inicio" stackId="c" fill="transparent" isAnimationActive={false} />
           <Bar dataKey="altura" stackId="c" isAnimationActive={false}>

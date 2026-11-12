@@ -51,7 +51,6 @@ export function GraficoRetencao({
   const faixas = faixasEras(linhas, eras);
   const imaturas = faixasImaturas(linhas);
   const eixoX = t(granularidade === "mes" ? "retencao.eixoXMes" : "retencao.eixoXSemana");
-  const passo = Math.max(0, Math.ceil(linhas.length / 12) - 1);
 
   return (
     <div>
@@ -80,7 +79,7 @@ export function GraficoRetencao({
                 label={{ value: t("imatura.rotulo"), position: "insideTopRight", fontSize: 11, fill: "#334155" }}
               />
             ))}
-            <XAxis dataKey="periodo" tickFormatter={(p: string) => linhas.find((l) => l.periodo === p)?.rotulo ?? p} interval={passo} tick={{ fontSize: 11 }} />
+            <XAxis dataKey="periodo" tickFormatter={(p: string) => linhas.find((l) => l.periodo === p)?.rotulo ?? p} interval="preserveStartEnd" minTickGap={16} tick={{ fontSize: 11 }} />
             <YAxis width={LARGURA_Y} unit="%" tick={{ fontSize: 11 }} domain={[0, "auto"]} label={{ value: t("retencao.eixoY"), angle: -90, position: "insideLeft", fontSize: 11, dx: 4 }} />
             <Tooltip content={({ payload }) => (payload && payload[0] ? <DicaCoorte linha={payload[0].payload as LinhaGrafico} /> : null)} />
             <Area type="monotone" dataKey="icBase" stackId="ic" stroke="none" fill="transparent" isAnimationActive={false} connectNulls={false} legendType="none" />
@@ -96,7 +95,7 @@ export function GraficoRetencao({
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={linhas} margin={MARGEM}>
             <CartesianGrid stroke="#e2e8f0" vertical={false} />
-            <XAxis dataKey="periodo" tickFormatter={(p: string) => linhas.find((l) => l.periodo === p)?.rotulo ?? p} interval={passo} tick={{ fontSize: 11 }} label={{ value: eixoX, position: "insideBottom", offset: -2, fontSize: 11 }} height={34} />
+            <XAxis dataKey="periodo" tickFormatter={(p: string) => linhas.find((l) => l.periodo === p)?.rotulo ?? p} interval="preserveStartEnd" minTickGap={16} tick={{ fontSize: 11 }} label={{ value: eixoX, position: "insideBottom", offset: -2, fontSize: 11 }} height={34} />
             <YAxis width={LARGURA_Y} tick={{ fontSize: 11 }} label={{ value: t("retencao.eixoYBarras"), angle: -90, position: "insideLeft", fontSize: 11, dx: 4 }} />
             <Tooltip content={({ payload }) => (payload && payload[0] ? <DicaCoorte linha={payload[0].payload as LinhaGrafico} /> : null)} />
             <Bar dataKey="novos" fill={AZUL} fillOpacity={0.55} isAnimationActive={false} />
