@@ -1,13 +1,21 @@
 // Preparação do gráfico de floresta da Tela 2 (funções puras).
 import { amostraPequena, cruzaZero } from "./regras";
 
-export type GrupoFator = "assistente" | "perfil" | "engajamento";
+/** "descritivo": comparações só descritivas (tema), nunca misturadas com os fatores do assistente nem do perfil. */
+export type GrupoFator = "assistente" | "perfil" | "engajamento" | "descritivo";
+type GrupoApi = "assistente" | "perfil" | "engajamento";
+
+/** O tema descritivo vem da API como "perfil", mas é só descrição (sem ajuste): vira um grupo à parte. */
+export function grupoEfetivo(e: { fator: string; grupo: GrupoApi }): GrupoFator {
+  return e.fator === "tema_descritivo" ? "descritivo" : e.grupo;
+}
+const semAjuste = (g: GrupoFator) => g === "engajamento" || g === "descritivo";
 
 export interface EfeitoApi {
   fator: string;
   nivel: string;
   referencia: string;
-  grupo: GrupoFator;
+  grupo: GrupoApi;
   n_nivel: number;
   n_referencia: number;
   taxa_nivel: number | null;
@@ -63,11 +71,11 @@ function estimativa(e: number | null, i: number | null, s: number | null): Estim
 
 /** Linhas de um grupo, ordenadas pelo tamanho do efeito (ajustado se houver, senão bruto), em escala simétrica em torno do zero. */
 export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { linhas: LinhaFloresta[]; limite: number } {
-  const doGrupo = efeitos.filter((e) => e.grupo === grupo);
+  const doGrupo = efeitos.filter((e) => grupoEfetivo(e) === grupo);
   const base = doGrupo.map((e) => {
     const bruto = estimativa(e.efeito_bruto_pp, e.bruto_ic_inf, e.bruto_ic_sup);
     // engajamento nunca mostra o ajustado, mesmo que a API traga algum valor.
-    const ajustado = grupo === "engajamento" ? null : estimativa(e.efeito_ajustado_pp, e.ajustado_ic_inf, e.ajustado_ic_sup);
+    const ajustado = semAjuste(grupo) ? null : estimativa(e.efeito_ajustado_pp, e.ajustado_ic_inf, e.ajustado_ic_sup);
     const ref = ajustado ?? bruto;
     return { e, bruto, ajustado, ref };
   });
@@ -86,7 +94,7 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
       nivel: e.nivel,
       referencia: e.referencia,
       metodo: e.metodo,
-      grupo: e.grupo,
+      grupo,
       nNivel: e.n_nivel,
       nReferencia: e.n_referencia,
       pequena,
@@ -95,7 +103,7 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
       referenciaDoRotulo: ref,
       naoDistingue: !pequena && ref !== null && cruzaZero(ref.inf, ref.sup),
       resisteFdr: e.significativo_fdr === true,
-      podeSerAcaso: grupo !== "engajamento" && !pequena && ajustado !== null && !cruzaZero(ajustado.inf, ajustado.sup) && e.significativo_fdr !== true,
+      podeSerAcaso: !semAjuste(grupo) && !pequena && ajustado !== null && !cruzaZero(ajustado.inf, ajustado.sup) && e.significativo_fdr !== true,
       leitura: e.leitura,
       pos: { zero: pos(0), bruto: tri(bruto), ajustado: tri(ajustado) },
     };
@@ -105,7 +113,7 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
 
 /** Quantas comparações (assistente + perfil, amostra suficiente, com ajuste) se distinguem de zero. */
 export function contarDistinguiveis(efeitos: EfeitoApi[]): { k: number; m: number; f: number } {
-  const validos = efeitos.filter((e) => e.grupo !== "engajamento" && e.amostra_suficiente && e.efeito_ajustado_pp !== null);
+  const validos = efeitos.filter((e) => grupoEfetivo(e) !== "engajamento" && grupoEfetivo(e) !== "descritivo" && e.amostra_suficiente && e.efeito_ajustado_pp !== null);
   const fora = validos.filter((e) => !cruzaZero(e.ajustado_ic_inf, e.ajustado_ic_sup));
   // f: as que continuam depois da correção para comparações múltiplas (Benjamini-Hochberg, feita na análise)
   return { k: fora.length, m: validos.length, f: fora.filter((e) => e.significativo_fdr === true).length };

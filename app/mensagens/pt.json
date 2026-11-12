@@ -150,12 +150,14 @@
     "abas": {
       "assistente": "Assistente",
       "perfil": "Perfil",
-      "engajamento": "Engajamento"
+      "engajamento": "Engajamento",
+      "descritivo": "Tema (só descrição)"
     },
     "abasAjuda": {
       "assistente": "O que a resposta do assistente fez: recusar, mudar de idioma, o tamanho da resposta e o modelo.",
       "perfil": "Quem chegou e quando: tema, idioma, aparelho, horário, região e época.",
-      "engajamento": "O que aconteceu durante a primeira visita (quantos turnos e conversas). É consequência da experiência, não causa; por isso aparece só a diferença bruta, sem ajuste."
+      "engajamento": "O que aconteceu durante a primeira visita (quantos turnos e conversas). É consequência da experiência, não causa; por isso aparece só a diferença bruta, sem ajuste.",
+      "descritivo": "Como o tema da primeira pergunta se relaciona com voltar. É só descrição: não ajustamos por outras características, então não dá para dizer que o tema faz a pessoa voltar."
     },
     "bruto": "Diferença bruta",
     "ajustado": "Ajustada",
@@ -207,10 +209,12 @@
       "regiao": "região",
       "era_modelo": "época de oferta de modelo",
       "n_turnos_sessao": "turnos na visita",
-      "n_conversas_sessao": "conversas na visita"
+      "n_conversas_sessao": "conversas na visita",
+      "tema_descritivo": "tema"
     },
     "respostaNenhuma": "Entre {m} comparações do assistente e do perfil, {k} têm intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, nenhuma continua diferente de zero. Não dá para afirmar um efeito com segurança.",
-    "naoResiste": "o intervalo não inclui o zero, mas não resiste à correção para muitas comparações: pode ser acaso"
+    "naoResiste": "o intervalo não inclui o zero, mas não resiste à correção para muitas comparações: pode ser acaso",
+    "tituloGrupoDesc": "Estas são diferenças brutas por tema, só para descrever, não efeitos do assistente"
   },
   "dados": {
     "pergunta": "Posso confiar nestes números?",

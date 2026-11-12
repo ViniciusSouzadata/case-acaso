@@ -123,3 +123,22 @@ describe("componente Floresta", () => {
     expect(screen.getAllByRole("listitem").length).toBeGreaterThan(0);
   });
 });
+
+describe("tema descritivo (grupo à parte)", () => {
+  const desc: EfeitoApi = { ...base, fator: "tema_descritivo", grupo: "perfil", nivel: "trabalho/negócios", referencia: "demais temas", efeito_bruto_pp: 9, bruto_ic_inf: 3, bruto_ic_sup: 15, efeito_ajustado_pp: null, ajustado_ic_inf: null, ajustado_ic_sup: null, significativo_fdr: null, leitura: null };
+
+  it("não aparece no Perfil nem entra nas contagens da frase-resposta", () => {
+    expect(prepararFloresta([base, desc], "perfil").linhas).toEqual([]);
+    expect(prepararFloresta([base, desc], "descritivo").linhas.map((l) => l.fator)).toEqual(["tema_descritivo"]);
+    expect(contarDistinguiveis([base, desc])).toEqual({ k: 1, m: 1, f: 1 });
+  });
+
+  it("mostra só o bruto, sem ajuste e sem rótulo de acaso", () => {
+    const { linhas, limite } = prepararFloresta([desc], "descritivo");
+    render(<Floresta linhas={linhas} limite={limite} />);
+    const l = document.querySelector('[data-fator="tema_descritivo"]') as HTMLElement;
+    expect(l.querySelector('[data-ponto="ajustado"]')).toBeNull();
+    expect(within(l).getByText(/sem ajuste/)).toBeTruthy();
+    expect(within(l).queryByText(/pode ser acaso/)).toBeNull();
+  });
+});

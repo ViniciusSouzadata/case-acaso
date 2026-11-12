@@ -9,7 +9,7 @@ import { contarDistinguiveis, contarDoGrupo, prepararFloresta, type EfeitoApi, t
 import { t } from "@/lib/mensagens";
 import { useApi } from "@/lib/useApi";
 
-const GRUPOS: GrupoFator[] = ["assistente", "perfil", "engajamento"];
+const GRUPOS: GrupoFator[] = ["assistente", "perfil", "engajamento", "descritivo"];
 
 /** Tela 2 — O que faz voltar. */
 export default function PaginaFatores() {
@@ -50,7 +50,7 @@ export default function PaginaFatores() {
         {linhas.length > 0 ? (
           <div role="tabpanel" className="mt-3">
             <h2 className="mb-1 text-base font-semibold text-slate-900">
-              {grupo === "engajamento" ? t("fatores.tituloGrupoEng") : t("fatores.tituloGrupo", { k: doGrupo.k, m: doGrupo.m })}
+              {grupo === "engajamento" ? t("fatores.tituloGrupoEng") : grupo === "descritivo" ? t("fatores.tituloGrupoDesc") : t("fatores.tituloGrupo", { k: doGrupo.k, m: doGrupo.m })}
             </h2>
             <Floresta linhas={linhas} limite={limite} />
           </div>

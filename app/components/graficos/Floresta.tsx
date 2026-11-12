@@ -22,7 +22,7 @@ export function LinhaDaFloresta({ l }: { l: LinhaFloresta }) {
           </div>
           <div className="text-xs text-slate-600">
             {t("fatores.n", { n: formatarInt(l.nNivel), nRef: formatarInt(l.nReferencia) })}
-            {l.grupo !== "engajamento" ? ` · ${t(l.metodo === "ipw" ? "fatores.metodoIpw" : "fatores.metodoLogit")}` : null}
+            {l.grupo !== "engajamento" && l.grupo !== "descritivo" ? ` · ${t(l.metodo === "ipw" ? "fatores.metodoIpw" : "fatores.metodoLogit")}` : null}
           </div>
         </div>
 
@@ -52,7 +52,7 @@ export function LinhaDaFloresta({ l }: { l: LinhaFloresta }) {
           ) : (
             <p className="mt-1 text-xs text-slate-700">
               {l.bruto ? <span>{t("fatores.bruto")}: {faixa(l.bruto)}</span> : null}
-              {l.ajustado ? <span> · {t("fatores.ajustado")}: {faixa(l.ajustado)}</span> : l.grupo === "engajamento" ? <span> · {t("fatores.semAjuste")}</span> : null}
+              {l.ajustado ? <span> · {t("fatores.ajustado")}: {faixa(l.ajustado)}</span> : l.grupo === "engajamento" || l.grupo === "descritivo" ? <span> · {t("fatores.semAjuste")}</span> : null}
             </p>
           )}
 
