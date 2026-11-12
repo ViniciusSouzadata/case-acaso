@@ -18,7 +18,7 @@ from scipy.stats import norm
 
 from analise.bruto import COLUNAS_BRUTO, calcular_bruto, n_minimo
 from analise.dados import carregar_elegiveis, carregar_grupos_ip
-from analise.fatores import ASSISTENTE, ENGAJAMENTO, FATORES, FAIXA_PERGUNTA_CURTA, Fator, agrupar_raros
+from analise.fatores import ASSISTENTE, ENGAJAMENTO, FATORES, Fator, agrupar_raros
 from analise.gravar import substituir
 
 MAX_PARAMETROS = 25  # sem contar o intercepto

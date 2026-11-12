@@ -1,5 +1,4 @@
 """T-208: sessões e usuários refeitos em pandas batem com o banco; sensibilidade grava assistente + 5 maiores de perfil."""
-import numpy as np
 import pandas as pd
 import psycopg
 import pytest

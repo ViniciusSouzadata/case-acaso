@@ -222,7 +222,7 @@ def fig_idioma(conn) -> tuple[str, str]:
     a2.set_ylabel("% com idioma da resposta ≠ idioma da pergunta")
     a2.set_title("Idioma divergente por tamanho da pergunta", fontsize=10)
     nome = _salvar(fig, "06_idioma.png")
-    curto, resto = faixas[0], faixas[1:]
+    resto = faixas[1:]
     taxa_resto = sum(f[2] for f in resto) / sum(f[1] for f in resto)
     txt = (f"{cont[0][0]} responde por {_pct(cont[0][1] / total, 0)} das conversas. O idioma da resposta difere do da pergunta em "
            f"{_pct(taxas[0], 0)} das perguntas de até 30 caracteres contra {_pct(taxa_resto, 0)} nas mais longas: em pergunta curta "

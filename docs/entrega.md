@@ -130,7 +130,7 @@ Três telas, cada uma com uma pergunta, em português simples; cada número tem 
 3. **Deploy:** imagem versionada (a tag é o commit); nunca construir em produção.
 4. **Verificação depois do deploy:** `/api/saude` e uma reconciliação; só depois o tráfego entra.
 5. **Reversão:** voltar para a imagem anterior; se a migração mudou dados, restaurar pelo backup ou pelo passo inverso (`sql/migrations_down/`). Reconstruir os marts a partir do bruto é seguro porque a carga é idempotente.
-6. **CI:** rodar lint e testes antes de aceitar a mudança (workflow descrito; ainda não configurado).
+6. **CI:** `.github/workflows/ci.yml` roda lint (ruff, só erros de sintaxe e nomes não definidos), a suíte Python contra um Postgres do compose, e `tsc` + `vitest` do app antes de aceitar a mudança. **Configurado, não executado aqui** (o repositório privado ainda não roda o workflow; sintaxe revisada à mão e o lint passa na minha máquina).
 
 ## 9. Incidente: a retenção do dashboard caiu de 31% para 18%  (C-35 a C-39)
 

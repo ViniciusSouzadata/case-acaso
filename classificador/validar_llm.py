@@ -21,7 +21,7 @@ from pathlib import Path
 
 from analise import validacao as V
 from classificador import openrouter as O
-from classificador.tema import INDEFINIDO, TAXONOMIA, primeira_pergunta
+from classificador.tema import primeira_pergunta
 
 RAIZ = V.RAIZ
 SAIDA = RAIZ / "docs" / "validacao_llm.md"

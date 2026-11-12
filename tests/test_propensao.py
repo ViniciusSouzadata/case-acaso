@@ -5,8 +5,7 @@ import psycopg
 import pytest
 
 from analise import ajustado, propensao
-from analise.dados import carregar_elegiveis, carregar_grupos_ip
-from analise.fatores import ASSISTENTE, PERFIL, Fator
+from analise.fatores import PERFIL, Fator
 from loader.migrar import dsn
 
 

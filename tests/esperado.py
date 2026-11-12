@@ -14,7 +14,7 @@ Usuario oficial = (hashed_ip, familia SO, familia navegador), sem versao.
 from __future__ import annotations
 
 import hashlib
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 def ip(nome: str) -> str:

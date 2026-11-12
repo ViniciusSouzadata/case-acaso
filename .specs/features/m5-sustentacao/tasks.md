@@ -37,7 +37,7 @@ T-503 ──────────┘
 - **Gate:** O incidente não volta sem um teste quebrar
 - **Reqs:** REQ-516
 
-## [ ] T-504 — CI (Could)
+## [x] T-504 — CI (Could)
 - **What:** `.github/workflows/ci.yml`: sobe o compose, roda `make test` (Python + TypeScript) e lint.
 - **Where:** `.github/workflows/`
 - **Depends on:** T-109, T-305

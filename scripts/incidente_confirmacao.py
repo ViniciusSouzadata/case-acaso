@@ -20,12 +20,12 @@ FUSO = "America/Sao_Paulo"
 
 # Uma linha por conversa: IP, UA e INÍCIO da conversa. No snapshot o turno do usuário vem sem horário; o início é o da 1ª resposta
 # do assistente (mesma regra do loader, `ts_inicio`). O código de referência usa o último turno: defeito tratado na T-502.
-BASE = f"""
+BASE = """
 CREATE OR REPLACE TEMP VIEW conv AS
 SELECT hashed_ip AS ip,
        coalesce(header."user-agent", '') AS ua,
        coalesce(conversation[1]."timestamp", conversation[2]."timestamp") AS t
-FROM read_parquet('{{snapshot}}')
+FROM read_parquet('{snapshot}')
 WHERE country = 'Brazil' AND hashed_ip IS NOT NULL
   AND coalesce(conversation[1]."timestamp", conversation[2]."timestamp") IS NOT NULL;  -- sem resposta do assistente: rejeitada na carga
 
