@@ -1,6 +1,8 @@
 # Case Acaso: retenção de um assistente de IA
 
-Repositório privado. Base analítica (Postgres 16) + carga (Python) + app (Next.js, em milestone futuro).
+Repositório privado. Base analítica (Postgres 16) + carga e análise (Python) + painel e API (Next.js) que respondem: de cada 100 pessoas que experimentam o assistente, quantas voltam em até 7 dias, e o que muda essa chance.
+
+**Pré-requisitos:** Docker Engine com o plugin Compose (Docker Desktop, ou Engine dentro do WSL2). Nada mais: sem credencial AWS e sem internet depois do primeiro `build`. Portas livres no host: `5433` (Postgres) e `3000` (painel); mude com `POSTGRES_HOST_PORT` e `APP_HOST_PORT` no `.env`.
 
 ## Como rodar
 
@@ -43,10 +45,28 @@ RESUMO DA SUBIDA
 ```
 Qualquer falha encerra com código 1 e `ERRO: etapa '<nome>' falhou: ...`.
 
+### Painel e API (endereços)
+Depois que o loader termina, o serviço `app` sobe sozinho:
+
+| Endereço | O que é |
+|---|---|
+| <http://localhost:3000/> | Tela 1, Retenção: a taxa de retorno em 7 dias por semana ou mês, com faixa de incerteza |
+| <http://localhost:3000/fatores> | Tela 2, O que faz voltar: comparações entre grupos parecidos, com intervalo e n |
+| <http://localhost:3000/dados> | Tela 3, Confiança nos dados: última carga, conferências e limites |
+| <http://localhost:3000/api/saude> | Verificação de saúde (última carga, versão da definição) |
+
+A API (`/api/retencao/*`, `/api/fatores/*`, `/api/semana/decomposicao`, `/api/achados`, `/api/dicionario`, `/api/qualidade`) devolve `{dados, meta}` e lê só `mart.*` e `resultado.*` com o papel `app_ro`. Nenhum texto de conversa, IP ou user-agent sai pela API nem pela tela. Tempos medidos: `docs/desempenho.md`.
+
+Os textos de "achados" e as tabelas de efeitos vêm de `resultado.*`, preenchido pela análise (`python -m analise ...`, ver `analise/__main__.py`). Sem essa etapa, as telas mostram avisos de "ainda não há" em vez de números inventados.
+
 ### Testes
+Tudo de uma vez (Python no `loader` e TypeScript no `app-testes`, ambos contra o banco do compose):
 ```
 docker compose run --build --rm loader sh -c "python -m loader.migrar && python -m pytest /app/tests -q -p no:cacheprovider"
+docker compose --profile testes run --build --rm app-testes
 ```
+(`make test` chama os dois.) Sem Docker, só o app: `cd app && npm ci && npx tsc --noEmit && npx vitest run`; com `DATABASE_URL=postgres://app_ro:<senha>@localhost:5433/acaso` entram também os testes de fumaça contra o banco real.
+
 161 testes; ~70 s na primeira vez (monta o banco real em segundo plano), e menos com o banco de testes em cache (o volume do `db` sobrevive; `down -v` ou `TESTES_SEM_CACHE=1` forçam a reconstrução).
 
 ### Zerar tudo
@@ -64,8 +84,30 @@ Remove containers, rede e o volume do banco. A porta do Postgres no host é `POS
 ### Atalhos (Makefile, opcional)
 `make up`, `make down`, `make test`, `make reset` chamam os mesmos comandos acima.
 
+## Estrutura de pastas
+| Pasta | Conteúdo |
+|---|---|
+| `data/bruto/` | Snapshot versionado do WildChat (Brasil) e checksum |
+| `loader/` | Carga: migra, verifica o bruto, carrega, transforma, reconcilia |
+| `sql/migrations/`, `sql/transform/` | Esquema (`stg`, `mart`, `resultado`, `ops`) e transformações |
+| `analise/` | Análise estatística que grava em `resultado.*` |
+| `classificador/` | Classificação de tema (regras em `seeds/`) |
+| `seeds/` | Regras de tema e recusa, planilha de validação manual |
+| `app/` | API e telas (Next.js, TypeScript estrito), testes em `app/tests/` |
+| `scripts/` | Medição da API (`medir_api.ts`), página de rotulagem (`rotulagem/rotular.html`) |
+| `docs/` | Desempenho, arquitetura e custo AWS (`docs/arquitetura/`), figuras |
+| `tests/` | Testes Python |
+| `.specs/` | Especificações, decisões e registro de execução |
+
+## Solução de problemas
+- **Porta ocupada** (`bind: address already in use`): defina `POSTGRES_HOST_PORT` ou `APP_HOST_PORT` no `.env` e suba de novo.
+- **Docker no WSL não responde:** `sudo service docker start`; rode os comandos dentro do WSL (ver "Subir do zero").
+- **Painel mostra "Não foi possível carregar":** confira `docker compose ps -a` (o loader deve estar `exited (0)`) e `docker compose logs app`; a mensagem de erro na tela traz um código `request_id` que aparece também nos logs.
+- **Pouca memória:** suba um serviço por vez (`docker compose up -d db`, depois `loader`, depois `app`) e evite builds em paralelo.
+- **Recomeçar do zero:** `docker compose down -v` apaga o volume do banco.
+
 ## Estado
-M1 (base analítica): carga, marts e reconciliação sobem com um comando. `mart.calc_retencao` foi reescrita em conjuntos (migração 006): a transformação do snapshot real caiu de ~118 s para ~3 s sem mudar nenhum resultado.
+M1 (base analítica): carga, marts e reconciliação sobem com um comando. M3/M4: API e três telas conferidas com dados reais; a prova de `docker compose up` do zero com o app e `make test` completo ainda será feita numa rodada única (ver `docs/gate_m4.md`).
 
 ## Dados brutos (`data/bruto/`)
 - `wildchat_brasil.parquet`: snapshot do extrato Brasil (`country = 'Brazil'`, 11.621 conversas, ~22 MB) do dataset [allenai/WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M), versão com toxicidade e PII removidas pelos autores. Snapshot gerado em **10/11/2026**. Integridade em `wildchat_brasil.sha256`.
