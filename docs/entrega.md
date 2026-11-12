@@ -126,10 +126,10 @@ Três telas, cada uma com uma pergunta, em português simples; cada número tem 
 
 ### Caminho até produção
 1. **Ambientes:** local (compose) → homologação → produção, com a mesma imagem e configuração por variável.
-2. **Migrações:** arquivos SQL numerados e aplicados em ordem, com registro em `ops.schema_migrations`. **A reversão de cada migração ainda não está escrita no repositório (migrações só andam para frente hoje); descrever o passo inverso é parte do caminho até produção.**
+2. **Migrações:** arquivos SQL numerados e aplicados em ordem, com registro em `ops.schema_migrations`. Cada migração tem o passo inverso escrito em `sql/migrations_down/` (rodado à mão, em transação, de trás para frente; **escrito e verificado na estrutura, não executado contra um banco ainda**).
 3. **Deploy:** imagem versionada (a tag é o commit); nunca construir em produção.
 4. **Verificação depois do deploy:** `/api/saude` e uma reconciliação; só depois o tráfego entra.
-5. **Reversão:** voltar para a imagem anterior; se a migração mudou dados, restaurar pelo backup (ou pelo passo inverso, quando existir). Reconstruir os marts a partir do bruto é seguro porque a carga é idempotente.
+5. **Reversão:** voltar para a imagem anterior; se a migração mudou dados, restaurar pelo backup ou pelo passo inverso (`sql/migrations_down/`). Reconstruir os marts a partir do bruto é seguro porque a carga é idempotente.
 6. **CI:** rodar lint e testes antes de aceitar a mudança (workflow descrito; ainda não configurado).
 
 ## 9. Incidente: a retenção do dashboard caiu de 31% para 18%  (C-35 a C-39)
