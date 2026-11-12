@@ -58,7 +58,7 @@ T-201, T-205 e T-207 podem começar em paralelo.
 - **Gate:** Tema disponível sem credencial no compose
 - **Reqs:** REQ-251, REQ-122
 
-## [ ] T-205b — Rotulagem manual (Vinícius) e validação
+## [x] T-205b — Rotulagem manual (Vinícius) e validação
 - **What:** Script gera `seeds/validacao_manual_em_branco.csv` com 200 conversas estratificadas (por tema previsto e por recusa prevista), mostrando só a 1ª pergunta e a 1ª resposta, **sem** os rótulos da máquina. Vinícius preenche tema e recusa. `analise/validacao.py` calcula acurácia, kappa de Cohen e matriz de confusão para tema e recusa e grava `resultado.validacao_classificador`. Classes com concordância baixa são fundidas e o seed regenerado.
 - **Where:** `analise/validacao.py`, `seeds/validacao_manual.csv`
 - **Depends on:** T-205
