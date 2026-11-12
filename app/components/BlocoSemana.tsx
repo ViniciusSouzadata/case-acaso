@@ -8,8 +8,8 @@ import { t } from "@/lib/mensagens";
 import { formatarInt, formatarPP, formatarPct } from "@/lib/regras";
 import { useApi } from "@/lib/useApi";
 
-// Semanas oferecidas (decisão do planejador): a principal do documento e o contraponto.
-export const SEMANAS = ["2023-05-01", "2023-11-20"] as const;
+// Semanas oferecidas (decisão do planejador): a principal (20/11/2023, abre selecionada) e a outra (01/05/2023) como contraponto, por decisão atualizada do planejador.
+export const SEMANAS = ["2023-11-20", "2023-05-01"] as const;
 
 interface SegmentoSemanaApi {
   segmento: string;

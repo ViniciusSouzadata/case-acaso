@@ -65,3 +65,11 @@ describe("sensibilidade", () => {
     expect(screen.getByText(/é a definição oficial/)).toBeTruthy();
   });
 });
+
+describe("semana da cascata", () => {
+  it("a principal é 20/11/2023 e 01/05/2023 continua selecionável", async () => {
+    const { SEMANAS } = await import("@/components/BlocoSemana");
+    expect(SEMANAS[0]).toBe("2023-11-20");
+    expect(SEMANAS).toContain("2023-05-01");
+  });
+});
