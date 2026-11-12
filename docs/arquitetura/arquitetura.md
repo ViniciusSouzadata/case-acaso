@@ -29,12 +29,12 @@ flowchart TB
   U["Pessoa usuária<br/>(navegador)"] -->|HTTPS| CF["CloudFront (opcional)"]
   CF --> ALB["Application Load Balancer"]
   subgraph VPC["VPC · 2 zonas de disponibilidade"]
-    subgraph PUB["Sub-redes públicas"]
+    subgraph PUB["Sub-redes públicas (security group só aceita o ALB)"]
       ALB
-    end
-    subgraph PRIV["Sub-redes privadas"]
       APP["ECS Fargate: app Next.js<br/>0,25 vCPU · 0,5 GB"]
       LOAD["ECS Fargate (tarefa agendada):<br/>loader + análise"]
+    end
+    subgraph PRIV["Sub-redes privadas"]
       RDS[("RDS PostgreSQL 16<br/>db.t4g.micro · gp3 20 GB")]
     end
   end
@@ -53,11 +53,11 @@ flowchart TB
 
 Imagem: `docs/arquitetura/implantacao-aws.png`.
 
-**Deploy:** a imagem do app e a do loader são construídas a partir do mesmo repositório, publicadas no ECR e atualizadas no ECS. O loader roda como tarefa agendada (migra, carrega, transforma, reconcilia) e termina; o app sobe depois que a última carga está registrada em `ops.lote_carga`. Migrações são versionadas em `sql/migrations/` e só o loader as aplica. O app não tem credencial de escrita.
+**Deploy:** a imagem do app e a do loader são construídas a partir do mesmo repositório, publicadas no ECR e atualizadas no ECS. O loader roda como tarefa agendada (migra, carrega, transforma, reconcilia) e termina; o app sobe depois que a última carga está registrada em `ops.lote_carga`. Migrações são versionadas em `sql/migrations/` e só o loader as aplica. O app não tem credencial de escrita. As tarefas ficam em sub-rede pública (IPv4 público, para falar com ECR, Secrets Manager e CloudWatch sem NAT nem endpoints), com security group que só aceita tráfego do ALB; o banco fica em sub-rede privada.
 
 ## 3. Componentes e custo mensal estimado
 
-**Como ler os preços.** Região `us-east-1` (N. Virginia), preço sob demanda, 730 h/mês, em dólar, **consultados em 12/11/2026** na **Price List API pública da AWS** (a mesma base das páginas oficiais de preço; os arquivos de cada serviço trazem a data de publicação citada na coluna "Fonte"). Os valores foram lidos direto desses arquivos oficiais; nenhum vem de terceiros. A seleção do perfil (0,25 vCPU, 1 LCU etc.) é premissa deste desenho, e **nenhum valor abaixo veio de uma cobrança real**. Onde a fonte oficial não foi consultada, a linha diz "não conferido na fonte oficial".
+**Como ler os preços.** Região `us-east-1` (N. Virginia), preço sob demanda, 730 h/mês, em dólar, **consultados em 12/11/2026** na **Price List API pública da AWS** (a mesma base das páginas oficiais de preço; os arquivos de cada serviço trazem a data de publicação citada na coluna "Fonte"). Os valores foram lidos direto desses arquivos oficiais; nenhum vem de terceiros. A seleção do perfil (0,25 vCPU e 0,25 LCU médio no ALB, entre outras) é premissa deste desenho, e **nenhum valor abaixo veio de uma cobrança real**. Onde a fonte oficial não foi consultada, a linha diz "não conferido na fonte oficial".
 
 | Componente | Para quê | Premissa e preço unitário | Custo/mês (US$) | Fonte (Price List API, consulta 12/11/2026) |
 |---|---|---|---|---|
@@ -70,17 +70,18 @@ Imagem: `docs/arquitetura/implantacao-aws.png`.
 | ECR (2 imagens, ≈ 2 GB) | Imagens | US$ 0,10/GB-mês × 2 | 0,20 | [AmazonECR](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonECR/current/us-east-1/index.json) · publ. 11/11/2026 · página: <https://aws.amazon.com/ecr/pricing/> |
 | Secrets Manager (2 segredos) | Senhas dos papéis | US$ 0,40/segredo-mês × 2 (chamadas de API: US$ 0,05 por 10 mil, desprezível) | 0,80 | [AWSSecretsManager](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSSecretsManager/current/us-east-1/index.json) · publ. 11/11/2026 · página: <https://aws.amazon.com/secrets-manager/pricing/> |
 | CloudWatch Logs (≤ 1 GB/mês) | Logs JSON | US$ 0,50/GB ingerido × 1 (classe Standard) | 0,50 | [AmazonCloudWatch](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/us-east-1/index.json) · publ. 04/11/2026 · página: <https://aws.amazon.com/cloudwatch/pricing/> |
-| NAT / saída para a internet | Imagens e pacotes | **Evitar**: endpoints de VPC ou sub-redes públicas com IP restrito. Preço do NAT Gateway: **não conferido na fonte oficial** (o arquivo de preços do EC2 é grande demais para esta máquina; o valor de ≈ US$ 33/mês citado antes era de memória e foi retirado) | 0 (com a escolha acima) | não conferido |
+| Saída para a internet: IPv4 público (tarefas em sub-rede pública, security group restrito) | Baixar imagens do ECR, falar com Secrets Manager e CloudWatch | US$ 0,005/h por IPv4 público em uso × 730 = 3,65: 1 da tarefa do app + 2 do ALB (2 zonas de disponibilidade assumidas) = 10,95; o loader tem IP só nas 5 h/mês em que roda = 0,03 | 10,98 | [AmazonVPC](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonVPC/current/us-east-1/index.json) · `PublicIPv4:InUseAddress` · publ. 05/11/2026 · página: <https://aws.amazon.com/vpc/pricing/> |
 | CloudFront (opcional) | Camada na frente do ALB | Fora do total; a camada gratuita **não foi conferida na fonte oficial** | 0 (não incluído) | não conferido |
-| **Total estimado** | | Soma das linhas acima: 11,68 + 2,30 + 9,01 + 0,12 + 17,89 + 0,02 + 0,20 + 0,80 + 0,50 | **42,52 (≈ 43)** | |
+| **Total estimado** | | Soma das linhas acima: 11,68 + 2,30 + 9,01 + 0,12 + 17,89 + 0,02 + 0,20 + 0,80 + 0,50 + 10,98 | **53,50 (≈ 54)** | |
 
-**Premissas do total:** um país (Brasil), ~11,6 mil conversas, poucas pessoas acessando ao mesmo tempo, sem Multi-AZ, sem CloudFront, sem tráfego de saída relevante (transferência de dados não foi precificada). A API já responde com `Cache-Control` para CDN; o app mede p50 de poucos milissegundos com cache quente (ver `docs/desempenho.md`).
+**Premissas do total:** um país (Brasil), ~11,6 mil conversas, poucas pessoas acessando ao mesmo tempo, sem Multi-AZ, sem CloudFront, sem NAT Gateway, sem tráfego de saída relevante (transferência de dados não foi precificada). A API já responde com `Cache-Control` para CDN; o app mede p50 de poucos milissegundos com cache quente (ver `docs/desempenho.md`).
 
 **O que muda o custo** (mesma fonte AmazonRDS, 12/11/2026):
 - Banco Multi-AZ: a instância passa a US$ 0,032/h = 23,36/mês, ou seja **+11,68** (o armazenamento Multi-AZ tem preço próprio e não foi somado aqui).
 - Banco reservado por 1 ano, padrão, sem pagamento antecipado: US$ 0,0116/h = 8,47/mês contra 11,68, **desconto de 27,5% (−3,21/mês)**. Com pagamento parcial antecipado (US$ 49 + US$ 0,0056/h) o equivalente é ≈ 8,17/mês; com tudo antecipado (US$ 95), ≈ 7,92/mês.
 - Retirar o ALB e servir pelo CloudFront direto ao Fargate economiza a maior linha (≈ 17,89), ao custo de mais configuração.
-- Um NAT Gateway, se necessário, é a maior surpresa possível; seu preço **não foi conferido** aqui.
+- **Por que sub-rede pública e não endpoints de VPC:** com o app e o loader em sub-redes privadas e sem NAT, seriam necessários 4 endpoints de interface (ECR api, ECR dkr, CloudWatch Logs, Secrets Manager), cobrados a US$ 0,01/h por endpoint e por zona: 4 × 2 × 0,01 × 730 = **58,40/mês**, mais os 2 IPv4 do ALB (7,30), ou seja ≈ 65,70 contra 10,98 da escolha adotada (mesma fonte AmazonVPC, `VpcEndpoint-Hours`, US$ 0,01/h; dados processados a US$ 0,01/GB, desprezíveis aqui). O endpoint de gateway do S3 não tem linha de cobrança no arquivo de preços, mas a gratuidade em si não foi conferida na página.
+- **NAT Gateway:** não usado. Seu preço **não está** no arquivo AmazonVPC da Price List API, então segue **não conferido na fonte oficial**.
 
 ## 4. Outros países
 
