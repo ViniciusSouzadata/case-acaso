@@ -47,12 +47,36 @@ def calcular_bruto(df: pd.DataFrame, n_minimo: int, fatores: list[Fator] | None 
     return linhas
 
 
+def bruto_tema_descritivo(df: pd.DataFrame, n_minimo: int) -> list[dict]:
+    """Tema em TODOS os níveis, cada um contra os demais temas, só diferença simples (Newcombe). Descritivo: o tema vem de IA com
+    concordância moderada e não entra no modelo ajustado (que agrupa em 3 temas + demais por causa do limite de parâmetros)."""
+    t = df["tema"].astype(object)
+    if t.isin(["não classificado"]).all():
+        return []
+    voltou = df["voltou_7d"].astype(int)
+    linhas = []
+    for nv in sorted(t.dropna().unique(), key=str):
+        dentro = t == nv
+        n1, k1, n0, k0 = int(dentro.sum()), int(voltou[dentro].sum()), int((~dentro).sum()), int(voltou[~dentro].sum())
+        if n1 == 0 or n0 == 0:
+            continue
+        d, inf, sup = newcombe(k1, n1, k0, n0)
+        linhas.append({
+            "fator": "tema_descritivo", "nivel": str(nv), "referencia": "demais temas", "grupo": "perfil",
+            "n_nivel": n1, "n_referencia": n0, "taxa_nivel": round(k1 / n1, 6), "taxa_referencia": round(k0 / n0, 6),
+            "efeito_bruto_pp": round(d * 100, 4), "bruto_ic_inf": round(inf * 100, 4), "bruto_ic_sup": round(sup * 100, 4),
+            "metodo": "logit_ame", "amostra_suficiente": n1 >= n_minimo and n0 >= n_minimo,
+        })
+    return linhas
+
+
 def n_minimo(conn: psycopg.Connection) -> int:
     return int(conn.execute("SELECT ops.param('n_minimo')").fetchone()[0])
 
 
 def gravar(conn: psycopg.Connection) -> list[dict]:
     """Calcula e grava só as colunas de bruto em resultado.efeito_fator (a T-204 completa as de ajustado)."""
-    linhas = calcular_bruto(carregar_elegiveis(conn), n_minimo(conn))
+    df, n_min = carregar_elegiveis(conn), n_minimo(conn)
+    linhas = calcular_bruto(df, n_min) + bruto_tema_descritivo(df, n_min)
     substituir(conn, "efeito_fator", COLUNAS_BRUTO, [[l[c] for c in COLUNAS_BRUTO] for l in linhas])
     return linhas

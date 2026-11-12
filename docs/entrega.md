@@ -1,5 +1,5 @@
 <!-- RASCUNHO da Sessão A (T-604), em revisão pelo planejador e pelo Vinícius. Marcas "[EM REVISÃO]" = o número ou a frase pode mudar:
-     (a) achados, resumo e sugestões a reescrever com a recusa do LLM (`.specs/project/ACHADOS-PROPOSTA.md`); (b) preços da AWS "a conferir"; (c) horas.
+     (a) preços da AWS "a conferir"; (b) total de horas atualizado no envio.
      Cada seção cita o C-nn do enunciado que responde. Números vêm de resultado.*, mart.* e do STATE; nada sobre clientes da Acaso. -->
 
 # Retenção de um assistente de IA: o que faz a pessoa voltar em 7 dias
@@ -8,10 +8,12 @@
 
 De cada 100 pessoas que experimentam o assistente pela primeira vez, **24 voltam em até 7 dias** (23,86%; intervalo de 95%: 22,19% a 25,62%; 2.372 usuários, 566 voltaram). Se "voltar" exigir outro dia, a taxa é de 17% (16,86%): a manchete honesta é **"entre 17% e 24%, conforme o que o cliente chama de voltar"**. Base: WildChat, conversas do Brasil de abr/2023 a abr/2024.
 
-Três achados [EM REVISÃO: o rascunho completo está em `seeds/achados.yaml`]:
-1. **O que o assistente faz na primeira resposta não muda, de forma que dê para afirmar, quem volta.** Modelo, recusa, tamanho da resposta e idioma: nenhum se distingue de zero por dois métodos, e a leitura se repete em quatro definições de usuário. *Decisão:* não priorizar trabalho no assistente esperando mais retorno com base nestes dados; se houver vontade de mexer, fazer teste controlado.
-2. **A semana de 01/05/2023 teve queda de retorno, mas uma semana entre 35 não é conclusão.** *Decisão:* tratar como alerta para olhar, não como problema confirmado. [EM REVISÃO: a base de comparação dessa semana pode estar contaminada pelo burn-in.]
-3. **Quem tem sessão mais longa na primeira visita volta mais, mas isso descreve, não prova causa.** *Decisão:* usar como sinal de acompanhamento no painel, não como meta a forçar.
+Três achados (texto completo em `seeds/achados.yaml` e na tabela `resultado.achado`):
+1. **A recusa na primeira resposta é o único comportamento do assistente ligado a menos retorno.** Entre 2.372 novos usuários, 132 receberam uma recusa na primeira resposta: voltaram 13 de 132 (9,8%), contra 553 de 2.240 (24,7%) dos demais. Comparando pessoas de perfil parecido, são 16,4 pontos a menos (de 11,5 a 21,4); com "voltar em outro dia", 9 de 132 (6,8%) contra 391 de 2.240 (17,5%), 11,5 pontos a menos (de 7,3 a 15,7). O grupo é pequeno. Antes de olhar esse efeito, a marcação de recusa foi trocada de palavras-chave por IA porque a validação manual de 200 conversas mostrou que as regras erravam (com elas a diferença parecia 3,3 pontos, de −10,1 a +3,5). *Decisão:* tratar a taxa de recusa como indicador de saúde do assistente e testar, de forma controlada, uma recusa que ofereça alternativa útil. *Limite:* é comparação, não experimento, e o conjunto de dados não traz as conversas tóxicas, onde as recusas são mais comuns.
+2. **Trocar de modelo ou mudar o formato da resposta não mostrou ganho de retorno.** GPT-4 contra GPT-3.5: −2,9 pontos (de −8,0 a +2,2); os dados descartam um ganho acima de cerca de 2 pontos. *Decisão:* não justificar um modelo mais caro por retenção; se a troca vier por qualidade, medir com teste controlado.
+3. **Quedas semanais isoladas enganam: a maior era efeito do início da coleta.** A semana de 01/05/2023 parecia cair 17,1 pontos (p = 0,013); com o início da coleta tratado com folga, cai 7,7 (p = 0,13). A semana de 20/11/2023 (novo modelo) caiu 4,9, dentro da variação normal (p = 0,43). Nas 33 semanas testadas, só 1 passou do limite, perto do que o acaso produz. *Decisão:* o alerta do painel só dispara acima da variação normal e ignora o início da coleta.
+
+Sinais descritivos (não são achados): quem tem 4 ou mais mensagens na primeira sessão volta mais (32,9% contra 17,2% com 1), e o tema da conversa (IA de concordância moderada) mostra, por exemplo, conversa pessoal com retorno menor; os dois acontecem junto do interesse da pessoa e não provam causa.
 
 O que **os dados não permitem**: separar causa de seleção (é observacional), enxergar efeito menor que cerca de 5 pontos (4,9 com grupos iguais), nem reconhecer a mesma pessoa que troca de rede ou de aparelho.
 
@@ -38,7 +40,7 @@ Só os gráficos que levaram a uma conclusão (`docs/figuras/`, frases em `concl
 - **Retorno por semana:** a faixa de incerteza de cada ponto tem em média 22 pontos de largura; boa parte da variação semanal é ruído.
 - **Turnos:** 56% das conversas têm um único turno e 84% têm até três. O engajamento vem depois da resposta, então vira sinal de engajamento, não fator do assistente (BDR-08).
 - **Idioma:** 70% das conversas em português. O idioma "divergente" aparece em 61% das perguntas de até 30 caracteres contra 10% nas mais longas: em pergunta curta é erro de detecção, então o fator só vale para perguntas com mais de 30 caracteres.
-- **Tema** [EM REVISÃO: depende do classificador]: o retorno vai de 31% (criação/ficção) a 16% (conversa pessoal) nas regras atuais.
+- **Tema** (IA com concordância moderada, descritivo): o retorno vai de 32% (trabalho/negócios e escrita/tradução) a 17% (conversa pessoal/conselho); só a conversa pessoal se distingue dos demais temas (−9,2 pontos, de −12,8 a −5,2, diferença simples).
 
 **Variáveis da primeira experiência** (C-17): modelo (família), tema, tamanho da pergunta e da resposta, recusa, idioma, idioma divergente, dispositivo, período do dia, fim de semana, região, era do modelo, e (como engajamento) turnos e conversas na 1ª sessão. Cada uma é derivada na carga, com o código em `loader/derivar.py` e o dicionário na tela "Posso confiar nestes números?".
 
@@ -50,22 +52,23 @@ Só os gráficos que levaram a uma conclusão (`docs/figuras/`, frases em `concl
 
 ## 4. Efeitos  (C-05, C-06, C-23, C-24)
 
-Efeito = diferença na taxa de retorno em pontos percentuais, com intervalo de 95%. "Ajustado" compara pessoas parecidas nos outros fatores (regressão logística com erro agrupado por IP). **Nenhum dos 25 efeitos ajustados passa a correção para muitos testes (Benjamini-Hochberg, 5%).**
+Efeito = diferença na taxa de retorno em pontos percentuais, com intervalo de 95%. "Ajustado" compara pessoas parecidas nos outros fatores (regressão logística com erro agrupado por IP). **Dos 25 efeitos ajustados, só um passa a correção para muitos testes (Benjamini-Hochberg, 5%): a recusa na primeira resposta.**
 
 | Fator (contra a referência) | Bruto | Ajustado (IC 95%) | Leitura |
 |---|---:|---|---|
-| Modelo GPT-4 (contra GPT-3.5) | +0,1 | −3,3 (−8,4 a +1,8) | não se distingue de zero; pelo 2º método (comparação ponderada): −5,4 (−12,0 a +0,9) |
-| Recusa na 1ª resposta | −1,8 | −3,2 (−9,9 a +3,6) | não se distingue de zero; 153 usuários |
-| Idioma divergente (pergunta > 30 caracteres) | +3,0 | +1,5 (−6,4 a +9,5) | não se distingue de zero; 158 usuários |
-| Resposta de 301 a 1.000 caracteres (contra até 300) | +8,8 | +3,7 (−2,4 a +9,7) | o bruto engana: boa parte era perfil e era do modelo |
-| Resposta com mais de 2.500 caracteres | +7,9 | +1,0 (−5,6 a +7,7) | idem |
-| Tema: criação/ficção [EM REVISÃO] | — | +7,5 (+0,9 a +14,1) | intervalo exclui zero, mas não passa a correção; tema é descritivo |
-| Tema: conversa pessoal [EM REVISÃO] | — | −6,9 (−12,6 a −1,2) | idem |
+| **Recusa na 1ª resposta** (132 usuários) | −14,8 | **−16,4 (−21,4 a −11,5)** | passa a correção; 13 de 132 voltaram contra 553 de 2.240; fator escondido precisaria ser muito forte (E-value 5,3); segundo método: grupo não comparável |
+| Modelo GPT-4 (contra GPT-3.5) | +0,1 | −2,9 (−8,0 a +2,2) | não se distingue de zero; pelo 2º método (comparação ponderada): −6,1 (−12,7 a +0,4) |
+| Idioma divergente (pergunta > 30 caracteres) | +3,0 | +0,1 (−7,7 a +7,9) | não se distingue de zero; 158 usuários |
+| Resposta de 301 a 1.000 caracteres (contra até 300) | +8,8 | +4,7 (−1,5 a +10,8) | o bruto engana: boa parte era perfil e era do modelo |
+| Resposta com mais de 2.500 caracteres | +7,9 | +0,5 (−6,0 a +7,0) | idem |
+| Tema: conversa pessoal (contra demais temas) | −10,0 | −8,2 (−14,3 a −2,1) | não passa a correção; tema é descritivo (IA de concordância moderada) |
 | Engajamento: 4+ turnos na 1ª sessão (descrição) | +15,6 (11,3 a 19,9) | fora do modelo | sinal, não causa (BDR-08) |
 
-**Fatores de confusão e como tratei** (C-24): perfil e era do modelo entram como controle; para modelo, recusa, idioma divergente e a "virada" de dez/2023 comparei pessoas de perfil parecido (ponderação por propensão, balanço conferido e erro por bootstrap agrupado por IP). A virada de dez/2023, quando o GPT-4 virou o padrão, não mostra mudança: +1,7 (−2,1 a +5,5). Para recusa e idioma divergente **não deu para montar um grupo de comparação equilibrado** (cerca de 150 usuários em cada grupo): o resultado fica no modelo ajustado, e lá não se distingue de zero. É limite do dado, não do método. A leitura é a mesma nas 4 definições de usuário e sessão.
+**Robustez da recusa** (`docs/robustez_recusa.md`): o efeito ajustado é −16,4 na definição oficial, −16,4 (só IP), −14,4 (IP + navegador completo), −15,4 (sessão de 60 min) e −16,3 (burn-in de 28 dias); as 132 recusas estão em 131 IPs (o maior tem 2), e sem os 10 IPs com mais recusas o efeito é −16,4; a direção se repete nos temas com recusas suficientes; com "voltou em outro dia" o ajustado é −11,5 (−15,7 a −7,3). Erro de marcação que não depende de quem volta tende a diminuir a diferença; uma correção simples leva o bruto de −14,8 para cerca de −18,5. Com a recusa marcada por regras, nos mesmos usuários, o ajustado era −3,3 (−10,1 a +3,5): as regras marcavam 63 usuários que a IA não considera recusa e perdiam 42.
 
-**O que prova e o que não prova:** mostra que, com estes dados, não há evidência de que o assistente mude o retorno, e que um efeito grande (acima de cerca de 5 pontos) é improvável. Não prova que não exista efeito pequeno, nem que o efeito seja causal; para isso, teste controlado (BDR-08, ADR-10).
+**Fatores de confusão e como tratei** (C-24): perfil e era do modelo entram como controle; para modelo, recusa, idioma divergente e a "virada" de dez/2023 comparei pessoas de perfil parecido (ponderação por propensão, balanço conferido e erro por bootstrap agrupado por IP). A virada de dez/2023, quando o GPT-4 virou o padrão, não mostra mudança: +2,0 (−2,1 a +6,1). Para recusa e idioma divergente **não deu para montar um grupo de comparação equilibrado** (cerca de 130 a 160 usuários em cada grupo): o resultado fica no modelo ajustado. É limite do dado, não do método. A leitura é a mesma nas 4 definições de usuário e sessão.
+
+**O que prova e o que não prova:** mostra que a recusa na primeira resposta anda junto de bem menos retorno, e que modelo, tamanho da resposta e idioma não mostram efeito distinguível de zero (um ganho de modelo acima de cerca de 2 pontos é incompatível com os dados). Não prova causa: a recusa pode ser sinal de um pedido que o produto não atende, e só vemos parte das recusas (as conversas tóxicas foram removidas na origem). Para afirmar causa, teste controlado (BDR-08, ADR-10).
 
 ## 5. A semana de 20/11/2023 e a de 01/05/2023  (C-25)
 
@@ -196,14 +199,16 @@ Os dois arquivos têm um comentário `DEFEITO:` em cada linha corrigida, e passa
 ## 11. Sugestões  (C-22)
 
 **Para o assistente** (com a cautela de que os dados não provam causa):
-- **Recusa:** acontece em cerca de 6% das primeiras respostas (aproximado: validação manual mostra que as regras também marcam recusa onde não há). Os dados não mostram que ela afaste a pessoa (−3,2 pontos, de −9,9 a +3,6). Se houver desejo de reduzir recusas, fazer como teste controlado.
-- **Resposta muito curta (até 300 caracteres):** retorno mais baixo no bruto (19,5%). No ajuste o efeito encolhe e o intervalo cruza zero: não é onde priorizar.
-- **Tema** [EM REVISÃO]: conversas de criação/ficção voltam mais e conversas pessoais menos; usar para entender o público, não para mudar o assistente.
+- **Recusa:** acontece em cerca de 6% das primeiras respostas e é o único comportamento do assistente ligado a menos retorno (16,4 pontos a menos, de 11,5 a 21,4). Acompanhar a taxa de recusa como indicador de saúde, revisar as recusas desnecessárias e testar de forma controlada uma recusa que ofereça alternativa útil. Os dados não provam que a recusa cause a saída.
+- **Modelo:** não justificar a troca para um modelo mais caro por retenção (−2,9 pontos, de −8,0 a +2,2; ganho acima de cerca de 2 pontos é incompatível com os dados).
+- **Resposta muito curta (até 300 caracteres):** retorno mais baixo no bruto; no ajuste o efeito encolhe e o intervalo cruza zero: não é onde priorizar.
+- **Tema** (descritivo): conversa pessoal volta menos (−9,2 pontos na diferença simples); usar para entender o público, não para mudar o assistente.
 
 **Para o dashboard** (indicadores pensados depois de ver os dados):
 - Mostrar sempre o intervalo e o n ao lado de cada taxa e de cada efeito, com o aviso "não se distingue de zero".
 - Mostrar "voltou em outro dia" ao lado da taxa oficial (17% × 24%).
-- Sinalizar uma semana só quando a diferença passar da variação normal, e dizer quantas semanas passariam por acaso.
+- Sinalizar uma semana só quando a diferença passar da variação normal, ignorando as semanas do início da coleta, e dizer quantas semanas passariam por acaso.
+- Mostrar a **taxa de recusa** na primeira resposta ao lado da retenção.
 - Indicador de **tamanho da primeira sessão** como sinal de engajamento.
 - Painel de reconciliação (bruto × base) visível ao cliente, para o número ser conferível.
 
@@ -218,4 +223,4 @@ Os dois arquivos têm um comentário `DEFEITO:` em cada linha corrigida, e passa
 
 ## 13. Uso de IA  (C-41)
 
-Usei assistentes de IA (Claude, pelo Claude Code) em duas funções: **planejamento** (especificações, desenho das decisões e revisão) e **execução** (código e testes, uma tarefa por vez), mais um LLM dentro do produto para classificar tema e recusa (Bedrock; OpenRouter como reserva). **Conferi** com testes e com os meus rótulos: 200 conversas rotuladas por mim contra a máquina (ADR-09), uma base sintética de resposta conhecida e reconciliação do bruto com a base (9 métricas, diferença 0). **Corrigi ou descartei**: o efeito marginal gerado na 1ª versão estimava +7,0 pontos onde o verdadeiro era +10,1 numa simulação (o teste pegou, corrigido); o "idioma divergente" bruto era ruído de detecção em pergunta curta (restrito); um teste de borda foi acrescentado porque trocar `<=` por `<` passava despercebido; a consulta de retenção levava 12 s por chamada e passou a 0,33 s depois de achar uma subconsulta repetida. Mais casos em `docs/conferi_da_ia.md`. **Horas aproximadas:** [a preencher a partir de `docs/horas.md`; não estimei de memória].
+Usei assistentes de IA (Claude, pelo Claude Code) em duas funções: **planejamento** (especificações, desenho das decisões e revisão) e **execução** (código e testes, uma tarefa por vez), mais um LLM para classificar tema e recusa (a rodada foi pela OpenRouter; o Bedrock, o principal planejado, ficou bloqueado na minha conta). **Conferi** com testes e com os meus rótulos: 200 conversas rotuladas por mim contra a máquina (ADR-09), uma base sintética de resposta conhecida e reconciliação do bruto com a base (9 métricas, diferença 0). **Corrigi ou descartei**: o efeito marginal gerado na 1ª versão estimava +7,0 pontos onde o verdadeiro era +10,1 numa simulação (o teste pegou, corrigido); o "idioma divergente" bruto era ruído de detecção em pergunta curta (restrito); um teste de borda foi acrescentado porque trocar `<=` por `<` passava despercebido; a consulta de retenção levava 12 s por chamada e passou a 0,33 s depois de achar uma subconsulta repetida. Mais casos em `docs/conferi_da_ia.md`. **Horas aproximadas:** cerca de 14 h até a manhã de 12/11 (ter ~6 h, qua ~6 h, qui ~2 h; estimativa minha, em `docs/horas.md`); total final atualizado no envio. O trabalho foi feito com agentes de IA (planejamento e execução em paralelo) sob minha direção e revisão; as horas são minhas, não de máquina.

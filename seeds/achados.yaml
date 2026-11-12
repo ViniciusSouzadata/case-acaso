@@ -1,58 +1,63 @@
-# RASCUNHO (T-209): revisão no ponto de controle 1. Só números que existem em resultado.*.
+# Achados aprovados pelo Vinícius (ponto de controle 1, 12/11/2026). Só números que existem em resultado.* e em docs/robustez_recusa.md.
 # Taxa de retorno em 7 dias: 23,9% (IC 22,2% a 25,6%; 2.372 usuários elegíveis; 566 voltaram).
 # Efeito mínimo detectável: 4,9 p.p. com grupos iguais.
 - ordem: 1
-  titulo: "O que o assistente faz na primeira conversa não muda, de forma que dê para afirmar, se a pessoa volta"
+  titulo: "A recusa na primeira resposta é o único comportamento do assistente ligado a menos retorno"
   evidencia: >-
-    Em 2.372 novos usuários, 23,9% voltaram em até 7 dias (IC 22,2% a 25,6%). Olhei quatro características da primeira
-    resposta do assistente (seis comparações). Nenhuma se distingue de zero. Depois de comparar pessoas de perfil parecido: modelo mais
-    novo (GPT-4) em vez do GPT-3.5, 3,3 pontos a menos de retorno a cada 100 usuários (de −8,4 a +1,8); o mesmo
-    modelo por um segundo método (comparação ponderada), 5,4 pontos a menos (de −12,0 a +0,9); recusa na primeira
-    resposta, 3,2 pontos a menos (de −9,9 a +3,6; só 153 usuários); resposta de 301 a 1.000 caracteres, 3,7 pontos a mais
-    (de −2,4 a +9,7). Em todos os casos o intervalo cruza zero e nenhum dos 25 testes passa na correção para muitos testes.
-    O resultado se repete em quatro formas de definir usuário e sessão (mesmo sinal em 24 de 25, 20 de 23 e 24 de 25 casos).
+    Entre 2.372 novos usuários, 132 (5,6%) receberam uma recusa na primeira resposta. Voltaram em até 7 dias 13 de 132
+    com recusa (9,8%), contra 553 de 2.240 sem recusa (24,7%). Comparando pessoas de perfil parecido, a diferença é de
+    16,4 pontos a menos de retorno a cada 100 usuários (de 11,5 a 21,4 a menos). Se "voltar" exigir outro dia, o quadro
+    é o mesmo: 9 de 132 com recusa (6,8%) contra 391 de 2.240 sem (17,5%), 11,5 pontos a menos (de 7,3 a 15,7 a menos).
+    O grupo com recusa é pequeno (132 pessoas, 13 delas voltaram), e os intervalos mostram essa incerteza. Dos fatores
+    do assistente comparados, é o único que se mantém depois da correção para muitos testes. O número quase não muda
+    com as quatro definições de usuário e sessão (de 14,4 a 16,4 pontos a menos) nem com um aquecimento maior da base
+    (16,3 a menos). As recusas não vêm de poucos usuários (132 recusas em 131 IPs) e a direção se repete nos 5 temas
+    com recusas suficientes. Sobre a ordem dos fatos: a forma de marcar a recusa foi trocada porque a validação manual
+    de 200 conversas mostrou que as regras de palavras-chave erravam (só 30% do que marcavam era recusa, ponderando
+    pela população), antes de olhar o efeito com o novo rótulo; a ordem está nos commits. Com as regras, a diferença
+    parecia pequena (3,3 pontos a menos, de 10,1 a menos até 3,5 a mais), porque os falsos alarmes a diluíam.
   decisao: >-
-    Não priorizar trabalho no assistente (trocar de modelo, encurtar ou alongar respostas, reduzir recusas) esperando
-    mais retorno com base nestes dados. Sugestão para o assistente: se houver desejo de mexer em recusa ou modelo,
-    fazer como teste controlado (metade dos usuários com cada versão), que é o que permite afirmar causa. Sugestão
-    para o dashboard: mostrar sempre o intervalo ao lado de cada efeito e o aviso "não se distingue de zero".
+    Tratar a taxa de recusa como indicador de saúde do assistente, ao lado da retenção, e revisar quais pedidos estão
+    sendo recusados sem necessidade. Antes de mudar para todos, testar de forma controlada (metade dos usuários com
+    cada versão) uma recusa que ofereça uma alternativa útil, que é o que permite afirmar causa.
   limite: >-
-    Os dados só permitem enxergar diferenças a partir de uns 5 pontos; efeitos menores que isso podem existir e
-    passar despercebidos. A comparação é de pessoas que escolheram ou receberam situações diferentes, então não prova
-    causa. A recusa foi identificada por regras que pegam cerca de 80% das recusas reais, com muitos falsos alarmes
-    (validação manual de 200 conversas), e para recusa e idioma divergente não foi possível montar um grupo de
-    comparação equilibrado com cerca de 150 usuários: o resultado fica no modelo ajustado, e lá não se distingue de zero.
+    É comparação, não experimento: a recusa pode ser o sinal de um pedido que o produto não atende, e não o motivo
+    de a pessoa não voltar. Com 132 casos não foi possível montar um grupo de comparação equilibrado (o segundo método
+    ficou "não comparável"). Para explicar a diferença, um fator escondido precisaria estar fortemente ligado às duas
+    coisas (E-value 5,3). Os autores do conjunto de dados removeram as conversas tóxicas, onde as recusas tendem a ser
+    mais comuns; vemos só parte das recusas. A recusa foi marcada por IA conferida contra 200 rótulos manuais (precisão
+    de 81% e revocação de 86%, ponderadas pela população); erro desse tipo tende a diminuir a diferença, não a criar.
 - ordem: 2
-  titulo: "A semana de 1º de maio de 2023 teve queda no retorno, mas uma semana entre 35 não é conclusão"
+  titulo: "Trocar de modelo ou mudar o formato da resposta não mostrou ganho de retorno"
   evidencia: >-
-    Na semana de 1º/05/2023, 17 de cada 100 novos usuários voltaram (84 usuários), contra 34 de cada 100 nas duas
-    semanas anteriores (74 usuários): 17,1 pontos a menos, e quase todo vindo de as pessoas voltarem menos, não de ter
-    chegado um público diferente (mudança de público: +0,7 ponto). Diferença maior que a variação normal (p = 0,013).
-    Mas, nas 35 semanas com amostra suficiente, 2 tiveram diferença assim, e só pelo acaso se esperam cerca de 2.
-    Contraponto: na semana de 20/11/2023, 22 de cada 100 voltaram (65 usuários) contra 26 de cada 100 (197 usuários):
-    4,9 pontos a menos, dentro da variação normal (p = 0,43). O mesmo método separou um caso do outro.
+    GPT-4 em vez de GPT-3.5, entre perfis parecidos: 2,9 pontos a menos de retorno a cada 100 usuários (de 8,0 a
+    menos até 2,2 a mais); pelo segundo método (comparação ponderada), 6,1 pontos a menos (de 12,7 a menos até 0,4 a
+    mais). Os dados descartam um ganho de retorno acima de cerca de 2 pontos com o modelo mais novo. Tamanho da
+    resposta (de 1,5 a menos até 4,7 a mais, conforme a faixa) e resposta em outro idioma (0,1 a mais, de 7,7 a menos
+    até 7,9 a mais) também não se distinguem de zero. Nenhum desses passa na correção para muitos testes.
   decisao: >-
-    Tratar a queda de 1º/05 como alerta para olhar de perto, não como problema confirmado: checar se houve mudança
-    de produto ou de canal de entrada naquela semana antes de agir. Sugestão para o dashboard: sinalizar semanas só
-    quando a diferença passar da variação normal e mostrar quantas semanas passariam por acaso.
+    Não justificar a troca para um modelo mais caro por ganho de retenção: o modelo mais caro não trouxe mais retorno
+    nestes dados. Se a troca acontecer por qualidade ou outro motivo, medir o efeito com teste controlado.
   limite: >-
-    Escolhi a semana de maior efeito entre as candidatas, o que exagera a chance de achar algo; por isso a leitura
-    acima conta quantas semanas passariam por acaso. Semanas têm poucos usuários (de 65 a 197 aqui), então só quedas grandes
-    aparecem.
+    Com esta base só se enxergam diferenças a partir de cerca de 5 pontos (4,9 com grupos iguais); efeitos menores
+    podem existir. Ganhos acima de 2 pontos para o modelo mais novo são incompatíveis com os dados, mas não se exclui
+    um efeito menor. A comparação é de pessoas que escolheram ou receberam situações diferentes, então não prova causa.
 - ordem: 3
-  titulo: "Quem tem sessão mais longa na primeira visita volta mais, mas isso descreve, não prova causa"
+  titulo: "Quedas semanais isoladas enganam: a maior era efeito do início da coleta"
   evidencia: >-
-    Quem teve 4 ou mais mensagens na sessão de entrada voltou em 32,9% dos casos (694 usuários), contra 17,2% de quem teve
-    1 mensagem (848 usuários): 15,6 pontos a mais (de 11,3 a 19,9). Quem fez 3 ou mais conversas na mesma sessão voltou
-    em 41,9% (198 usuários), contra 21,1% de quem fez 1 (1.871 usuários): 20,8 pontos a mais (de 13,9 a 28,0).
-    Sobre o tema da conversa (classificação por regras, só descritiva): criação/ficção ficou com 7,5 pontos a mais (de 0,9 a 14,1)
-    e conversa pessoal com 6,9 a menos (de −12,6 a −1,2), em relação aos demais temas.
+    A maior queda da série, na semana de 1º/05/2023 (17 a cada 100 novos usuários voltaram, 84 usuários), era de 17,1
+    pontos (p = 0,013) quando comparada às duas semanas anteriores. Mas essas duas semanas ficam logo no início da
+    coleta e incluem usuários antigos contados como novos. Com o início da coleta tratado com mais folga (semanas de
+    comparação começando pelo menos 28 dias depois do primeiro dado), a queda contra as quatro semanas seguintes é de
+    7,7 pontos (p = 0,13), dentro da variação normal. Na semana de 20/11/2023, quando chegou um novo modelo, 22 de cada
+    100 voltaram (65 usuários) contra 26 de cada 100 (197 usuários): 4,9 pontos a menos, quase todo de as pessoas
+    voltarem menos e não de mudança de público (p = 0,43). Nas 33 semanas testadas, só 1 passou do limite de 5%, o que
+    é perto do que o acaso produz (cerca de 2).
   decisao: >-
-    Usar o tamanho da primeira sessão como sinal de acompanhamento no dashboard (quem está engajado tende a voltar),
-    não como meta a forçar. Sugestão para o assistente: não alongar a conversa artificialmente com a ideia de
-    aumentar retorno; antes, testar de forma controlada se algo que estimula a segunda mensagem muda o retorno.
+    O alerta do painel só dispara quando a queda passa da variação normal, ignora as semanas do início da coleta
+    (as que começam a menos de 28 dias do primeiro dado) e mostra quantas semanas passariam por acaso. É a mesma lição
+    do incidente: conferir a definição antes de alarmar.
   limite: >-
-    A sessão longa acontece junto da volta, no mesmo período de uso: quem já tem interesse conversa mais e volta mais,
-    então não dá para dizer que conversar mais faz voltar. Por isso esses fatores não entram no modelo ajustado. O tema foi
-    marcado por regras que acertam 36,5% das conversas em uma validação manual de 200 (kappa 0,27), então serve só para
-    descrever o conjunto, nunca como fator firme.
+    As semanas têm de 33 a 197 usuários, então só quedas grandes são detectáveis. Escolher a semana de maior efeito
+    entre várias exagera a chance de achar algo; por isso a leitura conta quantas semanas passariam por acaso.
+    Não há dado de versão do produto por data para explicar por que cada semana variou.

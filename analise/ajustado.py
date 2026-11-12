@@ -16,7 +16,7 @@ import psycopg
 import statsmodels.api as sm
 from scipy.stats import norm
 
-from analise.bruto import COLUNAS_BRUTO, calcular_bruto, n_minimo
+from analise.bruto import COLUNAS_BRUTO, bruto_tema_descritivo, calcular_bruto, n_minimo
 from analise.dados import carregar_elegiveis, carregar_grupos_ip
 from analise.fatores import ASSISTENTE, ENGAJAMENTO, FATORES, Fator, agrupar_raros
 from analise.gravar import substituir
@@ -35,7 +35,7 @@ ROTULOS = {
     "recusa": "recusa na 1ª resposta", "idioma_divergente": "resposta em idioma diferente do da pergunta (pergunta com mais de 30 caracteres)",
     "faixa_chars_resposta": "tamanho da resposta", "modelo_familia": "modelo", "tema": "tema", "idioma": "idioma da pergunta",
     "dispositivo": "dispositivo", "periodo_dia": "período do dia", "fim_de_semana": "fim de semana",
-    "faixa_chars_pergunta": "tamanho da pergunta", "regiao": "região", "era_modelo": "era de oferta de modelo",
+    "tema_descritivo": "tema (descritivo)", "faixa_chars_pergunta": "tamanho da pergunta", "regiao": "região", "era_modelo": "era de oferta de modelo",
     "virada_dez2023": "virada de dezembro/2023 (GPT-4 vira o modelo padrão)", "n_turnos_sessao": "turnos na sessão", "n_conversas_sessao": "conversas na sessão",
 }
 
@@ -231,7 +231,7 @@ def combinar(brutos: list[dict], ajustados: list[dict]) -> list[dict]:
             if b["grupo"] == ASSISTENTE:
                 l["e_value"], l["e_value_ic"] = (round(v, 4) for v in e_values_do_efeito(
                     a["risco_ref"], l["efeito_ajustado_pp"], l["ajustado_ic_inf"], l["ajustado_ic_sup"]))
-        elif b["grupo"] == ENGAJAMENTO:
+        elif b["grupo"] == ENGAJAMENTO or b["fator"] == "tema_descritivo":   # só diferença simples, fora do modelo
             l["leitura"] = leitura_efeito(b["fator"], b["nivel"], b["referencia"], b["efeito_bruto_pp"], b["bruto_ic_inf"], b["bruto_ic_sup"], ajustado=False)
         else:
             l["leitura"] = (f"{ROTULOS.get(b['fator'], b['fator'])}: '{b['nivel']}' tem poucos usuários (n={b['n_nivel']}) e ficou fora do modelo; "
@@ -266,7 +266,7 @@ def gravar(conn: psycopg.Connection) -> list[dict]:
     df = df.reset_index(drop=True)
     ajustados, diag = ajustar(df, grupos, n_min)
     imprimir_diagnostico(diag)
-    linhas = combinar(calcular_bruto(df, n_min), ajustados)
+    linhas = combinar(calcular_bruto(df, n_min) + bruto_tema_descritivo(df, n_min), ajustados)
     substituir(conn, "efeito_fator", COLUNAS_EFEITO, [[l[c] for c in COLUNAS_EFEITO] for l in linhas])
     conn.execute("UPDATE resultado.meta SET parametros_modelo = %s", (diag["n_parametros"],))
     return linhas
