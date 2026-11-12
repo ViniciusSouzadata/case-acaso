@@ -37,7 +37,8 @@ describe.skipIf(!temBanco)("fumaça das telas contra o banco real", () => {
     const { default: Pagina } = await import("@/app/page");
     render(<Pagina />);
     await waitFor(() => expect(document.body.textContent).toContain("2.372"), { timeout: 20000 });
-    expect(screen.getByTestId("frase-resposta").textContent?.length).toBeGreaterThan(20);
+    // a frase vem de outra requisição que o cartão: espera por ela, em vez de supor que já chegou
+    await waitFor(() => expect(screen.getByTestId("frase-resposta").textContent?.length).toBeGreaterThan(20), { timeout: 20000 });
 
     const botoes = screen.getAllByRole("button", { name: /O que é este número/i });
     expect(botoes.length).toBeGreaterThan(0);
@@ -52,7 +53,7 @@ describe.skipIf(!temBanco)("fumaça das telas contra o banco real", () => {
     const { default: Pagina } = await import("@/app/fatores/page");
     render(<Pagina />);
     await waitFor(() => expect(document.querySelectorAll("[data-fator]").length).toBeGreaterThan(0), { timeout: 20000 });
-    expect(screen.getByTestId("frase-resposta").textContent).toMatch(/comparações/);
+    await waitFor(() => expect(screen.getByTestId("frase-resposta").textContent).toMatch(/comparações/), { timeout: 20000 });
     semDadoSensivel();
   }, 60000);
 
@@ -60,8 +61,8 @@ describe.skipIf(!temBanco)("fumaça das telas contra o banco real", () => {
     const { default: Pagina } = await import("@/app/dados/page");
     render(<Pagina />);
     await waitFor(() => expect(document.body.textContent).toMatch(/linhas lidas/), { timeout: 20000 });
-    expect(document.body.textContent).toContain("O texto de nenhuma conversa");
-    expect(screen.getByTestId("frase-confianca").textContent?.length).toBeGreaterThan(20);
+    await waitFor(() => expect(document.body.textContent).toContain("O texto de nenhuma conversa"), { timeout: 20000 });
+    await waitFor(() => expect(screen.getByTestId("frase-confianca").textContent?.length).toBeGreaterThan(20), { timeout: 20000 });
     semDadoSensivel();
   }, 60000);
 });

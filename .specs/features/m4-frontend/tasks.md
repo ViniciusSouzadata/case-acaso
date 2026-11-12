@@ -57,7 +57,7 @@ T-401 ─► T-402 ─┬─► T-403 ─┐
 - **Gate:** Cliente consegue responder "posso confiar?"
 - **Reqs:** REQ-408
 
-## [ ] T-406 — Fumaça ponta a ponta e gate
+## [x] T-406 — Fumaça ponta a ponta e gate
 - **What:** Teste de fumaça que sobe o app contra a base e verifica que as telas Must renderizam, que o "i" abre o glossário e que não há texto de conversa, IP ou user-agent no HTML. Conferir 1280 px e largura de celular. Revisar todos os textos de `pt.json` contra o REQ-409.
 - **Where:** `app/tests/`
 - **Depends on:** T-403, T-404, T-405
