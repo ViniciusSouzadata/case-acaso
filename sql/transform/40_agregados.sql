@@ -25,7 +25,7 @@ per AS (
            bool_or(sem_inicio) AS inicio
     FROM u GROUP BY coorte_semana
     UNION ALL
-    SELECT 'mes', coorte_mes, count(*)::bigint, bool_and(maduro), count(*) FILTER (WHERE voltou_7d)::bigint, bool_or(sem_inicio)
+    SELECT 'mes', coorte_mes, count(*)::bigint, bool_and(maduro), count(*) FILTER (WHERE voltou_7d)::bigint, (count(*) FILTER (WHERE sem_inicio) * 2 > count(*))
     FROM u GROUP BY coorte_mes
 ),
 mm AS (
@@ -47,7 +47,7 @@ SELECT per.granularidade,
        per.madura,
        (per.novos >= p.n_min) AS amostra_suficiente,
        -- BDR-09: semana de coorte que começa a menos de 28 dias do 1º dado da base pode misturar usuários antigos (início da coleta).
-       -- Calculado do mínimo da base, sem data fixa. Mês: true se contém alguma coorte semanal marcada.
+       -- Calculado do mínimo da base, sem data fixa. Mês: true se mais da metade dos novos do mês está em semanas marcadas.
        per.inicio AS inicio_coleta
 FROM per
 CROSS JOIN p
