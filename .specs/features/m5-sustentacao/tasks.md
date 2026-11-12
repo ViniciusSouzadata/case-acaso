@@ -7,7 +7,7 @@ T-504 ──────────┼─► T-505 (gate)
 T-503 ──────────┘
 ```
 
-## [ ] T-501 — Consulta de confirmação do incidente, rodável no bruto
+## [x] T-501 — Consulta de confirmação do incidente, rodável no bruto
 - **What:** `docs/incidente/confirmacao.sql` (versão Postgres, como o case usa) e `scripts/incidente_confirmacao.py` (mesma lógica em DuckDB sobre o snapshot): por semana, usuários novos pela chave `hashed_ip|user-agent` × pela chave `hashed_ip`, quantos "novos" caem em IP já visto, e o máximo de user-agents novos por IP. Saída só com agregados, gravada em `docs/incidente/evidencia.md` (mostra o mecanismo com dado real: IP + UA gera mais "usuários" que IP).
 - **Where:** `docs/incidente/`, `scripts/`
 - **Depends on:** T-110

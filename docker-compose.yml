@@ -34,6 +34,7 @@ services:
       - ./classificador:/app/classificador:ro
       - ./docs:/app/docs
       - ./tests:/app/tests:ro
+      - ./scripts:/app/scripts:ro
       - ./data/bruto:/app/data/bruto:ro
       - ./seeds:/app/seeds:ro
 
