@@ -17,7 +17,7 @@ T-603 ────────────┘
 - **Gate:** Toda decisão do projeto está registrada e defendível
 - **Reqs:** REQ-602
 
-## [ ] T-602 — Arquitetura AWS, custo e diagramas (planejador redige; executor gera os diagramas)
+## [x] T-602 — Arquitetura AWS, custo e diagramas (planejador redige; executor gera os diagramas)
 - **What:** Diagrama do fluxo bruto → tela (Mermaid, exportado em PNG) e diagrama da implantação AWS; tabela de componentes com o porquê e o custo mensal estimado (preços conferidos na página oficial de cada serviço, com data e link); descrição do deploy; seção de outros países.
 - **Where:** `docs/arquitetura/`
 - **Depends on:** gate do M3
