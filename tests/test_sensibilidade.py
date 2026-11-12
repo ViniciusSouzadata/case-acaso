@@ -131,3 +131,15 @@ def test_sensibilidade_real_grava_assistente_e_cinco_de_perfil():
         assert float(r.ef) == pytest.approx(oficial[(r.fator, r.nivel)], abs=1e-3)
     com_ef = tab.dropna(subset=["ef"])
     assert (com_ef["inf"].astype(float) < com_ef["ef"].astype(float)).all() and (com_ef["ef"].astype(float) < com_ef["sup"].astype(float)).all()
+
+
+def test_uniao_das_definicoes_inclui_as_primeiras_conversas_de_cada_chave():
+    from analise import uniao_definicoes as U
+    # mesmo IP, dois navegadores: na chave oficial são 2 usuários (2 primeiras conversas); só por IP, 1 usuário (a mais antiga)
+    a = {**_conv(10, "x1", "ipX", "2023-05-10 09:50", "2023-05-10 10:00", ua="uaA"), "usuario_id_ip": "ipX", "usuario_id_ip_ua": "ipXuaA"}
+    b = {**_conv(11, "x2", "ipX", "2023-05-10 12:00", "2023-05-10 12:05", ua="uaB"), "usuario_id_ip": "ipX", "usuario_id_ip_ua": "ipXuaB"}
+    por_def = U.ids_por_definicao(_base([a, b]), PAR, ERAS)
+    assert por_def["oficial"] == {10, 11} and por_def["so_ip"] == {10} and por_def["ip_ua_completo"] == {10, 11}
+    assert U.uniao(por_def) == {10, 11}
+    c = U.contagens(por_def)
+    assert c["oficial"] == 2 and c["so_ip"] == 1 and c["uniao"] == 2 and c["so_na_uniao"] == 0

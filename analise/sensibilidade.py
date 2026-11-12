@@ -114,6 +114,7 @@ def reconstruir(conv: pd.DataFrame, chave: str, gap_min: int, par: dict, eras: p
     primeira = primeira.assign(ts_inicio=u["ts_primeira"])
     cov = covariaveis(primeira, par["fuso_pais"], eras)
     cov["voltou_7d"] = u["voltou_7d"]
+    cov["conversa_id"] = primeira["conversa_id"]  # 1ª conversa de cada usuário (usada pela união das definições, T-205 LLM)
     cov["chave_usuario"] = u.index
     cov = cov[u["elegivel"]].reset_index(drop=True)
     codigo_ip, _ = pd.factorize(u.loc[u["elegivel"], "hashed_ip"])
