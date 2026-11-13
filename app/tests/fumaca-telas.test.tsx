@@ -53,15 +53,15 @@ describe.skipIf(!temBanco)("fumaça das telas contra o banco real", () => {
     const { default: Pagina } = await import("@/app/fatores/page");
     render(<Pagina />);
     await waitFor(() => expect(document.querySelectorAll("[data-fator]").length).toBeGreaterThan(0), { timeout: 20000 });
-    await waitFor(() => expect(screen.getByTestId("frase-resposta").textContent).toMatch(/comparações/), { timeout: 20000 });
+    await waitFor(() => expect(screen.getByTestId("frase-resposta").textContent).toMatch(/fator|pesa|recusa/i), { timeout: 20000 });
     semDadoSensivel();
   }, 60000);
 
   it("Tela 3 (Confiança nos dados): carga e problemas reais, quadro 'nunca mostra'", async () => {
     const { default: Pagina } = await import("@/app/dados/page");
     render(<Pagina />);
-    await waitFor(() => expect(document.body.textContent).toMatch(/linhas lidas/), { timeout: 20000 });
-    await waitFor(() => expect(document.body.textContent).toContain("O texto de nenhuma conversa"), { timeout: 20000 });
+    await waitFor(() => expect(document.body.textContent).toMatch(/Conversas lidas/), { timeout: 20000 });
+    await waitFor(() => expect(document.body.textContent).toContain("Texto de nenhuma conversa"), { timeout: 20000 });
     await waitFor(() => expect(screen.getByTestId("frase-confianca").textContent?.length).toBeGreaterThan(20), { timeout: 20000 });
     semDadoSensivel();
   }, 60000);

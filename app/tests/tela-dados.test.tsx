@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import PaginaDados from "@/app/dados/page";
 import { veredicto } from "@/lib/qualidade";
@@ -7,7 +7,8 @@ import { formatarDataHora } from "@/lib/regras";
 
 const mock = vi.hoisted(() => ({ corpo: null as unknown }));
 vi.mock("@/lib/useApi", () => ({
-  useApi: () => ({ estado: "ok", corpo: { dados: mock.corpo, meta: {} } }),
+  // o dicionário (dentro de "Ver detalhes") pede outra rota e espera uma lista
+  useApi: (url: string) => ({ estado: "ok", corpo: { dados: url.includes("qualidade") ? mock.corpo : [], meta: {} } }),
 }));
 
 afterEach(cleanup);
@@ -33,39 +34,56 @@ describe("data", () => {
   });
 });
 
-describe("Tela 3 — Confiança nos dados", () => {
+describe("Tela 3 — Confiança nos dados (painel)", () => {
   beforeEach(() => {
     mock.corpo = { lote, reconciliacao: [rec("elegiveis", true), rec("voltaram", false)], problemas: [problema], validacao: [] };
   });
 
-  it("mostra a carga, a conferência com ok/falha, o problema com contagem e tratamento", () => {
+  it("mostra a carga em cartões, a frase de confiança e a barra do problema", () => {
     render(<PaginaDados />);
-    expect(screen.getByText(/11\.621 linhas lidas/)).toBeTruthy();
-    expect(screen.getByText(/0 linhas rejeitadas/)).toBeTruthy();
-    const itens = document.querySelectorAll("[data-ok]");
-    expect([...itens].map((i) => i.getAttribute("data-ok"))).toEqual(["true", "false"]);
-    expect(screen.getByText(/175 \(1,5%\)/)).toBeTruthy();
-    expect(screen.getByText(/Usa o IP mais comum/)).toBeTruthy();
+    expect(screen.getByText("Conversas lidas")).toBeTruthy();
+    expect(screen.getByText("11.621")).toBeTruthy();
+    expect(screen.getByText(/0 rejeitadas/)).toBeTruthy();
+    expect(screen.getByTestId("conferencias").textContent).toBe("1 de 2");
     expect(screen.getByTestId("frase-confianca").textContent).toContain("1 de 2");
+    expect(document.querySelectorAll("[data-problema]").length).toBe(1);
+  });
+
+  it("conferências uma a uma ficam atrás de 'Ver detalhes', com ok/falha", () => {
+    render(<PaginaDados />);
+    expect(document.querySelectorAll("[data-ok]").length).toBe(0);
+    fireEvent.click(screen.getAllByRole("button", { name: /Ver detalhes/ })[0]!);
+    expect([...document.querySelectorAll("[data-ok]")].map((i) => i.getAttribute("data-ok"))).toEqual(["true", "false"]);
+  });
+
+  it("clicar na barra abre contagem e tratamento do problema", () => {
+    render(<PaginaDados />);
+    fireEvent.click(document.querySelector("[data-problema] button")!);
+    const d = screen.getByRole("dialog");
+    expect(d.textContent).toMatch(/175 conversas \(1,5%\)/);
+    expect(d.textContent).toMatch(/Usa o IP mais comum/);
   });
 
   it("sem conferência e sem validação: diz isso, não finge que está tudo certo", () => {
     mock.corpo = { lote, reconciliacao: [], problemas: [], validacao: [] };
     render(<PaginaDados />);
     expect(screen.getByTestId("frase-confianca").textContent).toContain("ainda não há conferência");
-    expect(screen.getByText(/ainda não foi feita/)).toBeTruthy();
+    expect(screen.getByTestId("conferencias").textContent).toBe("—");
   });
 
-  it("validação do classificador aparece com acurácia e n", () => {
-    mock.corpo = { lote, reconciliacao: [rec("a", true)], problemas: [], validacao: [{ classificador: "tema", n: 200, acuracia: 0.9, kappa: 0.8, detalhe_json: null, versao_prompt: null, modelo: null }] };
+  it("acerto do classificador aparece com a taxa e o n; tema vem marcado como só descritivo", () => {
+    const v = (classificador: string) => ({ classificador, n: 200, acuracia: 0.9, kappa: 0.8, detalhe_json: null, versao_prompt: null, modelo: "m" });
+    mock.corpo = { lote, reconciliacao: [rec("a", true)], problemas: [], validacao: [v("tema"), v("recusa")] };
     render(<PaginaDados />);
-    expect(screen.getByText(/acerta 90,0% das 200/)).toBeTruthy();
+    expect(screen.getAllByText("90%").length).toBe(2);
+    expect(screen.getAllByText(/em 200 conferidas à mão/).length).toBe(2);
+    expect(screen.getByText(/tema é só descritivo/)).toBeTruthy();
   });
 
   it("quadro 'mostra / nunca mostra' sempre presente", () => {
     render(<PaginaDados />);
-    const quadro = screen.getByRole("heading", { name: /O que este painel mostra/ }).closest("section")!;
-    expect(within(quadro).getByText(/O texto de nenhuma conversa/)).toBeTruthy();
-    expect(within(quadro).getByText(/Endereço de rede/)).toBeTruthy();
+    expect(screen.getByText("O painel nunca mostra")).toBeTruthy();
+    expect(screen.getByText("Texto de nenhuma conversa")).toBeTruthy();
+    expect(screen.getByText(/IP nem navegador/)).toBeTruthy();
   });
 });
