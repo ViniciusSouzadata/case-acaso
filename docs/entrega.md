@@ -106,37 +106,25 @@ Três telas, cada uma com uma pergunta, em português simples; cada número tem 
 ## 8. Sustentação: como eu saberia que um número está errado  (C-32, C-33, C-34)
 
 ### O que registramos em cada camada
-| Camada | O que fica registrado | Para que serve |
-|---|---|---|
-| **Carga** | um registro por execução em `ops.lote_carga` (arquivo de origem, checksum, versão da definição, linhas lidas, gravadas e rejeitadas, início, fim, status); cada linha rejeitada em `ops.rejeitado` com o motivo | saber de qual arquivo e de qual versão da regra veio o número, e se a carga foi parcial |
-| **Base analítica** | versão da definição em `ops.parametros` e em `resultado.meta`; reconciliação bruto × base em `ops.reconciliacao` (9 métricas) | dizer "o número mudou porque a regra mudou" ou "porque o dado mudou" |
-| **Backend** | um log em JSON por requisição, com `request_id`, rota, tempo (`Server-Timing`) e a versão dos dados; erro devolve o `request_id` | achar a consulta exata que gerou o que a tela mostrou |
-| **Tela** | `request_id` visível no erro; rodapé com data da carga e versão da definição | o usuário consegue citar o que viu |
+- **Carga e base:** um registro por execução em `ops.lote_carga` (arquivo de origem, checksum, versão da definição, linhas lidas, gravadas e rejeitadas, status); linhas rejeitadas em `ops.rejeitado`, com o motivo; reconciliação bruto × base em `ops.reconciliacao` (9 métricas).
+- **Backend e tela:** um log em JSON por requisição, com `request_id`, rota, tempo e versão dos dados; o erro mostra o `request_id` e o rodapé traz a data da carga e a versão da definição.
 
-**Caminho para investigar um número errado:** tela (`request_id` e rodapé) → log da requisição → consulta SQL → tabela `mart` → lote em `ops.lote_carga` → arquivo bruto. Em nenhum ponto aparece texto de conversa, IP ou user-agent.
+**Caminho para investigar um número errado:** tela (`request_id` e rodapé) → log da requisição → consulta SQL → tabela `mart` → lote em `ops.lote_carga` → arquivo bruto. Em nenhum ponto aparece texto de conversa, IP ou user-agent (decisões em `docs/decisoes/`).
 
 ### Como perceber a divergência antes do cliente
-- **Reconciliação automática a cada carga:** o loader refaz 9 métricas direto do arquivo bruto (conversas, IPs, usuários, elegíveis, retornos, semanas maduras e semanas divergentes) e compara com a base. Hoje: diferença 0 nas 9.
-- **Regras de alerta** (descritas; a reconciliação já roda, o envio do alerta fica como próximo passo):
-  1. diferença acima da tolerância em qualquer métrica reconciliada;
-  2. "novos usuários" da semana mais de 3 desvios-padrão fora da média das 8 semanas anteriores;
-  3. salto no número de user-agents por IP (o sinal exato do incidente).
+- **Reconciliação automática a cada carga:** o loader refaz 9 métricas direto do arquivo bruto e compara com a base. Hoje: diferença 0 nas 9.
+- **Regras de alerta** (descritas; a reconciliação já roda, o envio do alerta fica como próximo passo): (1) diferença acima da tolerância em qualquer métrica; (2) "novos usuários" da semana mais de 3 desvios-padrão fora da média das 8 semanas anteriores; (3) salto no número de user-agents por IP (o sinal exato do incidente).
 
 ### Testes que impedem a definição de mudar em silêncio
-- **Base sintética de resposta conhecida:** casos escritos à mão (retorno em 6 d 23 h conta, 7 d + 1 min não; intervalo de exatamente 30 min é a mesma sessão; troca de versão do navegador é a mesma pessoa; 1 IP com 12 user-agents é tráfego anômalo; conversa vazia não conta). A resposta esperada fica em `tests/esperado.py`.
-- **Versão da definição:** os parâmetros do banco são comparados com um arquivo de referência; mudar um sem subir a versão derruba o teste.
-- **Contrato da API:** campo a mais, a menos ou de tipo errado falha.
-- **Um comando:** `make test` (ou `docker compose run --rm loader ...`). Provei que os testes pegam: gap de sessão de 30 para 60 minutos sem subir a versão derrubou o teste de versão; trocar `<=` por `<` na janela de 7 dias só foi pego depois que acrescentei os testes de borda.
+- **Base sintética de resposta conhecida** (`tests/esperado.py`): retorno em 6 d 23 h conta, 7 d + 1 min não; 30 min exatos é a mesma sessão; troca de versão do navegador é a mesma pessoa; 1 IP com 12 user-agents é tráfego anômalo; conversa vazia não conta. Mudar um parâmetro sem subir a versão da definição, ou mudar o contrato da API, também derruba o teste.
+- **Um comando:** `make test`. Provei que os testes pegam: gap de sessão de 30 para 60 minutos derrubou o teste de versão; trocar `<=` por `<` na janela de 7 dias só foi pego depois que acrescentei os testes de borda.
 
 ### Caminho até produção
-1. **Ambientes:** local (compose) → homologação → produção, com a mesma imagem e configuração por variável.
-2. **Migrações:** arquivos SQL numerados e aplicados em ordem, com registro em `ops.schema_migrations`. Cada migração tem o passo inverso escrito em `sql/migrations_down/` (rodado à mão, em transação, de trás para frente; **escrito e verificado na estrutura, não executado contra um banco ainda**).
-3. **Deploy:** imagem versionada (a tag é o commit); nunca construir em produção.
-4. **Verificação depois do deploy:** `/api/saude` e uma reconciliação; só depois o tráfego entra.
-5. **Reversão:** voltar para a imagem anterior; se a migração mudou dados, restaurar pelo backup ou pelo passo inverso (`sql/migrations_down/`). Reconstruir os marts a partir do bruto é seguro porque a carga é idempotente.
-6. **CI:** `.github/workflows/ci.yml` roda lint (ruff, só erros de sintaxe e nomes não definidos), a suíte Python contra um Postgres do compose, e `tsc` + `vitest` do app antes de aceitar a mudança. **Configurado, não executado aqui** (o repositório privado ainda não roda o workflow; sintaxe revisada à mão e o lint passa na minha máquina).
+Mesma imagem em local (compose) → homologação → produção; a tag é o commit e nunca se constrói em produção. Migrações SQL numeradas (`ops.schema_migrations`), cada uma com o passo inverso em `sql/migrations_down/` (**escrito e verificado na estrutura, não executado contra um banco ainda**). Depois do deploy, `/api/saude` e uma reconciliação; só então entra tráfego. Reversão: imagem anterior ou, se a migração mudou dados, backup ou passo inverso (a carga é idempotente). CI em `.github/workflows/ci.yml` (ruff, suíte Python contra o Postgres do compose, `tsc` + `vitest`): **configurado, não executado aqui** (o repositório privado ainda não roda o workflow). Desenho: `docs/arquitetura/arquitetura.md`.
 
 ## 9. Incidente: a retenção do dashboard caiu de 31% para 18%  (C-35 a C-39)
+
+> Os números da tabela abaixo (1.210, 1.150, 2.034 etc.) e a queda de 31% para 18% **vêm do enunciado do case**; não existem na base deste projeto. Os dados reais só aparecem na evidência do mecanismo (Pergunta 2).
 
 ### Pergunta 1 — Por onde eu começaria e por quê
 Reconciliando as duas fontes **na mesma granularidade** (semana). A tabela do enunciado já aponta o caminho:
@@ -150,30 +138,23 @@ Reconciliando as duas fontes **na mesma granularidade** (semana). A tabela do en
 Quem **voltou** fica estável nas duas fontes; quem **chegou** explode só no dashboard (+862, +73,5%). A queda não é de comportamento: é de **contagem de usuários novos**. Em semanas normais as duas fontes já divergiam cerca de 5%, o que indica definições de usuário diferentes desde antes. Com cerca de 1.200 usuários por semana, o intervalo de 95% da taxa é de aproximadamente ±2,6 pontos: 31% para 30% é ruído; 31% para 18% não é.
 
 ### Pergunta 2 — Em qual camada está a falha, com que evidência
-Na **carga**, na definição de `usuario_id`. O relatório conta por `hashed_ip`; a carga conta por `hashed_ip|user-agent`. O endpoint calcula certo sobre o que recebe, e a tela só exibe.
+Na **carga**, na definição de `usuario_id`. O relatório conta por `hashed_ip`; a carga conta por `hashed_ip|user-agent`. O endpoint calcula certo sobre o que recebe, e a tela só exibe. Robô com user-agent rotativo, IP compartilhado e navegador atualizado apontam para a mesma linha; a carga duplicada fica descartada (`ON CONFLICT DO NOTHING` não duplica a conversa, e duplicar conversa não cria usuário).
 
-Há três explicações possíveis para "mais novos, mesmos retornos", e todas apontam para a mesma linha: um IP com user-agent rotativo (robô), um IP compartilhado com muita gente de verdade, ou usuários antigos que atualizaram o navegador. A carga duplicada fica descartada: `ON CONFLICT DO NOTHING` não duplica a conversa, e duplicar conversa não cria usuário.
+**Consulta de confirmação:** `docs/incidente/confirmacao.sql` (no bruto: `scripts/incidente_confirmacao.py`): novos por semana pela chave IP + user-agent e pela chave IP.
 
-**Consulta de confirmação** (`docs/incidente/confirmacao.sql`; a mesma lógica roda no arquivo bruto com `scripts/incidente_confirmacao.py`): para cada semana, usuários novos pela chave IP + user-agent, pela chave IP, quantos "novos" caem em IP que já existia e o máximo de user-agents novos por IP.
-
-**Mecanismo mostrado com dado real** (WildChat Brasil, `docs/incidente/evidencia.md`): 2.385 usuários pela chave IP contra **2.895 pela chave IP + user-agent (+21,4%)**, 510 "novos" a mais caindo em IP já visto, e até 35 user-agents diferentes em um único IP. Os números do enunciado (1.210 por semana) não existem neste dado; o que mostro é o mecanismo.
+**Mecanismo com dado real** (WildChat Brasil, `docs/incidente/evidencia.md`): 2.385 usuários pela chave IP contra **2.895 pela chave IP + user-agent (+21,4%)**, 510 "novos" a mais em IP já visto e até 35 user-agents em um único IP. Os números do enunciado não existem neste dado; o que mostro é o mecanismo.
 
 ### Pergunta 3 — O trecho que causa o problema e a correção
-O trecho: `chave = f"{hashed_ip}|{user-agent}"`. Cada versão de navegador, e cada navegador de um mesmo IP, vira "uma pessoa nova".
+O trecho: `chave = f"{hashed_ip}|{user-agent}"`. Cada versão de navegador, e cada navegador de um mesmo IP, vira "uma pessoa nova". Outros defeitos do endpoint, sem relação direta com a queda (lista em `docs/incidente/correcao/`): "primeira vez" pelo **último** turno, coortes recentes sem marca de imaturas, semana no fuso UTC, inserção linha a linha sem transação.
 
-Outros defeitos do mesmo endpoint, mesmo sem relação direta com a queda: a "primeira vez" usa o **último** turno da conversa; coortes dos últimos 7 dias não são marcadas como imaturas; `date_trunc('week')` roda no fuso do banco (UTC); `ON CONFLICT DO NOTHING` congela conversa que continua em outro dia; a inserção é linha a linha, sem transação nem registro de lote.
-
-**Correção escrita** em `docs/incidente/correcao/`:
-- `carga_corrigida.py`: identidade vinda de **uma regra única** (IP + família do navegador, sem versão), upsert com `ON CONFLICT DO UPDATE`, **um lote em uma transação** e registro do lote.
-- `route_corrigida.ts`: usuário vindo de `mart.dim_usuario`, início da primeira sessão (não o último turno), semana no fuso do país, coortes imaturas marcadas.
-Os dois arquivos têm um comentário `DEFEITO:` em cada linha corrigida, e passam em `py_compile` e `tsc --noEmit --strict`.
+**Correção escrita** em `docs/incidente/correcao/` (linhas marcadas com `DEFEITO:`; passam em `py_compile` e `tsc --noEmit --strict`): `carga_corrigida.py` (identidade por **uma regra única**, IP + família do navegador; um lote por transação, com registro) e `route_corrigida.ts` (usuário de `mart.dim_usuario`, início da primeira sessão, semana no fuso do país, coortes imaturas marcadas).
 
 ### Pergunta 4 — O que mais fazer além do código e como evitar que volte
 1. **Reprocessar o histórico** com a regra corrigida (a carga é idempotente) e **versionar** a mudança de definição.
-2. **Alinhar a definição** com o relatório do time de dados: a causa organizacional são duas definições de usuário e nenhuma reconciliação.
-3. **Reconciliação automática e alerta** (seção 4.1): salto de "novos" e de user-agents por IP.
-4. **Teste de regressão** (`tests/test_regressao_incidente.py`): na base sintética, a troca de versão do navegador não cria usuário novo e o IP com 12 user-agents não entra nos "novos"; o teste também mostra que, com a chave do incidente, a mesma verificação falha.
-5. **Registro pós-incidente:** causa, impacto, correção e o que mudou no processo; as semanas anteriores tinham cerca de 5% de viés que também foi corrigido.
+2. **Alinhar a definição** com o time de dados: a causa organizacional são duas definições de usuário e nenhuma reconciliação.
+3. **Reconciliação automática e alerta** (seção 8).
+4. **Teste de regressão** (`tests/test_regressao_incidente.py`): a troca de versão do navegador não cria usuário novo e o IP com 12 user-agents não entra nos "novos"; com a chave do incidente, a verificação falha.
+5. **Registro pós-incidente:** causa, impacto, correção e mudança de processo; o viés de cerca de 5% das semanas anteriores também foi corrigido.
 
 ### Pergunta 5 — O que eu diria à gerente de produto
 
