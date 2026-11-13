@@ -37,7 +37,7 @@ export function BlocoSemana() {
   const cascata = resumo ? montarCascata(resumo) : null;
 
   return (
-    <section className="rounded border border-slate-200 bg-white p-4" aria-labelledby="semana-titulo">
+    <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4" aria-labelledby="semana-titulo">
       <h2 id="semana-titulo" className="text-base font-semibold text-slate-900">{t("semana.titulo", { semana: dataBr(semana) })}</h2>
       <p className="mt-1 text-sm text-slate-700">{t("semana.intro")}</p>
 

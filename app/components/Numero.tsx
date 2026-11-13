@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useContagem } from "@/lib/movimento";
 import { amostraPequena, cruzaZero, formatar, formatarInt, imatura, type FormatoNumero } from "@/lib/regras";
 import { t } from "@/lib/mensagens";
 import { AvisoAmostra } from "./AvisoAmostra";
@@ -18,17 +19,20 @@ export interface PropsNumero {
   madura?: boolean;
   /** chave do indicador em /api/dicionario; sem ela não há ícone "i" */
   indicador?: string;
+  /** contagem animada do número de destaque (só Tela 1) */
+  contar?: boolean;
 }
 
 /** REQ-402..406: valor com intervalo e n; o "i" abre o glossário; amostra pequena e coorte imatura seguem a regra única. */
-export function Numero({ rotulo, valor, formato, icInf, icSup, n, amostraSuficiente = true, madura = true, indicador }: PropsNumero) {
+export function Numero({ rotulo, valor, formato, icInf, icSup, n, amostraSuficiente = true, madura = true, indicador, contar = false }: PropsNumero) {
   const [aberto, setAberto] = useState(false);
   const pequena = amostraPequena(amostraSuficiente);
   const ainda = imatura(madura);
   const mostrarValor = !pequena && !ainda && valor !== null;
+  const animado = useContagem(valor, contar);
 
   return (
-    <div className="rounded border border-slate-200 bg-white p-4">
+    <div className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4">
       <div className="flex items-center gap-2 text-sm text-slate-600">
         <span>{rotulo}</span>
         {indicador ? (
@@ -36,15 +40,15 @@ export function Numero({ rotulo, valor, formato, icInf, icSup, n, amostraSuficie
             type="button"
             aria-label={`${t("numero.info")} (${rotulo})`}
             onClick={() => setAberto(true)}
-            className="flex h-5 w-5 items-center justify-center rounded-full border border-azul text-xs font-semibold text-azul"
+            className="flex h-5 w-5 items-center justify-center rounded-full border border-azul text-xs font-semibold text-azul hover:bg-azul hover:text-white"
           >
             i
           </button>
         ) : null}
       </div>
 
-      <div className="mt-1 text-3xl font-semibold text-slate-900" data-testid="valor">
-        {ainda ? t("imatura.rotulo") : pequena ? t("numero.amostraPequena", { n: formatarInt(n) }) : mostrarValor ? formatar(valor, formato) : t("numero.semValor")}
+      <div className="mt-1 font-display text-4xl font-semibold tracking-tight text-slate-900" data-testid="valor">
+        {ainda ? t("imatura.rotulo") : pequena ? t("numero.amostraPequena", { n: formatarInt(n) }) : mostrarValor ? formatar(contar && animado !== null ? animado : valor, formato) : t("numero.semValor")}
       </div>
 
       {mostrarValor && icInf != null && icSup != null ? (

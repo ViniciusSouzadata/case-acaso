@@ -15,10 +15,11 @@ import {
 } from "recharts";
 import { faixasEras, faixasImaturas, type EraApi, type Granularidade, type LinhaGrafico } from "@/lib/graficos";
 import { t } from "@/lib/mensagens";
+import { useMovimentoReduzido } from "@/lib/movimento";
 import { DicaCoorte } from "./DicaCoorte";
 
-const AZUL = "#0072b2";
-const LARANJA = "#e69f00";
+const AZUL = "#6a48eb"; // violeta de marca: série principal
+const LARANJA = "#ff6c0e"; // laranja: destaque pontual (média móvel)
 const CINZA = "#8a8f98";
 const MARGEM = { top: 10, right: 16, bottom: 4, left: 8 };
 const LARGURA_Y = 52;
@@ -29,7 +30,7 @@ interface PontoProps {
   payload?: LinhaGrafico;
 }
 
-/** Ponto cheio azul; cinza vazado quando a amostra é pequena (REQ-404). */
+/** Ponto cheio violeta; cinza vazado quando a amostra é pequena (REQ-404). */
 function Ponto({ cx, cy, payload }: PontoProps) {
   if (cx === undefined || cy === undefined || !payload || payload.taxa === null) return <g />;
   return payload.amostraOk && !payload.inicioColeta ? (
@@ -37,6 +38,12 @@ function Ponto({ cx, cy, payload }: PontoProps) {
   ) : (
     <circle cx={cx} cy={cy} r={4} fill="#fff" stroke={CINZA} strokeWidth={1.5} />
   );
+}
+
+/** Ponto sob o mouse: anel maior, para destacar o período cujo intervalo e n aparecem na dica. */
+function PontoAtivo({ cx, cy, payload }: PontoProps) {
+  if (cx === undefined || cy === undefined || !payload || payload.taxa === null) return <g />;
+  return <circle cx={cx} cy={cy} r={6.5} fill="#fff" stroke={payload.amostraOk && !payload.inicioColeta ? AZUL : CINZA} strokeWidth={3} />;
 }
 
 export function GraficoRetencao({
@@ -50,6 +57,8 @@ export function GraficoRetencao({
 }) {
   const faixas = faixasEras(linhas, eras);
   const imaturas = faixasImaturas(linhas);
+  const reduzido = useMovimentoReduzido();
+  const anima = !reduzido;
   const eixoX = t(granularidade === "mes" ? "retencao.eixoXMes" : "retencao.eixoXSemana");
 
   return (
@@ -81,11 +90,11 @@ export function GraficoRetencao({
             ))}
             <XAxis dataKey="periodo" tickFormatter={(p: string) => linhas.find((l) => l.periodo === p)?.rotulo ?? p} interval="preserveStartEnd" minTickGap={16} tick={{ fontSize: 11 }} />
             <YAxis width={LARGURA_Y} unit="%" tick={{ fontSize: 11 }} domain={[0, "auto"]} label={{ value: t("retencao.eixoY"), angle: -90, position: "insideLeft", fontSize: 11, dx: 4 }} />
-            <Tooltip content={({ payload }) => (payload && payload[0] ? <DicaCoorte linha={payload[0].payload as LinhaGrafico} /> : null)} />
+            <Tooltip cursor={{ stroke: AZUL, strokeDasharray: "3 3" }} content={({ payload }) => (payload && payload[0] ? <DicaCoorte linha={payload[0].payload as LinhaGrafico} /> : null)} />
             <Area type="monotone" dataKey="icBase" stackId="ic" stroke="none" fill="transparent" isAnimationActive={false} connectNulls={false} legendType="none" />
-            <Area type="monotone" dataKey="icAltura" stackId="ic" stroke="none" fill={AZUL} fillOpacity={0.16} isAnimationActive={false} connectNulls={false} legendType="none" />
-            <Line type="monotone" dataKey="mm4" stroke={LARANJA} strokeWidth={2} strokeDasharray="6 4" dot={false} isAnimationActive={false} connectNulls />
-            <Line type="monotone" dataKey="taxa" stroke={AZUL} strokeWidth={2} dot={<Ponto />} activeDot={false} isAnimationActive={false} connectNulls={false} />
+            <Area type="monotone" dataKey="icAltura" stackId="ic" stroke="none" fill={AZUL} fillOpacity={0.16} isAnimationActive={anima} animationDuration={400} connectNulls={false} legendType="none" />
+            <Line type="monotone" dataKey="mm4" stroke={LARANJA} strokeWidth={2} strokeDasharray="6 4" dot={false} isAnimationActive={anima} animationDuration={400} connectNulls />
+            <Line type="monotone" dataKey="taxa" stroke={AZUL} strokeWidth={2} dot={<Ponto />} activeDot={<PontoAtivo />} isAnimationActive={anima} animationDuration={400} connectNulls={false} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -98,7 +107,7 @@ export function GraficoRetencao({
             <XAxis dataKey="periodo" tickFormatter={(p: string) => linhas.find((l) => l.periodo === p)?.rotulo ?? p} interval="preserveStartEnd" minTickGap={16} tick={{ fontSize: 11 }} label={{ value: eixoX, position: "insideBottom", offset: -2, fontSize: 11 }} height={34} />
             <YAxis width={LARGURA_Y} tick={{ fontSize: 11 }} label={{ value: t("retencao.eixoYBarras"), angle: -90, position: "insideLeft", fontSize: 11, dx: 4 }} />
             <Tooltip content={({ payload }) => (payload && payload[0] ? <DicaCoorte linha={payload[0].payload as LinhaGrafico} /> : null)} />
-            <Bar dataKey="novos" fill={AZUL} fillOpacity={0.55} isAnimationActive={false} />
+            <Bar dataKey="novos" fill={AZUL} fillOpacity={0.55} isAnimationActive={anima} animationDuration={300} />
           </BarChart>
         </ResponsiveContainer>
       </div>

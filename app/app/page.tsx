@@ -51,11 +51,11 @@ export default function PaginaRetencao() {
         {resumo.estado === "erro" ? <Estado tipo="erro" mensagem={resumo.mensagem} requestId={resumo.requestId} /> : null}
         {resumo.estado === "ok" && !r ? <Estado tipo="vazio" /> : null}
         {r ? (
-          <Numero rotulo={t("retencao.cartaoRotulo")} valor={r.taxa} formato="pct" icInf={r.ic_inf} icSup={r.ic_sup} n={r.usuarios} indicador="taxa_retorno_7d" />
+          <Numero rotulo={t("retencao.cartaoRotulo")} valor={r.taxa} formato="pct" icInf={r.ic_inf} icSup={r.ic_sup} n={r.usuarios} indicador="taxa_retorno_7d" contar />
         ) : null}
       </section>
 
-      <section className="rounded border border-slate-200 bg-white p-4">
+      <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <h2 className="max-w-2xl text-base font-semibold text-slate-900">
             {variacao

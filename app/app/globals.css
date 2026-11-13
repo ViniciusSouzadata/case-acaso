@@ -1,17 +1,63 @@
 @import "tailwindcss";
 
-/* Paleta de Okabe-Ito: distinguível por quem tem daltonismo (REQ-411). */
+/* Identidade visual (referência de estilo, sem marca): violeta como cor de marca, laranja só como contraste pontual.
+   Dados: violeta = série principal/ajustado, laranja = destaque/negativo, cinzas = base e amostra pequena (REQ-411).
+   Violeta #6a48eb e laranja #ff6c0e são distinguíveis por quem tem daltonismo; o significado nunca depende só da cor
+   (ponto vazado × cheio, hachurado e rótulos continuam). */
 @theme {
-  --color-azul: #0072b2;
-  --color-laranja: #e69f00;
+  --color-azul: #6a48eb;
+  --color-violeta: #6a48eb;
+  --color-violeta-claro: #978df8;
+  --color-violeta-escuro: #583ecb;
+  --color-laranja: #ff6c0e;
   --color-verde: #009e73;
   --color-vermelho: #d55e00;
   --color-roxo: #cc79a7;
   --color-cinza: #8a8f98;
-  --color-fundo: #f8fafc;
+  --color-fundo: #f6f7f9;
+  --color-papel: #fefefe;
+  --color-tinta: #121212;
+}
+
+@theme inline {
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex), ui-monospace, monospace;
 }
 
 body {
   background: var(--color-fundo);
-  color: #0f172a;
+  color: #14161a;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-violeta);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.cabecalho :focus-visible {
+  outline-color: var(--color-violeta-claro);
+}
+
+/* Movimento com função, curto e sem laço. Desligado por completo com prefers-reduced-motion. */
+@keyframes entra {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.entra {
+  animation: entra 320ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .entra { animation: none; }
+  * { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }

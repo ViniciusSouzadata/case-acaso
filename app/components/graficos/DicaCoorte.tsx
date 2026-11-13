@@ -7,7 +7,7 @@ export function DicaCoorte({ linha }: { linha: LinhaGrafico }) {
   const ainda = imatura(linha.madura);
   const pequena = amostraPequena(linha.amostraOk);
   return (
-    <div className="max-w-[240px] rounded border border-slate-300 bg-white p-2 text-xs shadow">
+    <div className="max-w-[240px] rounded-lg border border-slate-200 bg-papel p-2 text-xs shadow-md">
       <div className="font-medium">{linha.rotulo}</div>
       <div>{t("numero.n", { n: formatarInt(linha.novos) })}</div>
       {ainda ? (

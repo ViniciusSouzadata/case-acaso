@@ -29,7 +29,7 @@ export function Achados() {
           const de = resumir(a.decisao);
           const temDetalhe = ev.resto !== "" || de.resto !== "" || a.limite !== "";
           return (
-            <article key={a.ordem} className="rounded border border-slate-200 bg-white p-4 text-sm">
+            <article key={a.ordem} className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4 text-sm">
               <h3 className="font-semibold text-slate-900">{a.titulo}</h3>
               <p className="mt-2"><span className="font-medium">{t("fatores.achadoEvidencia")}:</span> {ev.visivel}</p>
               <p className="mt-2"><span className="font-medium">{t("fatores.achadoDecisao")}:</span> {de.visivel}</p>

@@ -84,8 +84,8 @@ export interface FaixaEra {
   cor: string;
 }
 
-// Okabe-Ito, em tom claro, só para o fundo.
-const CORES_ERA = ["#56b4e9", "#e69f00", "#009e73", "#cc79a7", "#f0e442"];
+// Fundo das épocas do produto: violeta claro, laranja claro, cinza e violeta médio (a legenda e a ordem identificam cada uma).
+const CORES_ERA = ["#978df8", "#ffb27a", "#aab0b8", "#c7bdfb", "#d9dce1"];
 
 /** Para cada era, a primeira e a última categoria do eixo X que cai dentro dela. */
 export function faixasEras(linhas: LinhaGrafico[], eras: EraApi[]): FaixaEra[] {

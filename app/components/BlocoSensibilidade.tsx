@@ -14,7 +14,7 @@ export function BlocoSensibilidade() {
   const v = resumoSensibilidade(linhas);
 
   return (
-    <section className="rounded border border-slate-200 bg-white p-4" aria-labelledby="sens-titulo">
+    <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4" aria-labelledby="sens-titulo">
       <h2 id="sens-titulo" className="text-base font-semibold text-slate-900">{t("sens.titulo")}</h2>
       <p className="mt-1 text-sm text-slate-700">{t("sens.intro")}</p>
       {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
