@@ -23,7 +23,7 @@ Cada linha: o que escolhi e o que muda se estiver errado (taxa recalculada com a
 
 | Premissa | Escolha | Se estiver errada | Registro |
 |---|---|---|---|
-| Quem é um usuário | IP + família do navegador (sem versão) | só IP: 23,94%; IP + user-agent completo: 25,14% (e +21% de usuários) | BDR-01 |
+| Quem é um usuário | IP + família do navegador (sem versão) | só IP: 23,94%; IP + user-agent completo: 25,14% (e +12% de novos usuários elegíveis em relação à definição oficial: 2.372 → 2.657) | BDR-01 |
 | O que é sessão | intervalo ≤ 30 min entre o fim de uma conversa e o início da próxima | 60 min: 21,54% | BDR-02 |
 | O que é "voltar" | nova sessão com início em até 7 dias (168 h) do início da 1ª | "só em outro dia": 16,86% (cerca de 166 dos 566 retornos são outra sessão no mesmo dia) | BDR-02 |
 | O que conta como uso | ao menos 1 pergunta não vazia e 1 resposta; 141 perguntas vazias e 76 conversas fora | contando as vazias: 23,69% | BDR-03 |
@@ -100,7 +100,7 @@ Três telas, cada uma com uma pergunta, em português simples; cada número tem 
 
 - **Fluxo:** arquivo bruto → carga (papel `loader_rw`) → `stg` (restrito) → `mart` e `resultado` → API (papel `app_ro`, só leitura) → telas. Diagrama e modelo da base em `docs/arquitetura/arquitetura.md`.
 - **Pré-cálculo e cache:** os indicadores são pré-agregados na carga; a API guarda em cache e invalida quando muda o lote (ADR-07). Tempos medidos em `docs/desempenho.md`.
-- **AWS (desenho, não implantado):** RDS PostgreSQL, containers para app e carga, balanceador, S3 para o bruto, Secrets Manager, CloudWatch e **Bedrock** para o LLM (ADR-08, ADR-09). **Custo mensal estimado: cerca de US$ 54 (US$ 53,50; preços da Price List API oficial da AWS, us-east-1, sob demanda, consultados em 12/11/2026; `docs/arquitetura/arquitetura.md`)**, mais o LLM, medido: **US$ 0,24 para classificar 2.657 conversas (≈US$ 0,08 por 1.000; a base Brasil inteira ≈US$ 0,94; o WildChat inteiro ≈US$ 68)**, `docs/custo_llm.md`.
+- **AWS (desenho, não implantado):** RDS PostgreSQL, containers para app e carga, balanceador, S3 para o bruto, Secrets Manager, CloudWatch e **Bedrock** para o LLM (ADR-08, ADR-09). **Custo mensal estimado: cerca de US$ 54 (US$ 53,50; preços da Price List API oficial da AWS, us-east-1, sob demanda, consultados em 12/11/2026; `docs/arquitetura/arquitetura.md`)**, mais o LLM, medido: **US$ 0,24 para classificar 2.944 conversas (≈US$ 0,08 por 1.000; a base Brasil inteira ≈US$ 0,94; o WildChat inteiro ≈US$ 68)**, `docs/custo_llm.md`.
 - **Outros países:** o país é parâmetro (uma carga por país no mesmo banco), com idioma da interface, fuso por país e comparação padronizada pelo mix; amostras pequenas aparecem como "amostra pequena" (seção 4 de `arquitetura.md`).
 
 ## 8. Sustentação: como eu saberia que um número está errado  (C-32, C-33, C-34)
