@@ -43,9 +43,9 @@ A única escolha que move o número de verdade é o que se chama de voltar. As o
 
 O uso é muito concentrado. Dos 2.385 IPs, os 24 mais ativos respondem por 41% das conversas, e um só responde por 13,4%. Sem tirar esse tráfego, qualquer média descreveria meia dúzia de robôs.
 
-As conversas são curtas: 56% têm um único turno. Quem tem 4 ou mais mensagens na primeira sessão volta mais (32,9% contra 17,2%), mas isso acontece depois da resposta do assistente. Trato como sinal de interesse, não como fator do assistente.
+As conversas são curtas: 56% têm um único turno. Quem tem 4 ou mais turnos na primeira sessão volta mais: 32,9%, contra 17,2% de quem teve um turno só. Mas isso acontece depois da resposta do assistente. Trato como sinal de interesse, não como fator do assistente.
 
-O retorno por semana varia muito, e a faixa de incerteza de cada ponto tem em média 22 pontos de largura. Boa parte do sobe e desce semanal é ruído. Os gráficos que levaram a essas conclusões estão em `docs/figuras/`.
+O retorno por semana varia muito. Nas semanas com amostra suficiente, a faixa de incerteza de cada ponto tem em média 22 pontos de largura. Boa parte do sobe e desce semanal é ruído. Os gráficos que levaram a essas conclusões estão em `docs/figuras/`.
 
 **Variáveis da primeira experiência.** Modelo, tema, tamanho da pergunta e da resposta, recusa, idioma, dispositivo, período do dia, fim de semana e região. Todas são derivadas na carga (`loader/derivar.py`) e descritas no dicionário do painel.
 
@@ -91,15 +91,15 @@ Nas duas, quase toda a diferença é de comportamento, não de público. E nenhu
 |---|---|---|
 | Retenção | De cada 100 pessoas, quantas voltam em 7 dias, e isso está mudando? | Linha por semana com faixa de incerteza, para ninguém ler ponto solto como tendência. Cascata para separar público de comportamento |
 | O que faz voltar | Quais fatores pesam, e quanto é efeito do assistente? | Um ponto por fator com o intervalo. O que cruza o zero se vê de relance |
-| Confiança nos dados | Posso confiar nestes números? | Tabelas: última carga, conferência com a origem, problemas de qualidade e dicionário |
+| Confiança nos dados | Posso confiar nestes números? | Tabelas: última carga, conferência com a origem, problemas de qualidade, validação da classificação e o que o painel nunca mostra |
 
-Todo número tem definição, fórmula, denominador, período e a consulta SQL, a um clique. Quando a amostra é pequena, o painel escreve "amostra pequena" no lugar do número. Semanas que ainda não completaram 7 dias aparecem hachuradas, nunca como queda. O painel mostra só agregados. Texto de conversa, IP e navegador não aparecem em nenhuma tela nem na API, e o texto de conversa nem entra no banco.
+Todo número tem um ícone que abre a definição, o denominador e o período; a fórmula e a consulta SQL ficam logo abaixo, para quem quiser conferir. Quando a amostra é pequena, o painel escreve "amostra pequena" no lugar do número. Semanas que ainda não completaram 7 dias aparecem hachuradas, nunca como queda. O painel mostra só agregados. Texto de conversa, IP e navegador não aparecem em nenhuma tela nem na API, e o texto de conversa nem entra no banco.
 
 ## 6. Arquitetura e custo
 
 O arquivo bruto passa por uma carga em Python, que grava no Postgres. A análise lê dessa base e grava os resultados em tabelas. A API, em Next.js, lê só as tabelas finais, com um usuário de banco que só tem permissão de leitura. Os indicadores são calculados na carga e a API guarda as respostas em cache até a carga seguinte. Diagrama, modelo da base e lista de endpoints estão em `docs/arquitetura/arquitetura.md`.
 
-Na AWS, o desenho usa RDS PostgreSQL, containers para o app e a carga, balanceador, S3 para o bruto e Bedrock para o LLM. O custo estimado é de **US$ 54 por mês**, com preços da tabela oficial da AWS consultados em 12/11/2026. O LLM custou US$ 0,24 para classificar 2.944 conversas, cerca de US$ 0,08 por mil. É um desenho com custo calculado. Não implantei.
+Na AWS, o desenho usa RDS PostgreSQL, containers para o app e a carga, balanceador, S3 para o bruto e Bedrock para o LLM. O custo estimado é de **US$ 54 por mês**, com preços da tabela oficial da AWS consultados em 12/11/2026. O LLM custou US$ 0,24 para classificar 2.944 conversas, cerca de US$ 0,08 por mil; rodei pela OpenRouter, porque o Bedrock ficou bloqueado na minha conta. A parte AWS é um desenho com custo calculado. Não implantei.
 
 Para outros países, o país já é parâmetro na base e na API. Os textos do painel ficam em arquivo separado por idioma, o fuso é configurado por país e a comparação entre países usa a mesma separação entre público e comportamento da seção 4.
 
