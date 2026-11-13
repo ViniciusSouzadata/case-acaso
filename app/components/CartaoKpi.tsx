@@ -10,6 +10,7 @@ export function CartaoKpi({
   escuro = false,
   onAbrir,
   extra,
+  selo,
   testid,
 }: {
   rotulo: string;
@@ -18,6 +19,8 @@ export function CartaoKpi({
   escuro?: boolean;
   onAbrir?: () => void;
   extra?: ReactNode;
+  /** aviso curto embaixo do apoio (ex.: limite honesto de um número) */
+  selo?: ReactNode;
   testid?: string;
 }) {
   const corpo = (
@@ -30,6 +33,7 @@ export function CartaoKpi({
         {valor}
       </div>
       {apoio ? <div className={`mt-2 text-xs ${escuro ? "text-white/80" : "text-slate-600"}`}>{apoio}</div> : null}
+      {selo ? <div className="mt-1.5">{selo}</div> : null}
     </>
   );
   const base = `${escuro ? "cartao-escuro" : "cartao"} p-4 text-left`;

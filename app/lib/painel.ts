@@ -105,3 +105,43 @@ export function conclusaoSemana(r: ResumoSemanaApi): { frase: string; normal: bo
 export function deCadaCem(taxa: number): string {
   return nf(0).format(taxa * 100);
 }
+
+// ---------------------------------------------------------------- Tela 3 (confiança nos dados)
+
+/** Nome curto, em linguagem comum, de um problema de qualidade. O texto longo (do banco) continua no detalhe. */
+const NOMES_PROBLEMA: [string, string][] = [
+  ["Conversas de IPs de tráfego anômalo", "Tráfego fora do comum"],
+  ["Conversas do IP mais ativo", "IP mais ativo"],
+  ["Idioma divergente em pergunta curta", "Idioma mal detectado"],
+  ["IP muda no meio da conversa", "IP que muda"],
+  ["Pergunta vazia", "Pergunta vazia"],
+  ["Conteúdo repetido", "Conteúdo repetido"],
+  ["Conversa sem nenhuma mensagem do usuário", "Sem mensagem do usuário"],
+  ["Conversas com dado pessoal ocultado", "Dado pessoal ocultado"],
+  ["Semanas com queda forte", "Semanas com queda de volume"],
+  ["Conversas tóxicas", "Conversas tóxicas"],
+];
+
+export function nomeProblema(texto: string): string {
+  return NOMES_PROBLEMA.find(([prefixo]) => texto.startsWith(prefixo))?.[1] ?? texto;
+}
+
+/** "semanas" quando o percentual é de semanas (não de conversas): fica fora das barras de % de conversas. */
+export function unidadeProblema(texto: string): "conversas" | "semanas" {
+  return texto.startsWith("Semanas") ? "semanas" : "conversas";
+}
+
+/** Frase única da Tela 3, montada da carga e das conferências. O tom muda quando alguma não bate. */
+export function fraseConfianca(v: "sem_lote" | "sem_conferencia" | "ok" | "falha", total: number, falhas: number, rejeitadas: number | null): { frase: string; ok: boolean } {
+  if (v === "falha") return { frase: t("painel.tela3.falha", { k: falhas, m: total }), ok: false };
+  if (v === "sem_lote") return { frase: t("dados.respostaSemLote"), ok: false };
+  if (v === "sem_conferencia") return { frase: t("dados.respostaSemConf"), ok: false };
+  const rej = rejeitadas === null ? "" : rejeitadas === 0 ? t("painel.tela3.nenhumaRejeitada") : t("painel.tela3.rejeitadas", { n: new Intl.NumberFormat("pt-BR").format(rejeitadas) });
+  return { frase: t("painel.tela3.ok", { m: total, rej }), ok: true };
+}
+
+/** Acerto do classificador feito por IA (o que alimenta os números do painel), ou null se não houver conferência dele. */
+export function acertoIA(validacao: { classificador: string; modelo: string | null; acuracia: number | null; n: number | null }[], classificador: string): { acuracia: number; n: number } | null {
+  const v = validacao.find((x) => x.classificador === classificador && x.modelo !== null && !x.modelo.startsWith("regras") && x.acuracia !== null && x.n !== null);
+  return v ? { acuracia: v.acuracia as number, n: v.n as number } : null;
+}
