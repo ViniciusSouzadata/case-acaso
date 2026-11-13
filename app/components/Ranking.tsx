@@ -93,7 +93,7 @@ export function Ranking({ efeitos }: { efeitos: EfeitoApi[] }) {
         <button type="button" onClick={() => setAjuda(true)} className="text-sm font-medium text-violeta hover:underline">{t("painel.tela2.ajuda")}</button>
       </div>
 
-      <ul className="mt-2 divide-y divide-[#efedf8]" role="tabpanel">
+      <ul className={`mt-2 divide-y divide-[#efedf8] ${todos ? "max-h-[17.5rem] overflow-y-auto pr-1" : ""}`} role="tabpanel">
         {visiveis.map((l) => (
           <LinhaRanking key={l.chave} l={l} onAbrir={() => setAberta(l)} />
         ))}

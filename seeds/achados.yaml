@@ -1,8 +1,12 @@
+# numero_destaque, rotulo_destaque e acao_curta (opcionais): só para o cartão curto da Tela 2; conferidos contra resultado.* em 14/11 (−16,4 e −2,9 de efeito_fator; 1 de 33 semanas com p<0,05 de analise.semana.contar_semanas_significativas).
 # Achados aprovados pelo Vinícius (ponto de controle 1, 12/11/2026). Só números que existem em resultado.* e em docs/robustez_recusa.md.
 # Taxa de retorno em 7 dias: 23,9% (IC 22,2% a 25,6%; 2.372 usuários elegíveis; 566 voltaram).
 # Efeito mínimo detectável: 4,9 p.p. com grupos iguais.
 - ordem: 1
   titulo: "A recusa na primeira resposta é o único comportamento do assistente ligado a menos retorno"
+  numero_destaque: "−16"
+  rotulo_destaque: "a cada 100 · quem recebeu recusa"
+  acao_curta: "Acompanhar a taxa de recusa e revisar as recusas desnecessárias."
   evidencia: >-
     Entre 2.372 novos usuários, 132 (5,6%) receberam uma recusa na primeira resposta. Voltaram em até 7 dias 13 de 132
     com recusa (9,8%), contra 553 de 2.240 sem recusa (24,7%). Comparando pessoas de perfil parecido, a diferença é de
@@ -29,6 +33,9 @@
     de 81% e revocação de 86%, ponderadas pela população); erro desse tipo tende a diminuir a diferença, não a criar.
 - ordem: 2
   titulo: "Trocar de modelo ou mudar o formato da resposta não mostrou ganho de retorno"
+  numero_destaque: "−2,9"
+  rotulo_destaque: "a cada 100 · GPT-4 em vez de GPT-3.5"
+  acao_curta: "Não trocar de modelo esperando mais retorno."
   evidencia: >-
     GPT-4 em vez de GPT-3.5, entre perfis parecidos: 2,9 pontos a menos de retorno a cada 100 usuários (de 8,0 a
     menos até 2,2 a mais); pelo segundo método (comparação ponderada), 6,1 pontos a menos (de 12,7 a menos até 0,4 a
@@ -44,6 +51,9 @@
     um efeito menor. A comparação é de pessoas que escolheram ou receberam situações diferentes, então não prova causa.
 - ordem: 3
   titulo: "Quedas semanais isoladas enganam: a maior era efeito do início da coleta"
+  numero_destaque: "1 de 33"
+  rotulo_destaque: "semanas caiu além do acaso (2 seriam esperadas por sorte)"
+  acao_curta: "Só alarmar quando a queda passar da variação normal."
   evidencia: >-
     A maior queda da série, na semana de 1º/05/2023 (17 a cada 100 novos usuários voltaram, 84 usuários), era de 17,1
     pontos (p = 0,013) quando comparada às duas semanas anteriores. Mas essas duas semanas ficam logo no início da

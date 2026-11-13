@@ -429,6 +429,7 @@
       "problemaContagem": "{n} conversas ({pct})",
       "semanasContagem": "{n} semanas ({pct} das semanas)",
       "oQueFizemos": "O que fizemos"
-    }
+    },
+    "margemErro": "margem de erro: {inf} a {sup}"
   }
 }

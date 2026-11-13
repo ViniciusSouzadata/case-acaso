@@ -17,7 +17,7 @@ export default function PaginaFatores() {
   const sustentam = validos.filter((e) => e.significativo_fdr === true).map((e) => nomeCurto(e.fator, e.nivel));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <header>
         <h1 className="titulo-painel">{t("painel.tela2.titulo")}</h1>
         <p className="mt-1 max-w-3xl text-base text-slate-700" data-testid="frase-resposta">
@@ -29,7 +29,7 @@ export default function PaginaFatores() {
       {r.estado === "erro" ? <Estado tipo="erro" mensagem={r.mensagem} requestId={r.requestId} /> : null}
       {r.estado === "ok" && efeitos.length === 0 ? <Estado tipo="vazio" mensagem={t("fatores.tituloGrupoVazio")} /> : null}
       {efeitos.length > 0 ? <Ranking efeitos={efeitos} /> : null}
-      {r.estado === "ok" ? <CartoesAchados efeitos={efeitos} /> : null}
+      {r.estado === "ok" ? <CartoesAchados /> : null}
     </div>
   );
 }
