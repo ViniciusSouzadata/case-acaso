@@ -25,7 +25,7 @@ export function Rodape() {
 
   return (
     <footer className="fixed inset-x-0 bottom-0 z-40 border-t border-[#2a2a33] bg-tinta px-4 py-2 text-xs text-white/80">
-      <div className="mx-auto flex max-w-5xl flex-wrap gap-x-4 gap-y-1">
+      <div className="mx-auto flex max-w-6xl flex-wrap gap-x-4 gap-y-1">
         {r.estado === "carregando" ? <span>{t("rodape.carregando")}</span> : null}
         {r.estado === "erro" ? <span>{t("rodape.indisponivel")}</span> : null}
         {data ? <span>{t("rodape.atualizado", { data })}</span> : null}

@@ -5,6 +5,7 @@ import { Bar, BarChart, Cell, CartesianGrid, LabelList, ResponsiveContainer, XAx
 import type { DegrauCascata } from "@/lib/graficos";
 import { t } from "@/lib/mensagens";
 import { useMovimentoReduzido } from "@/lib/movimento";
+import { numeroGrande } from "@/lib/painel";
 import { formatarPP, formatarPct } from "@/lib/regras";
 
 const CINZA = "#8a8f98"; // semana base
@@ -38,7 +39,7 @@ function TickQuebrado({ x, y, payload }: { x?: number; y?: number; payload?: { v
 }
 
 /** Cascata: barras flutuantes (base invisível + altura). Monta em etapas (base → quem chegou → comportamento → final); sem animação com movimento reduzido. */
-export function Cascata({ degraus }: { degraus: DegrauCascata[] }) {
+export function Cascata({ degraus, altura = "h-64", semJargao = false }: { degraus: DegrauCascata[]; altura?: string; semJargao?: boolean }) {
   const reduzido = useMovimentoReduzido();
   const [etapa, setEtapa] = useState(degraus.length);
 
@@ -53,16 +54,18 @@ export function Cascata({ degraus }: { degraus: DegrauCascata[] }) {
   }, [degraus, reduzido]);
 
   const visivel = reduzido ? degraus.length : etapa;
+  // sem jargão: "−4,4" em vez de "−4,4 p.p." (a unidade vai no eixo e na frase)
+  const fmtDelta = (v: number) => (semJargao ? numeroGrande(v) : formatarPP(v));
   const dados = degraus.map((d, i) => ({
     rotulo: t(NOMES[d.chave]),
     inicio: i < visivel ? Math.min(d.de, d.ate) : 0,
     altura: i < visivel ? Math.abs(d.ate - d.de) : 0,
     cor: corDoDegrau(d),
-    texto: i < visivel ? (d.total ? formatarPct(d.valor / 100) : formatarPP(d.valor)) : "",
-    textoFinal: d.total ? formatarPct(d.valor / 100) : formatarPP(d.valor),
+    texto: i < visivel ? (d.total ? formatarPct(d.valor / 100) : fmtDelta(d.valor)) : "",
+    textoFinal: d.total ? formatarPct(d.valor / 100) : fmtDelta(d.valor),
   }));
   return (
-    <div role="img" aria-label={dados.map((d) => `${d.rotulo}: ${d.textoFinal}`).join("; ")} className="h-64 w-full">
+    <div role="img" aria-label={dados.map((d) => `${d.rotulo}: ${d.textoFinal}`).join("; ")} className={`${altura} w-full`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={dados} margin={{ top: 22, right: 16, bottom: 4, left: 8 }}>
           <CartesianGrid stroke="#e2e8f0" vertical={false} />

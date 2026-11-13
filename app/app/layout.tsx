@@ -15,14 +15,14 @@ export const metadata = { title: t("app.titulo") };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className={`${sora.variable} ${instrument.variable} ${plex.variable}`}>
-      <body className="min-h-screen pb-16">
+      <body className="min-h-screen pb-12">
         <div className="cabecalho bg-tinta">
-          <div className="mx-auto max-w-5xl px-4 pt-4">
-            <p className="font-display text-base font-semibold tracking-tight text-papel">{t("app.titulo")}</p>
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 px-4">
+            <p className="py-3 font-display text-base font-semibold tracking-tight text-papel">{t("app.titulo")}</p>
+            <Navegacao />
           </div>
-          <Navegacao />
         </div>
-        <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+        <main className="mx-auto max-w-6xl px-4 py-4">{children}</main>
         <Rodape />
       </body>
     </html>

@@ -327,5 +327,69 @@
       }
     },
     "validacaoLinhaSemTipo": "{nome}: acerta {acuracia} das {n} conversas conferidas (concordância além do acaso: {kappa})"
+  },
+  "painel": {
+    "aCadaCem": "a cada 100",
+    "pertoDeZero": "perto de zero",
+    "verDetalhes": "Ver detalhes",
+    "fechar": "Fechar",
+    "carregando": "Carregando…",
+    "tela1": {
+      "titulo": "Quantas pessoas voltam em até 7 dias?",
+      "conclusao": "Cerca de {n} de cada 100 voltam; conforme o que se chama de “voltar”, pode ser {min}.",
+      "cartaoTaxa": "Taxa de retorno",
+      "cartaoTaxaSub": "entre {inf} e {sup}",
+      "cartaoPessoas": "Pessoas analisadas",
+      "cartaoPessoasSub": "chegaram pela 1ª vez",
+      "cartaoVoltaram": "Voltaram",
+      "cartaoVoltaramSub": "em até 7 dias",
+      "cartaoDefinicao": "Conforme a definição",
+      "cartaoDefinicaoSub": "ver as {n} definições",
+      "graficoTitulo": "Taxa de retorno por semana",
+      "legTaxa": "Taxa por semana (○ pouca gente)",
+      "legFaixa": "Margem de erro",
+      "legMedia": "Média de 4 semanas",
+      "emAndamento": "em andamento",
+      "semanaTitulo": "O que houve em {data}",
+      "semanaSub": "{base} → {semana}",
+      "detalheGrafico": "Detalhes do gráfico",
+      "detalheSemana": "Detalhes da semana",
+      "detalheDefinicoes": "As definições de “voltar”"
+    },
+    "semana": {
+      "caiu": "Caiu {abs} pontos {causa}.",
+      "subiu": "Subiu {abs} pontos {causa}.",
+      "causaComportamento": "porque voltaram menos, não porque chegou gente diferente",
+      "causaPublico": "porque chegou gente diferente",
+      "normal": "dentro da variação normal",
+      "foraNormal": "passa da variação normal; veja a cautela nos detalhes"
+    },
+    "tela2": {
+      "titulo": "O que faz as pessoas voltarem?",
+      "ajuda": "Como ler",
+      "ajudaTitulo": "Como ler este ranking",
+      "ajudaTexto": "Cada linha compara pessoas parecidas: a barra é a margem de erro e o ponto, a diferença estimada no retorno, em pessoas a cada 100. Barra que passa pelo zero = sem diferença clara.",
+      "eixo": "menos retorno ← 0 → mais retorno",
+      "achadosTitulo": "O que isso quer dizer para o produto",
+      "oQueFazer": "O que fazer",
+      "detalheFator": "Detalhes do fator",
+      "metodo": "Método e balanço dos grupos",
+      "selo": {
+        "sustenta": "se sustenta",
+        "acaso": "pode ser acaso",
+        "semDiferenca": "sem diferença clara",
+        "pequena": "amostra pequena",
+        "descritivo": "só descreve"
+      },
+      "cap1": "a cada 100 · recusa na 1ª resposta",
+      "cap2": "a cada 100 · GPT-4 em vez de GPT-3.5",
+      "cap3": "pontos na semana de 20/11/2023"
+    },
+    "fatores": {
+      "semDados": "Não há comparações disponíveis.",
+      "nenhum": "Nenhum fator se distingue de zero depois da correção para muitas comparações.",
+      "um": "Só um fator pesa de forma clara: “{nome}”.",
+      "varios": "{k} fatores pesam de forma clara."
+    }
   }
 }

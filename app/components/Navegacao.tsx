@@ -13,7 +13,7 @@ const ABAS = [
 export function Navegacao() {
   const atual = usePathname();
   return (
-    <nav aria-label="Telas" className="mx-auto flex max-w-5xl flex-wrap gap-1 px-4">
+    <nav aria-label="Telas" className="flex flex-wrap gap-1">
       {ABAS.map((a) => {
         const ativa = a.href === "/" ? atual === "/" : atual.startsWith(a.href);
         return (
@@ -21,7 +21,7 @@ export function Navegacao() {
             key={a.href}
             href={a.href}
             aria-current={ativa ? "page" : undefined}
-            className={`border-b-2 px-3 py-3 text-sm ${ativa ? "border-violeta-claro font-semibold text-papel" : "border-transparent text-white/70 hover:text-papel"}`}
+            className={`border-b-2 px-3 py-3.5 text-sm ${ativa ? "border-violeta-claro font-semibold text-papel" : "border-transparent text-white/70 hover:text-papel"}`}
           >
             {t(a.chave)}
           </Link>
