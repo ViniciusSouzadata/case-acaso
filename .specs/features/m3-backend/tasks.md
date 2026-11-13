@@ -5,7 +5,7 @@ Pré-requisito: gate do M1. Endpoints de `resultado.*` usam a migração da T-20
 T-301 ─► T-302 ─► T-303 ─► T-304 ─► T-305 (gate)
 ```
 
-## [ ] T-301 — Projeto Next.js, conexão e utilitários da API
+## [x] T-301 — Projeto Next.js, conexão e utilitários da API
 - **What:** Criar `app/` (Next.js App Router, TypeScript estrito, Tailwind). `lib/db.ts` (pool `pg` com `DATABASE_URL` do papel `app_ro`), `lib/api.ts` (envelope `{dados, meta}`, erro padronizado, `request_id`, log JSON de uma linha, `Server-Timing`), `lib/meta.ts` (lê versão da definição, versão da análise, último lote). `GET /api/saude`. Serviço `app` no compose, dependente do `loader` concluído. Dockerfile de produção (build + start).
 - **Where:** `app/`, `docker-compose.yml`
 - **Depends on:** T-110
