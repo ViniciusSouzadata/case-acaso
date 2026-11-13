@@ -138,16 +138,16 @@ Reconciliando as duas fontes **na mesma granularidade** (semana). A tabela do en
 Quem **voltou** fica estável nas duas fontes; quem **chegou** explode só no dashboard (+862, +73,5%). A queda não é de comportamento: é de **contagem de usuários novos**. Em semanas normais as duas fontes já divergiam cerca de 5%, o que indica definições de usuário diferentes desde antes. Com cerca de 1.200 usuários por semana, o intervalo de 95% da taxa é de aproximadamente ±2,6 pontos: 31% para 30% é ruído; 31% para 18% não é.
 
 ### Pergunta 2 — Em qual camada está a falha, com que evidência
-Na **carga**, na definição de `usuario_id`. O relatório conta por `hashed_ip`; a carga conta por `hashed_ip|user-agent`. O endpoint calcula certo sobre o que recebe, e a tela só exibe. Robô com user-agent rotativo, IP compartilhado e navegador atualizado apontam para a mesma linha; a carga duplicada fica descartada (`ON CONFLICT DO NOTHING` não duplica a conversa, e duplicar conversa não cria usuário).
+Na **carga**, na definição de `usuario_id`. O relatório conta por `hashed_ip`; a carga conta por `hashed_ip|user-agent`. A carga duplicada fica descartada (`ON CONFLICT DO NOTHING` não duplica a conversa, e duplicar conversa não cria usuário).
 
 **Consulta de confirmação:** `docs/incidente/confirmacao.sql` (no bruto: `scripts/incidente_confirmacao.py`): novos por semana pela chave IP + user-agent e pela chave IP.
 
-**Mecanismo com dado real** (WildChat Brasil, `docs/incidente/evidencia.md`): 2.385 usuários pela chave IP contra **2.895 pela chave IP + user-agent (+21,4%)**, 510 "novos" a mais em IP já visto e até 35 user-agents em um único IP. Os números do enunciado não existem neste dado; o que mostro é o mecanismo.
+**Mecanismo com dado real** (WildChat Brasil, `docs/incidente/evidencia.md`): 2.385 usuários pela chave IP contra **2.895 pela chave IP + user-agent (+21,4%)**, 510 "novos" a mais em IP já visto e até 35 user-agents em um único IP.
 
 ### Pergunta 3 — O trecho que causa o problema e a correção
-O trecho: `chave = f"{hashed_ip}|{user-agent}"`. Cada versão de navegador, e cada navegador de um mesmo IP, vira "uma pessoa nova". Outros defeitos do endpoint, sem relação direta com a queda (lista em `docs/incidente/correcao/`): "primeira vez" pelo **último** turno, coortes recentes sem marca de imaturas, semana no fuso UTC, inserção linha a linha sem transação.
+O trecho: `chave = f"{hashed_ip}|{user-agent}"`. Cada versão de navegador, e cada navegador de um mesmo IP, vira "uma pessoa nova". Outros defeitos do endpoint, sem relação direta com a queda (lista em `docs/incidente/correcao/`): "primeira vez" pelo **último** turno, coortes recentes sem marca de imaturas, semana no fuso UTC, `ON CONFLICT DO NOTHING` que congela conversa que continua em outro dia, inserção linha a linha sem transação.
 
-**Correção escrita** em `docs/incidente/correcao/` (linhas marcadas com `DEFEITO:`; passam em `py_compile` e `tsc --noEmit --strict`): `carga_corrigida.py` (identidade por **uma regra única**, IP + família do navegador; um lote por transação, com registro) e `route_corrigida.ts` (usuário de `mart.dim_usuario`, início da primeira sessão, semana no fuso do país, coortes imaturas marcadas).
+**Correção escrita** em `docs/incidente/correcao/` (passam em `py_compile` e `tsc --noEmit --strict`): `carga_corrigida.py` (identidade por **uma regra única**, IP + família do navegador; um lote por transação, com registro) e `route_corrigida.ts` (usuário de `mart.dim_usuario`, início da primeira sessão, semana no fuso do país, coortes imaturas marcadas).
 
 ### Pergunta 4 — O que mais fazer além do código e como evitar que volte
 1. **Reprocessar o histórico** com a regra corrigida (a carga é idempotente) e **versionar** a mudança de definição.
