@@ -50,7 +50,7 @@ export default function PaginaFatores() {
         {linhas.length > 0 ? (
           <div role="tabpanel" className="mt-3">
             <h2 className="mb-1 text-base font-semibold text-slate-900">
-              {grupo === "engajamento" ? t("fatores.tituloGrupoEng") : grupo === "descritivo" ? t("fatores.tituloGrupoDesc") : t("fatores.tituloGrupo", { k: doGrupo.k, m: doGrupo.m })}
+              {grupo === "engajamento" ? t("fatores.tituloGrupoEng") : grupo === "descritivo" ? t("fatores.tituloGrupoDesc") : t("fatores.tituloGrupo", { k: doGrupo.k, m: doGrupo.m, tem: t(doGrupo.k === 1 ? "fatores.concordancia.tem1" : "fatores.concordancia.temN") })}
             </h2>
             <Floresta linhas={linhas} limite={limite} />
           </div>

@@ -173,7 +173,7 @@
     "ajustado": "Ajustada",
     "explicaTitulo": "Bruto ou ajustado?",
     "explica": "O ponto vazado é a diferença que se vê direto nos dados (bruta). O ponto cheio compara grupos parecidos, para separar o que é do assistente do que é de quem chegou. Quanto mais longe um ponto do outro, mais da diferença bruta vinha de quem chegou, e não do assistente.",
-    "tituloGrupo": "Neste grupo, {k} de {m} comparações têm intervalo que não inclui o zero (veja abaixo quais podem ser acaso); as demais caem dentro da incerteza",
+    "tituloGrupo": "Neste grupo, {k} de {m} comparações {tem} intervalo que não inclui o zero (veja abaixo quais podem ser acaso); as demais caem dentro da incerteza",
     "tituloGrupoEng": "Estas são diferenças brutas de comportamento durante a visita, não efeitos do assistente",
     "tituloGrupoVazio": "Ainda não há comparações neste grupo",
     "eixo": "diferença na taxa de retorno, em pontos percentuais (p.p.): à direita do zero voltam mais, à esquerda voltam menos",
