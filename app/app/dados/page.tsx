@@ -36,8 +36,8 @@ export default function PaginaDados() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">{t("dados.pergunta")}</h1>
-        <p className="mt-2 text-base text-slate-800" data-testid="frase-confianca">{frase}</p>
+        <h1 className="titulo-tela">{t("dados.pergunta")}</h1>
+        <p className="mt-3 max-w-3xl text-lg leading-snug text-slate-700" data-testid="frase-confianca">{frase}</p>
       </header>
 
       {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
@@ -45,7 +45,7 @@ export default function PaginaDados() {
 
       {q ? (
         <>
-          <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4" aria-labelledby="h-carga">
+          <section className="cartao p-4" aria-labelledby="h-carga">
             <h2 id="h-carga" className="text-base font-semibold text-slate-900">{t("dados.cargaTitulo")}</h2>
             {q.lote ? (
               <ul className="mt-2 space-y-1 text-sm text-slate-800">
@@ -60,7 +60,7 @@ export default function PaginaDados() {
             )}
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4" aria-labelledby="h-conf">
+          <section className="cartao p-4" aria-labelledby="h-conf">
             <h2 id="h-conf" className="text-base font-semibold text-slate-900">{t("dados.confTitulo")}</h2>
             <p className="mt-1 text-sm text-slate-700">{t("dados.confAjuda")}</p>
             {q.reconciliacao.length === 0 ? (
@@ -82,7 +82,7 @@ export default function PaginaDados() {
             )}
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4" aria-labelledby="h-prob">
+          <section className="cartao p-4" aria-labelledby="h-prob">
             <h2 id="h-prob" className="text-base font-semibold text-slate-900">{t("dados.problemasTitulo")}</h2>
             <p className="mt-1 text-sm text-slate-700">{t("dados.problemasAjuda")}</p>
             {q.problemas.length === 0 ? (
@@ -117,7 +117,7 @@ export default function PaginaDados() {
             )}
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4" aria-labelledby="h-val">
+          <section className="cartao p-4" aria-labelledby="h-val">
             <h2 id="h-val" className="text-base font-semibold text-slate-900">{t("dados.validacaoTitulo")}</h2>
             <p className="mt-1 text-sm text-slate-700">{t("dados.validacaoAjuda")}</p>
             {q.validacao.length === 0 ? (
@@ -142,7 +142,7 @@ export default function PaginaDados() {
         </>
       ) : null}
 
-      <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4" aria-labelledby="h-painel">
+      <section className="cartao p-4" aria-labelledby="h-painel">
         <h2 id="h-painel" className="text-base font-semibold text-slate-900">{t("dados.painelTitulo")}</h2>
         <div className="mt-2 grid gap-4 sm:grid-cols-2">
           <div>

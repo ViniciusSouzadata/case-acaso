@@ -61,3 +61,34 @@ code, pre {
   .entra { animation: none; }
   * { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }
+
+/* Peças recorrentes das telas. */
+.cartao {
+  background: var(--color-papel);
+  border: 1px solid #e3e0f3;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgb(18 18 18 / 0.04);
+}
+.cartao-escuro {
+  background: var(--color-tinta);
+  border: 1px solid #2a2a33;
+  border-radius: 14px;
+  color: var(--color-papel);
+}
+.titulo-tela {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.125rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-tinta);
+}
+.titulo-tela::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 4px;
+  margin-bottom: 0.9rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-violeta), var(--color-violeta-claro));
+}

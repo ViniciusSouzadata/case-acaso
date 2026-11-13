@@ -14,7 +14,7 @@ export function Estado({
 }) {
   if (tipo === "carregando") {
     return (
-      <p role="status" className="py-6 text-sm text-slate-500">
+      <p role="status" className="py-6 text-sm text-slate-600">
         {t("estado.carregando")}
       </p>
     );

@@ -23,13 +23,13 @@ export default function PaginaFatores() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">{t("fatores.pergunta")}</h1>
-        <p className="mt-2 text-base text-slate-800" data-testid="frase-resposta">
+        <h1 className="titulo-tela">{t("fatores.pergunta")}</h1>
+        <p className="mt-3 max-w-3xl text-lg leading-snug text-slate-700" data-testid="frase-resposta">
           {r.estado === "ok" ? fraseResposta(k, m, f) : ""}
         </p>
       </header>
 
-      <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4">
+      <section className="cartao p-4">
         <div role="tablist" aria-label="Grupos de fatores" className="flex flex-wrap gap-1 border-b border-slate-200">
           {GRUPOS.map((g) => (
             <button key={g} role="tab" type="button" aria-selected={grupo === g} onClick={() => setGrupo(g)} className={`border-b-2 px-3 py-2 text-sm ${grupo === g ? "border-azul font-semibold text-azul" : "border-transparent text-slate-700"}`}>

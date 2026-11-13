@@ -32,11 +32,11 @@ export function Glossario({ indicador, onFechar }: { indicador: string; onFechar
   const item = r.estado === "ok" ? r.corpo.dados[0] : undefined;
 
   return (
-    <div role="dialog" aria-modal="true" aria-label={t("glossario.titulo")} className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center">
-      <div className="max-h-[85vh] w-full max-w-xl overflow-y-auto rounded-t-lg bg-white p-5 shadow-xl sm:rounded-lg">
+    <div role="dialog" aria-modal="true" aria-label={t("glossario.titulo")} className="fixed inset-0 z-50 flex items-end justify-center bg-tinta/60 sm:items-center">
+      <div className="max-h-[85vh] w-full max-w-xl overflow-y-auto entra rounded-t-2xl border-t-4 border-violeta bg-papel p-5 shadow-xl sm:rounded-2xl">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="text-lg font-semibold">{item ? item.nome_exibicao : t("glossario.titulo")}</h2>
-          <button type="button" onClick={onFechar} className="rounded border px-2 py-1 text-sm">
+          <h2 className="font-display text-lg font-semibold text-tinta">{item ? item.nome_exibicao : t("glossario.titulo")}</h2>
+          <button type="button" onClick={onFechar} className="rounded-lg border border-violeta px-3 py-1 text-sm font-medium text-violeta hover:bg-violeta hover:text-papel">
             {t("glossario.fechar")}
           </button>
         </div>
@@ -49,7 +49,7 @@ export function Glossario({ indicador, onFechar }: { indicador: string; onFechar
             <Campo rotulo={t("glossario.denominador")}>{item.denominador}</Campo>
             <Campo rotulo={t("glossario.periodo")}>{item.periodo_referencia}</Campo>
             <Campo rotulo={t("glossario.limitacoes")}>{item.limitacoes}</Campo>
-            <details className="rounded border border-slate-200 p-2">
+            <details className="rounded-lg border border-[#e3e0f3] p-2">
               <summary className="cursor-pointer font-medium text-azul">{t("glossario.tecnicoTitulo")}</summary>
               <div className="mt-2 space-y-3">
                 <Campo rotulo={t("glossario.formula")}>{item.formula}</Campo>
@@ -69,7 +69,7 @@ export function Glossario({ indicador, onFechar }: { indicador: string; onFechar
 function Campo({ rotulo, children }: { rotulo: string; children: React.ReactNode }) {
   return (
     <div>
-      <dt className="font-medium text-slate-700">{rotulo}</dt>
+      <dt className="text-xs font-semibold uppercase tracking-wide text-violeta-escuro">{rotulo}</dt>
       <dd className="mt-0.5 text-slate-900">{children}</dd>
     </div>
   );

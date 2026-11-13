@@ -36,8 +36,8 @@ export default function PaginaRetencao() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">{t("retencao.pergunta")}</h1>
-        <p className="mt-2 text-base text-slate-800" data-testid="frase-resposta">
+        <h1 className="titulo-tela">{t("retencao.pergunta")}</h1>
+        <p className="mt-3 max-w-3xl text-lg leading-snug text-slate-700" data-testid="frase-resposta">
           {r
             ? t("retencao.resposta", { taxa: formatarPct(r.taxa), inf: formatarPct(r.ic_inf), sup: formatarPct(r.ic_sup), n: formatarInt(r.usuarios) })
             : resumo.estado === "ok"
@@ -55,7 +55,7 @@ export default function PaginaRetencao() {
         ) : null}
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4">
+      <section className="cartao p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <h2 className="max-w-2xl text-base font-semibold text-slate-900">
             {variacao
@@ -64,7 +64,7 @@ export default function PaginaRetencao() {
                 ? t("retencao.tituloGraficoSemMedida")
                 : t("retencao.tituloGraficoCarregando")}
           </h2>
-          <div role="group" aria-label="Granularidade" className="flex overflow-hidden rounded border border-slate-300 text-sm">
+          <div role="group" aria-label="Granularidade" className="flex overflow-hidden rounded-lg border border-[#cfc9ee] text-sm">
             <button type="button" aria-pressed={gran === "semana"} onClick={() => setGran("semana")} className={`px-3 py-1 ${gran === "semana" ? "bg-azul text-white" : "bg-white text-slate-800"}`}>
               {t("retencao.alternarSemana")}
             </button>

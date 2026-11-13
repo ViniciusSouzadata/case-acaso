@@ -24,7 +24,7 @@ export function DetalheBalanco() {
   const linhas = r.estado === "ok" ? r.corpo.dados : [];
 
   return (
-    <details className="rounded-xl border border-slate-200 bg-papel shadow-sm p-4" onToggle={(e) => setAberto((e.currentTarget as HTMLDetailsElement).open)}>
+    <details className="cartao p-4" onToggle={(e) => setAberto((e.currentTarget as HTMLDetailsElement).open)}>
       <summary className="cursor-pointer text-sm font-medium text-azul">{t("fatores.balancoResumo")}</summary>
       <p className="mt-2 text-xs text-slate-700">{t("fatores.balancoIntro", { limite: String(LIMITE_BALANCO).replace(".", ",") })}</p>
       <label className="mt-2 block text-xs text-slate-700">
