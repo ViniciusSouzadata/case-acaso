@@ -102,6 +102,7 @@ Remove containers, rede e o volume do banco. A porta do Postgres no host é `POS
 
 ## Solução de problemas
 - **Porta ocupada** (`bind: address already in use`): se outra stack estiver usando as portas `5433` ou `3000`, pare-a antes (`docker compose down` na pasta dela) ou defina `POSTGRES_HOST_PORT` e `APP_HOST_PORT` no `.env` deste repositório (o `docker-compose.yml` lê as duas) e suba de novo.
+- **Painel cai depois de cerca de 1 minuto (Docker Engine dentro do WSL, sem Docker Desktop):** o WSL desliga a distribuição quando não resta nenhuma sessão aberta e os containers caem junto (`Exited`). Deixe uma janela do Ubuntu aberta enquanto usa o painel (ou rode `wsl -d <sua distribuição> -- sleep infinity` num terminal e não o feche) e suba de novo com `docker compose up -d`. Com Docker Desktop ou Linux nativo isso não acontece.
 - **Docker no WSL não responde:** `sudo service docker start`; rode os comandos dentro do WSL (ver "Subir do zero").
 - **Painel mostra "Não foi possível carregar":** confira `docker compose ps -a` (o loader deve estar `exited (0)`) e `docker compose logs app`; a mensagem de erro na tela traz um código `request_id` que aparece também nos logs.
 - **Pouca memória:** suba um serviço por vez (`docker compose up -d db`, depois `docker compose up -d loader` e `docker compose wait loader`, depois `docker compose up -d app`) e evite builds em paralelo.
