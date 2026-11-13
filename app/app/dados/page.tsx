@@ -2,8 +2,8 @@
 
 import { Estado } from "@/components/Estado";
 import type { LoteQualidade, Problema, Reconciliacao, Validacao } from "@/lib/consultas/qualidade";
-import { t } from "@/lib/mensagens";
-import { nomeLegivel, veredicto } from "@/lib/qualidade";
+import { t, todasAsMensagens } from "@/lib/mensagens";
+import { nomeCapitalizado, nomeLegivel, tipoClassificador, traduzirTermos, veredicto } from "@/lib/qualidade";
 import { formatarDataHora, formatarInt, formatarPct } from "@/lib/regras";
 import { useApi } from "@/lib/useApi";
 
@@ -15,6 +15,7 @@ interface Qualidade {
 }
 
 const ITENS = ["1", "2", "3"];
+const TERMOS = (todasAsMensagens.dados as { termosTecnicos: Record<string, { inline: string; nota: string }> }).termosTecnicos;
 
 /** Tela 3 — Confiança nos dados. */
 export default function PaginaDados() {
@@ -88,17 +89,30 @@ export default function PaginaDados() {
               <Estado tipo="vazio" mensagem={t("dados.problemasVazio")} />
             ) : (
               <ul className="mt-2 divide-y divide-slate-100">
-                {q.problemas.map((p) => (
+                {q.problemas.map((p) => {
+                  const prob = traduzirTermos(p.problema, TERMOS);
+                  const trat = traduzirTermos(p.tratamento ?? "", TERMOS);
+                  const tecnicos = [...prob.tecnicos, ...trat.tecnicos];
+                  return (
                   <li key={p.problema} className="py-2 text-sm">
-                    <div className="font-medium text-slate-900">{p.problema}</div>
+                    <div className="font-medium text-slate-900">{prob.texto}</div>
                     <div className="text-xs text-slate-700">{t("dados.problemaContagem", { n: formatarInt(p.contagem), pct: formatarPct(p.percentual) })}</div>
                     {p.tratamento ? (
                       <div className="mt-0.5 text-xs text-slate-800">
-                        <span className="font-medium">{t("dados.tratamento")}:</span> {p.tratamento}
+                        <span className="font-medium">{t("dados.tratamento")}:</span> {trat.texto}
                       </div>
                     ) : null}
+                    {tecnicos.length > 0 ? (
+                      <details className="mt-0.5 text-xs text-slate-600">
+                        <summary className="cursor-pointer">{t("dados.nomesTecnicosTitulo")}</summary>
+                        <ul className="mt-1 list-disc pl-5">
+                          {tecnicos.map((x) => <li key={x.termo}><code>{x.termo}</code>: {x.nota}</li>)}
+                        </ul>
+                      </details>
+                    ) : null}
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             )}
           </section>
@@ -110,16 +124,18 @@ export default function PaginaDados() {
               <Estado tipo="vazio" mensagem={t("dados.validacaoVazia")} />
             ) : (
               <ul className="mt-2 space-y-1 text-sm text-slate-800">
-                {q.validacao.map((v) => (
-                  <li key={v.classificador}>
-                    {t("dados.validacaoLinha", {
-                      nome: nomeLegivel(v.classificador),
-                      acuracia: formatarPct(v.acuracia),
-                      n: formatarInt(v.n),
-                      kappa: v.kappa === null ? "—" : v.kappa.toLocaleString("pt-BR", { maximumFractionDigits: 2 }),
-                    })}
-                  </li>
-                ))}
+                {q.validacao.map((v) => {
+                  const tipo = tipoClassificador(v.modelo);
+                  const kappa = v.kappa === null ? "—" : v.kappa.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+                  const comum = { nome: nomeCapitalizado(v.classificador), acuracia: formatarPct(v.acuracia), n: formatarInt(v.n), kappa };
+                  return (
+                    <li key={`${v.classificador}|${v.modelo ?? ""}|${v.versao_prompt ?? ""}`}>
+                      {tipo === null
+                        ? t("dados.validacaoLinhaSemTipo", comum)
+                        : t("dados.validacaoLinha", { ...comum, tipo: tipo === "ia" ? t("dados.validacaoTipoIa") : t("dados.validacaoTipoRegras"), usado: tipo === "ia" ? t("dados.validacaoUsado") : "" })}
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </section>

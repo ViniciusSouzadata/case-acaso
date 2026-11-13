@@ -49,7 +49,9 @@
     "fonte": "De onde vem",
     "sql": "Consulta usada",
     "limitacoes": "O que ele não mostra",
-    "naoEncontrado": "Este indicador ainda não tem descrição no dicionário."
+    "naoEncontrado": "Este indicador ainda não tem descrição no dicionário.",
+    "formulaTitulo": "Como se calcula",
+    "tecnicoTitulo": "Para conferir (técnico)"
   },
   "demo": {
     "titulo": "Demonstração dos componentes de confiança",
@@ -222,7 +224,40 @@
     },
     "respostaNenhuma": "Entre {m} {comparacoes} do assistente e do perfil, {k} {kTem} intervalo que não inclui o zero. Como olhamos {m} ao mesmo tempo, algumas aparecem só por acaso: depois de corrigir isso, nenhuma continua diferente de zero. Não dá para afirmar um efeito com segurança.",
     "naoResiste": "o intervalo não inclui o zero, mas não resiste à correção para muitas comparações: pode ser acaso",
-    "tituloGrupoDesc": "Estas são diferenças brutas por tema, só para descrever, não efeitos do assistente"
+    "tituloGrupoDesc": "Estas são diferenças brutas por tema, só para descrever, não efeitos do assistente",
+    "titulos": {
+      "recusa": "Recebeu recusa na 1ª resposta, contra não recebeu",
+      "idioma_divergente": "Resposta em outro idioma que o da pergunta, contra no mesmo idioma",
+      "fim_de_semana": "Primeira conversa no fim de semana, contra em dia de semana",
+      "virada_dez2023": "Depois de dez/2023 (GPT-4 como padrão), contra antes (abr a nov/2023)",
+      "modelo_familia": "Modelo {nivel}, contra modelo {ref}",
+      "faixa_chars_resposta": "Resposta com {nivel} caracteres, contra {ref} caracteres",
+      "faixa_chars_pergunta": "Pergunta com {nivel} caracteres, contra {ref} caracteres",
+      "idioma": "Idioma da pergunta: {nivel}, contra {ref}",
+      "tema": "Tema da pergunta: {nivel}, contra {ref}",
+      "tema_descritivo": "Tema da pergunta: {nivel}, contra {ref}",
+      "periodo_dia": "Horário da pergunta: {nivel}, contra {ref}",
+      "regiao": "Região: {nivel}, contra {ref}",
+      "dispositivo": "Aparelho: {nivel}, contra {ref}",
+      "era_modelo": "Época do produto: {nivel}, contra {ref}",
+      "n_turnos_sessao": "Turnos na primeira visita: {nivel}, contra {ref}",
+      "n_conversas_sessao": "Conversas na primeira visita: {nivel}, contra {ref}"
+    },
+    "niveis": {
+      "Spanish": "espanhol",
+      "Portuguese": "português",
+      "English": "inglês",
+      "2023-07..10 (só 3.5)": "jul a out/2023 (só GPT-3.5)",
+      "2023-12+ (4 padrão)": "dez/2023 em diante (GPT-4 padrão)",
+      "2023-11 (4 volta)": "nov/2023 (GPT-4 volta)",
+      "2023-04..06 (3.5 + 4 opcional)": "abr a jun/2023 (GPT-3.5, GPT-4 opcional)"
+    },
+    "segundoMetodoCom": "Pelo segundo método (grupos parecidos, {n} contra {nRef}): {faixa}.",
+    "segundoMetodoSem": "Pelo segundo método (grupos parecidos): não comparável, porque os dois grupos diferem demais em perfil.",
+    "segundoMetodoLeitura": "Ver a leitura do segundo método",
+    "achadoDetalhes": "Ver detalhes",
+    "achadoMaisEvidencia": "O que vimos (continuação)",
+    "achadoMaisDecisao": "O que fazer (continuação)"
   },
   "dados": {
     "pergunta": "Posso confiar nestes números?",
@@ -248,10 +283,10 @@
     "problemasVazio": "Nenhum problema registrado.",
     "problemaContagem": "{n} ({pct})",
     "tratamento": "O que fizemos",
-    "validacaoTitulo": "O classificador de tema acerta?",
-    "validacaoAjuda": "Conferimos uma amostra de conversas à mão e comparamos com o que o classificador disse.",
+    "validacaoTitulo": "Os classificadores de recusa e de tema acertam?",
+    "validacaoAjuda": "Conferimos à mão uma amostra de 200 conversas e comparamos com o que cada classificador disse. Há dois por tema: um por palavras-chave (primeira versão, só regras) e outro por IA. Os números do painel usam o de IA para a recusa e para o tema da primeira conversa de cada pessoa.",
     "validacaoVazia": "A conferência do classificador de tema ainda não foi feita. Enquanto isso, o tema não é usado nas conclusões.",
-    "validacaoLinha": "{nome}: acerta {acuracia} das {n} conversas conferidas (concordância além do acaso: {kappa})",
+    "validacaoLinha": "{nome} ({tipo}{usado}): acerta {acuracia} das {n} conversas conferidas (concordância além do acaso: {kappa})",
     "painelTitulo": "O que este painel mostra e o que nunca mostra",
     "mostra": "Mostra",
     "mostraItens": {
@@ -264,6 +299,33 @@
       "1": "O texto de nenhuma conversa.",
       "2": "Endereço de rede (IP) nem identificação do aparelho ou do navegador.",
       "3": "Números firmes para grupos com poucas pessoas: nesses casos aparece o aviso de amostra pequena."
-    }
+    },
+    "validacaoTipoIa": "por IA",
+    "validacaoTipoRegras": "por palavras-chave",
+    "validacaoUsado": ", usado nos números",
+    "nomesTecnicosTitulo": "Nomes técnicos",
+    "termosTecnicos": {
+      "turn_identifier": {
+        "inline": "número do turno",
+        "nota": "identificador de cada turno (mensagem) dentro da conversa"
+      },
+      "conversation_hash": {
+        "inline": "o código da conversa",
+        "nota": "código (hash) gerado a partir do texto da conversa; duas conversas iguais têm o mesmo"
+      },
+      "hash da conversa repetido": {
+        "inline": "código da conversa repetido",
+        "nota": "conversation_hash repetido"
+      },
+      " (redacted)": {
+        "inline": "",
+        "nota": "redacted: marca dos autores do conjunto de dados para dado pessoal ocultado"
+      },
+      " (ver figura 06)": {
+        "inline": " (a análise exploratória do projeto mostra o porquê)",
+        "nota": "figura 06 da análise exploratória (docs/figuras)"
+      }
+    },
+    "validacaoLinhaSemTipo": "{nome}: acerta {acuracia} das {n} conversas conferidas (concordância além do acaso: {kappa})"
   }
 }

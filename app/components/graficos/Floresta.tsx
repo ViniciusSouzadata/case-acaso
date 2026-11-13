@@ -1,5 +1,5 @@
 import type { Estimativa, LinhaFloresta } from "@/lib/floresta";
-import { t } from "@/lib/mensagens";
+import { t, todasAsMensagens } from "@/lib/mensagens";
 import { formatarInt, formatarPP } from "@/lib/regras";
 
 const nomeFator = (f: string) => {
@@ -7,6 +7,16 @@ const nomeFator = (f: string) => {
   const r = t(chave);
   return r === chave ? f : r;
 };
+
+const NIVEIS = (todasAsMensagens.fatores as { niveis: Record<string, string> }).niveis;
+
+/** Título da linha em frase, sem identificador de variável (REQ-409). Fator sem frase própria cai em "rótulo: nível contra referência". */
+export function tituloLinha(fator: string, nivel: string, referencia: string): string {
+  const vars = { nivel: NIVEIS[nivel] ?? nivel, ref: NIVEIS[referencia] ?? referencia };
+  const chave = `fatores.titulos.${fator}`;
+  const frase = t(chave, vars);
+  return frase === chave ? `${nomeFator(fator)}: ${t("fatores.contra", vars)}` : frase;
+}
 
 const faixa = (e: Estimativa) => `${formatarPP(e.efeito)} (${t("numero.ic", { inf: formatarPP(e.inf), sup: formatarPP(e.sup) })})`;
 
@@ -18,7 +28,7 @@ export function LinhaDaFloresta({ l }: { l: LinhaFloresta }) {
       <div className="grid gap-1 sm:grid-cols-[15rem_1fr] sm:gap-3">
         <div>
           <div className="text-sm font-medium text-slate-900">
-            {nomeFator(l.fator)}: {t("fatores.contra", { nivel: l.nivel, ref: l.referencia })}
+            {tituloLinha(l.fator, l.nivel, l.referencia)}
           </div>
           <div className="text-xs text-slate-600">
             {t("fatores.n", { n: formatarInt(l.nNivel), nRef: formatarInt(l.nReferencia) })}
@@ -55,6 +65,22 @@ export function LinhaDaFloresta({ l }: { l: LinhaFloresta }) {
               {l.ajustado ? <span> · {t("fatores.ajustado")}: {faixa(l.ajustado)}</span> : l.grupo === "engajamento" || l.grupo === "descritivo" ? <span> · {t("fatores.semAjuste")}</span> : null}
             </p>
           )}
+
+          {l.segundo ? (
+            <div className="mt-1 text-xs text-slate-700" data-segundo-metodo>
+              <p>
+                {l.segundo.ajustado
+                  ? t("fatores.segundoMetodoCom", { n: formatarInt(l.segundo.nNivel), nRef: formatarInt(l.segundo.nReferencia), faixa: faixa(l.segundo.ajustado) })
+                  : t("fatores.segundoMetodoSem")}
+              </p>
+              {l.segundo.leitura ? (
+                <details>
+                  <summary className="cursor-pointer text-azul">{t("fatores.segundoMetodoLeitura")}</summary>
+                  <p className="mt-1 text-slate-800">{l.segundo.leitura}</p>
+                </details>
+              ) : null}
+            </div>
+          ) : null}
 
           <div className="mt-1 flex flex-wrap gap-2 text-xs">
             {l.naoDistingue ? <span className="rounded bg-slate-100 px-2 py-0.5 font-medium text-slate-900">{t("zero.rotulo")}</span> : null}

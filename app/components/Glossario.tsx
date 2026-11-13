@@ -46,14 +46,19 @@ export function Glossario({ indicador, onFechar }: { indicador: string; onFechar
         {item ? (
           <dl className="mt-3 space-y-3 text-sm">
             <Campo rotulo={t("glossario.definicao")}>{item.definicao}</Campo>
-            <Campo rotulo={t("glossario.formula")}>{item.formula}</Campo>
             <Campo rotulo={t("glossario.denominador")}>{item.denominador}</Campo>
             <Campo rotulo={t("glossario.periodo")}>{item.periodo_referencia}</Campo>
-            <Campo rotulo={t("glossario.fonte")}>{item.fonte}</Campo>
             <Campo rotulo={t("glossario.limitacoes")}>{item.limitacoes}</Campo>
-            <Campo rotulo={t("glossario.sql")}>
-              <pre className="overflow-x-auto rounded bg-slate-100 p-2 text-xs">{item.sql_referencia}</pre>
-            </Campo>
+            <details className="rounded border border-slate-200 p-2">
+              <summary className="cursor-pointer font-medium text-azul">{t("glossario.tecnicoTitulo")}</summary>
+              <div className="mt-2 space-y-3">
+                <Campo rotulo={t("glossario.formula")}>{item.formula}</Campo>
+                <Campo rotulo={t("glossario.fonte")}>{item.fonte}</Campo>
+                <Campo rotulo={t("glossario.sql")}>
+                  <pre className="overflow-x-auto rounded bg-slate-100 p-2 text-xs">{item.sql_referencia}</pre>
+                </Campo>
+              </div>
+            </details>
           </dl>
         ) : null}
       </div>

@@ -42,6 +42,16 @@ export interface Estimativa {
   sup: number;
 }
 
+export interface SegundoMetodo {
+  nNivel: number;
+  nReferencia: number;
+  pequena: boolean;
+  bruto: Estimativa | null;
+  /** null = o método não conseguiu montar grupos comparáveis */
+  ajustado: Estimativa | null;
+  leitura: string | null;
+}
+
 export interface LinhaFloresta {
   chave: string;
   fator: string;
@@ -62,6 +72,10 @@ export interface LinhaFloresta {
   /** intervalo fora do zero, mas sem resistir à correção para muitas comparações: pode ser acaso */
   podeSerAcaso: boolean;
   leitura: string | null;
+  /** o mesmo fator pelo outro método (comparação de grupos parecidos), quando a linha principal é o ajuste pelo perfil */
+  segundo: SegundoMetodo | null;
+  /** a linha principal é o ajuste pelo perfil (entra na contagem da frase-resposta) */
+  principalLogit: boolean;
   /** posições em % da trilha: [inf, efeito, sup] */
   pos: { zero: number; bruto: [number, number, number] | null; ajustado: [number, number, number] | null };
 }
@@ -73,12 +87,20 @@ function estimativa(e: number | null, i: number | null, s: number | null): Estim
 /** Linhas de um grupo, ordenadas pelo tamanho do efeito (ajustado se houver, senão bruto), em escala simétrica em torno do zero. */
 export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { linhas: LinhaFloresta[]; limite: number } {
   const doGrupo = efeitos.filter((e) => grupoEfetivo(e) === grupo);
-  const base = doGrupo.map((e) => {
+  // Uma linha por fator: o ajuste pelo perfil é a principal; o outro método (grupos parecidos) vira a frase "segundo método".
+  const porFator = new Map<string, EfeitoApi[]>();
+  for (const e of doGrupo) porFator.set(`${e.fator}|${e.nivel}`, [...(porFator.get(`${e.fator}|${e.nivel}`) ?? []), e]);
+  const principais = [...porFator.values()].map((g) => {
+    const principal = g.find((x) => x.metodo === "logit_ame") ?? g[0]!;
+    const outro = g.find((x) => x !== principal);
+    return { principal, outro };
+  });
+  const base = principais.map(({ principal: e, outro }) => {
     const bruto = estimativa(e.efeito_bruto_pp, e.bruto_ic_inf, e.bruto_ic_sup);
     // engajamento nunca mostra o ajustado, mesmo que a API traga algum valor.
     const ajustado = semAjuste(grupo) ? null : estimativa(e.efeito_ajustado_pp, e.ajustado_ic_inf, e.ajustado_ic_sup);
     const ref = ajustado ?? bruto;
-    return { e, bruto, ajustado, ref };
+    return { e, outro, bruto, ajustado, ref };
   });
   base.sort((a, b) => Math.abs(b.ref?.efeito ?? 0) - Math.abs(a.ref?.efeito ?? 0));
 
@@ -87,7 +109,7 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
   const pos = (x: number) => ((x + limite) / (2 * limite)) * 100;
   const tri = (x: Estimativa | null): [number, number, number] | null => (x ? [pos(x.inf), pos(x.efeito), pos(x.sup)] : null);
 
-  const linhas = base.map(({ e, bruto, ajustado, ref }): LinhaFloresta => {
+  const linhas = base.map(({ e, outro, bruto, ajustado, ref }): LinhaFloresta => {
     const pequena = amostraPequena(e.amostra_suficiente);
     return {
       chave: `${e.fator}|${e.nivel}|${e.metodo}`,
@@ -106,15 +128,27 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
       resisteFdr: e.significativo_fdr === true,
       podeSerAcaso: !semAjuste(grupo) && !pequena && ajustado !== null && !cruzaZero(ajustado.inf, ajustado.sup) && e.significativo_fdr !== true,
       leitura: e.leitura,
+      segundo: outro
+        ? {
+            nNivel: outro.n_nivel,
+            nReferencia: outro.n_referencia,
+            pequena: amostraPequena(outro.amostra_suficiente),
+            bruto: estimativa(outro.efeito_bruto_pp, outro.bruto_ic_inf, outro.bruto_ic_sup),
+            ajustado: estimativa(outro.efeito_ajustado_pp, outro.ajustado_ic_inf, outro.ajustado_ic_sup),
+            leitura: outro.leitura,
+          }
+        : null,
+      principalLogit: e.metodo === "logit_ame",
       pos: { zero: pos(0), bruto: tri(bruto), ajustado: tri(ajustado) },
     };
   });
   return { linhas, limite };
 }
 
-/** Quantas comparações (assistente + perfil, amostra suficiente, com ajuste) se distinguem de zero. */
+/** Quantos efeitos ajustados pelo perfil (assistente + perfil, amostra suficiente) se distinguem de zero. */
 export function contarDistinguiveis(efeitos: EfeitoApi[]): { k: number; m: number; f: number } {
-  const validos = efeitos.filter((e) => grupoEfetivo(e) !== "engajamento" && grupoEfetivo(e) !== "descritivo" && e.amostra_suficiente && e.efeito_ajustado_pp !== null);
+  // Só o ajuste pelo perfil (o método principal): o segundo método repete fatores que já estão contados.
+  const validos = efeitos.filter((e) => e.metodo === "logit_ame" && grupoEfetivo(e) !== "engajamento" && grupoEfetivo(e) !== "descritivo" && e.amostra_suficiente && e.efeito_ajustado_pp !== null);
   const fora = validos.filter((e) => !cruzaZero(e.ajustado_ic_inf, e.ajustado_ic_sup));
   // f: as que continuam depois da correção para comparações múltiplas (Benjamini-Hochberg, feita na análise)
   return { k: fora.length, m: validos.length, f: fora.filter((e) => e.significativo_fdr === true).length };
@@ -131,6 +165,7 @@ export function fraseResposta(k: number, m: number, f: number): string {
 }
 
 export function contarDoGrupo(linhas: LinhaFloresta[]): { k: number; m: number } {
-  const validas = linhas.filter((l) => !l.pequena && l.referenciaDoRotulo !== null);
+  // linhas só do segundo método (ex.: virada de dez/2023) aparecem, mas ficam fora da contagem
+  const validas = linhas.filter((l) => !l.pequena && l.referenciaDoRotulo !== null && (l.principalLogit || l.grupo === "engajamento" || l.grupo === "descritivo"));
   return { k: validas.filter((l) => !l.naoDistingue).length, m: validas.length };
 }
