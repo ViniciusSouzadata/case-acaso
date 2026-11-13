@@ -90,4 +90,52 @@ O desenho já separa o país como parâmetro (`pais` na API e nas tabelas), ent�
 - Os mesmos `mart.*` e `resultado.*` servem a todos; a API filtra por `pais`.
 - A análise roda por país, com limiares de amostra iguais (vêm de `ops.parametros`), porque amostras menores aparecem como "amostra pequena" em vez de número firme.
 - Cuidados: idioma e fuso horário mudam a definição de "dia"; a taxonomia de temas e as regras de recusa precisam de validação manual por idioma.
+- **Idioma da interface:** os textos das telas já ficam fora do código, em `app/mensagens/pt.json` (lidos por `app/lib/mensagens.ts`); outro idioma é outro arquivo, escolhido pelo país, com números no formato local.
+- **Fuso de cada país:** `fuso_pais` em `ops.parametros` define a semana da coorte, o "dia" e o período do dia; país com mais de um fuso usa o da capital, com a premissa registrada.
+- **Comparação entre países:** a taxa bruta lado a lado engana se o público for diferente; a comparação usa a mesma decomposição mix × taxa da semana (seção 5 do `entrega.md`), com intervalo e n de cada país.
 - Custo: a base cresce pouco por país; a 5 países o RDS continua na mesma classe de instância até a carga e a análise ficarem lentas. O primeiro limite provável é a análise, não o armazenamento.
+
+## 5. Modelo da base analítica
+
+Quatro esquemas no Postgres, cada um com um papel de acesso (`sql/migrations/`, `sql/transform/`):
+
+| Esquema | Tabela | Grão (uma linha por) | Para quê |
+|---|---|---|---|
+| `ops` | `parametros` | chave da definição | limiares versionados (janela, gap de sessão, n mínimo, fuso) |
+| `ops` | `lote_carga` | execução da carga | origem, checksum, linhas lidas/gravadas/rejeitadas, versão da definição |
+| `ops` | `rejeitado` | conversa rejeitada | motivo da rejeição |
+| `ops` | `reconciliacao` | métrica × lote | bruto × base, diferença e tolerância (9 métricas) |
+| `stg` | `conversa` | conversa | variáveis derivadas na carga; **sem texto de conversa**; só o `loader_rw` lê |
+| `mart` | `fct_sessao` | usuário × sessão | sessões pelo gap de 30 min |
+| `mart` | `dim_usuario` | usuário | primeira sessão, coorte, elegibilidade e motivo |
+| `mart` | `fct_primeira_experiencia` | usuário | variáveis da 1ª experiência e retorno em 7 dias |
+| `mart` | `agg_retencao_periodo` | semana ou mês | novos, voltaram, taxa, IC, maturidade, amostra suficiente |
+| `mart` | `agg_retencao_sensibilidade` | definição alternativa | taxa por definição e diferença para a oficial |
+| `mart` | `agg_retencao_segmento` | variável × valor | taxa por segmento, com IC |
+| `mart` | `dim_era_modelo` | era de oferta de modelo | faixas do gráfico |
+| `mart` | `dicionario_indicador` | indicador | definição, fórmula, denominador, período, fonte e SQL |
+| `resultado` | `efeito_fator`, `sensibilidade_efeito`, `balanco_propensao` | fator / definição / covariável | efeitos bruto e ajustado com IC, robustez, balanço |
+| `resultado` | `decomposicao_resumo`, `decomposicao_semana` | semana / segmento | mix × taxa |
+| `resultado` | `achado`, `problema_qualidade`, `validacao_classificador`, `meta` | achado / problema / classificador | textos e conferências exibidos nas telas |
+
+A aplicação (papel `app_ro`) só tem `SELECT` em `mart.*`, `resultado.*` e, para o rodapé e a tela de confiança, em `ops.lote_carga` e `ops.reconciliacao` (migrações 002 e 020); nada de `stg`.
+
+## 6. Endpoints
+
+Todos são `GET`, devolvem `{dados, meta}` (o `meta` traz versão da definição, versão da análise e último lote) e erro padronizado com `request_id`. Código em `app/app/api/`.
+
+| Rota | Entrada (query) | Saída (`dados`) |
+|---|---|---|
+| `/api/retencao/resumo` | `pais` | usuários, voltaram, taxa, IC, período, efeito mínimo detectável |
+| `/api/retencao/coortes` | `pais`, `inicio`, `fim`, `granularidade` (`semana`/`mes`) | por período: novos, voltaram, taxa, IC, média móvel, madura, amostra suficiente; `meta.eras` |
+| `/api/retencao/sensibilidade` | `pais` | por definição: usuários, taxa, IC, diferença para a oficial |
+| `/api/fatores/efeitos` | `pais`, `grupo?` (`assistente`/`perfil`/`engajamento`) | efeitos bruto e ajustado com IC e n |
+| `/api/fatores/segmentos` | `pais`, `variavel` | por valor: novos, voltaram, taxa, IC, amostra suficiente |
+| `/api/fatores/balanco` | `pais`, `tratamento` | por covariável: diferença padronizada antes e depois |
+| `/api/semana/decomposicao` | `pais`, `semana` | resumo (mix × taxa) e segmentos |
+| `/api/achados` | `pais` | ordem, título, evidência, decisão, limite |
+| `/api/qualidade` | `pais` | lote, reconciliação, problemas, validação do classificador |
+| `/api/dicionario` | `indicador?` | ficha completa de cada indicador, com o SQL |
+| `/api/saude` | — | ok, banco, último lote, versão da definição |
+
+Regras: `inicio`/`fim` opcionais, `fim` exclusivo, intervalo invertido devolve 400; abaixo do n mínimo a linha sai com `amostra_suficiente: false` e a tela decide ocultar.
