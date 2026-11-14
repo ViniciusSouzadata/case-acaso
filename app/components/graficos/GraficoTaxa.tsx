@@ -1,6 +1,6 @@
 "use client";
 
-import { Area, ComposedChart, Line, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, ComposedChart, Line, ReferenceArea, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { faixasImaturas, type LinhaGrafico } from "@/lib/graficos";
 import { t } from "@/lib/mensagens";
 import { useMovimentoReduzido } from "@/lib/movimento";
@@ -29,14 +29,32 @@ function PontoAtivo({ cx, cy, payload }: PontoProps) {
 }
 
 /** Gráfico principal da Tela 1: taxa por semana com a margem de erro e a média de 4 semanas. Sem faixas de fundo, sem grade vertical, legenda de 3 itens. */
-export function GraficoTaxa({ linhas, altura = "h-60" }: { linhas: LinhaGrafico[]; altura?: string }) {
+export function GraficoTaxa({
+  linhas,
+  altura = "h-60",
+  marcadas = [],
+  selecionada,
+  onEscolher,
+}: {
+  linhas: LinhaGrafico[];
+  altura?: string;
+  /** semanas que a decomposição explica: marcadas no gráfico e clicáveis (só com amostra suficiente) */
+  marcadas?: string[];
+  selecionada?: string;
+  onEscolher?: (periodo: string) => void;
+}) {
   const anima = !useMovimentoReduzido();
   const imaturas = faixasImaturas(linhas);
+  // amostra pequena nunca vira ponto clicável "firme"
+  const clicaveis = linhas.filter((l) => marcadas.includes(l.periodo) && l.amostraOk && l.taxa !== null);
+  const escolher = (p: string | undefined) => {
+    if (p && onEscolher && clicaveis.some((l) => l.periodo === p)) onEscolher(p);
+  };
   return (
     <div>
       <div role="img" aria-label={t("painel.tela1.graficoTitulo")} className={`${altura} w-full`}>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={linhas} margin={{ top: 8, right: 12, bottom: 0, left: 0 }}>
+          <ComposedChart data={linhas} margin={{ top: 14, right: 12, bottom: 0, left: 0 }} onClick={(e) => escolher(typeof e?.activeLabel === "string" ? e.activeLabel : undefined)} style={clicaveis.length > 0 ? { cursor: "pointer" } : undefined}>
             <defs>
               <pattern id="hachura-painel" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
                 <rect width="6" height="6" fill="#fff" />
@@ -48,11 +66,25 @@ export function GraficoTaxa({ linhas, altura = "h-60" }: { linhas: LinhaGrafico[
             ))}
             <XAxis dataKey="periodo" tickFormatter={(p: string) => linhas.find((l) => l.periodo === p)?.rotulo ?? p} interval="preserveStartEnd" minTickGap={48} tick={{ fontSize: 11, fill: "#475569" }} tickLine={false} axisLine={{ stroke: "#cbd5e1" }} />
             <YAxis width={40} unit="%" tick={{ fontSize: 11, fill: "#475569" }} domain={[0, "auto"]} tickCount={4} tickLine={false} axisLine={false} />
-            <Tooltip cursor={{ stroke: VIOLETA, strokeDasharray: "3 3" }} content={({ payload }) => (payload && payload[0] ? <DicaCoorte linha={payload[0].payload as LinhaGrafico} /> : null)} />
+            <Tooltip cursor={{ stroke: VIOLETA, strokeDasharray: "3 3" }} content={({ payload }) => (payload && payload[0] ? <DicaCoorte linha={payload[0].payload as LinhaGrafico} clicavel={clicaveis.some((l) => l.periodo === (payload[0]!.payload as LinhaGrafico).periodo)} /> : null)} />
             <Area type="monotone" dataKey="icBase" stackId="ic" stroke="none" fill="transparent" isAnimationActive={false} connectNulls={false} legendType="none" />
             <Area type="monotone" dataKey="icAltura" stackId="ic" stroke="none" fill={VIOLETA} fillOpacity={0.16} isAnimationActive={anima} animationDuration={400} connectNulls={false} legendType="none" />
             <Line type="monotone" dataKey="mm4" stroke={LARANJA} strokeWidth={2} strokeDasharray="6 4" dot={false} isAnimationActive={anima} animationDuration={400} connectNulls />
             <Line type="monotone" dataKey="taxa" stroke={VIOLETA} strokeWidth={2} dot={<Ponto />} activeDot={<PontoAtivo />} isAnimationActive={anima} animationDuration={400} connectNulls={false} />
+            {clicaveis.map((l) => (
+              <ReferenceDot
+                key={`m-${l.periodo}`}
+                x={l.periodo}
+                y={l.taxa!}
+                r={l.periodo === selecionada ? 7 : 6}
+                fill={l.periodo === selecionada ? LARANJA : "#fff"}
+                stroke={LARANJA}
+                strokeWidth={3}
+                ifOverflow="visible"
+                style={{ cursor: "pointer" }}
+                onClick={() => escolher(l.periodo)}
+              />
+            ))}
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -60,6 +92,7 @@ export function GraficoTaxa({ linhas, altura = "h-60" }: { linhas: LinhaGrafico[
         <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-0.5 w-4 bg-violeta" />{t("painel.tela1.legTaxa")}</li>
         <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-3 w-4 rounded-sm bg-violeta/20" />{t("painel.tela1.legFaixa")}</li>
         <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block w-4 border-t-2 border-dashed border-laranja" />{t("painel.tela1.legMedia")}</li>
+        {clicaveis.length > 0 ? <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-3 w-3 rounded-full border-[3px] border-laranja bg-white" />{t("painel.tela1.legMarcada")}</li> : null}
       </ul>
     </div>
   );

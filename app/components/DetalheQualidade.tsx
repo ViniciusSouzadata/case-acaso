@@ -62,9 +62,13 @@ function Campo({ rotulo, children }: { rotulo: string; children: React.ReactNode
 }
 
 /** Tudo o que saiu da tela principal e continua acessível: conferências, carga, validação da classificação e dicionário. */
-export function DetalheQualidade({ lote, reconciliacao, validacao }: { lote: LoteQualidade | null; reconciliacao: Reconciliacao[]; validacao: Validacao[] }) {
+export type SecaoQualidade = "conf" | "carga" | "validacao" | "tudo";
+
+export function DetalheQualidade({ lote, reconciliacao, validacao, secao = "tudo" }: { lote: LoteQualidade | null; reconciliacao: Reconciliacao[]; validacao: Validacao[]; secao?: SecaoQualidade }) {
+  const ver = (s: SecaoQualidade) => secao === "tudo" || secao === s;
   return (
     <>
+      {ver("conf") ? (
       <section className="cartao p-4">
         <h3 className="text-base font-semibold text-tinta">{t("painel.tela3.detalheConf")}</h3>
         <p className="mt-1 text-sm text-slate-700">{t("dados.confAjuda")}</p>
@@ -96,7 +100,9 @@ export function DetalheQualidade({ lote, reconciliacao, validacao }: { lote: Lot
           </table>
         )}
       </section>
+      ) : null}
 
+      {ver("carga") ? (
       <section className="cartao p-4">
         <h3 className="text-base font-semibold text-tinta">{t("painel.tela3.detalheCarga")}</h3>
         {lote ? (
@@ -111,7 +117,9 @@ export function DetalheQualidade({ lote, reconciliacao, validacao }: { lote: Lot
           <Estado tipo="vazio" mensagem={t("dados.cargaVazia")} />
         )}
       </section>
+      ) : null}
 
+      {ver("validacao") ? (
       <section className="cartao p-4">
         <h3 className="text-base font-semibold text-tinta">{t("painel.tela3.detalheValidacao")}</h3>
         <p className="mt-1 text-sm text-slate-700">{t("dados.validacaoAjuda")}</p>
@@ -134,8 +142,9 @@ export function DetalheQualidade({ lote, reconciliacao, validacao }: { lote: Lot
           </ul>
         )}
       </section>
+      ) : null}
 
-      <Dicionario />
+      {secao === "tudo" ? <Dicionario /> : null}
     </>
   );
 }

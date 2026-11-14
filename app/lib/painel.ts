@@ -145,3 +145,9 @@ export function acertoIA(validacao: { classificador: string; modelo: string | nu
   const v = validacao.find((x) => x.classificador === classificador && x.modelo !== null && !x.modelo.startsWith("regras") && x.acuracia !== null && x.n !== null);
   return v ? { acuracia: v.acuracia as number, n: v.n as number } : null;
 }
+
+/** Ligação cartão de achado → linha do ranking da Tela 2 (pela ordem do achado no seed). O achado 3 (semanas) não tem linha própria. */
+export const ALVO_ACHADO: Record<number, { fator: string; nivel: string }> = {
+  1: { fator: "recusa", nivel: "sim" },
+  2: { fator: "modelo_familia", nivel: "gpt-4" },
+};

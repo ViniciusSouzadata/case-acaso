@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { CartaoKpi } from "@/components/CartaoKpi";
-import { DetalheQualidade } from "@/components/DetalheQualidade";
+import { DestacaNumeros } from "@/components/DestacaNumeros";
+import { DetalheQualidade, type SecaoQualidade } from "@/components/DetalheQualidade";
 import { Estado } from "@/components/Estado";
 import { PainelLateral } from "@/components/PainelLateral";
 import type { LoteQualidade, Problema, Reconciliacao, Validacao } from "@/lib/consultas/qualidade";
@@ -27,7 +28,7 @@ const ITENS = ["1", "2", "3"];
 export default function PaginaDados() {
   const r = useApi<Qualidade>("/api/qualidade");
   const q = r.estado === "ok" ? r.corpo.dados : null;
-  const [detalhe, setDetalhe] = useState(false);
+  const [detalhe, setDetalhe] = useState<SecaoQualidade | null>(null);
   const [problema, setProblema] = useState<Problema | null>(null);
   const [todos, setTodos] = useState(false);
 
@@ -49,11 +50,11 @@ export default function PaginaDados() {
         <div>
           <h1 className="titulo-painel">{t("painel.tela3.titulo")}</h1>
           <p className={`mt-1 max-w-3xl text-base ${resposta && !resposta.ok ? "font-medium text-[#8a3a00]" : "text-slate-700"}`} data-testid="frase-confianca">
-            {resposta?.frase ?? ""}
+            {resposta ? <DestacaNumeros texto={resposta.frase} /> : ""}
           </p>
         </div>
         {q ? (
-          <button type="button" onClick={() => setDetalhe(true)} className="rounded-lg border border-violeta px-3 py-1.5 text-sm font-medium text-violeta hover:bg-violeta hover:text-papel">
+          <button type="button" onClick={() => setDetalhe("tudo")} className="alvo rounded-lg border border-violeta px-3 py-1.5 text-sm font-medium text-violeta hover:bg-violeta hover:text-papel">
             {t("painel.verDetalhes")}
           </button>
         ) : null}
@@ -70,22 +71,30 @@ export default function PaginaDados() {
               valor={ver && ver.total > 0 ? `${batem} de ${ver.total}` : "—"}
               apoio={t("painel.tela3.cartaoConfSub")}
               testid="conferencias"
+              onAbrir={() => setDetalhe("conf")}
               extra={ver && ver.total > 0 ? <span className={`text-lg font-semibold ${ver.falhas === 0 ? "text-[#047857]" : "text-[#8a3a00]"}`} aria-label={ver.falhas === 0 ? t("dados.confOk") : t("dados.confFalha")}>{ver.falhas === 0 ? "✓" : "✗"}</span> : null}
             />
             <CartaoKpi
               rotulo={t("painel.tela3.cartaoLidas")}
               valor={q.lote ? formatarInt(q.lote.linhas_lidas) : "—"}
               apoio={q.lote ? t("painel.tela3.cartaoLidasSub", { n: formatarInt(q.lote.linhas_rejeitadas) }) : undefined}
+              animar={q.lote && q.lote.linhas_lidas !== null ? { valor: q.lote.linhas_lidas, formato: (n) => formatarInt(Math.round(n)) } : undefined}
+              atrasoMs={60}
+              onAbrir={() => setDetalhe("carga")}
             />
             <CartaoKpi
               rotulo={t("painel.tela3.cartaoRecusa")}
               valor={recusa ? formatarPct(recusa.acuracia, 0) : "—"}
               apoio={recusa ? t("painel.tela3.cartaoAcertoSub", { n: formatarInt(recusa.n) }) : undefined}
+              atrasoMs={120}
+              onAbrir={() => setDetalhe("validacao")}
             />
             <CartaoKpi
               rotulo={t("painel.tela3.cartaoTema")}
               valor={tema ? formatarPct(tema.acuracia, 0) : "—"}
               apoio={tema ? t("painel.tela3.cartaoAcertoSub", { n: formatarInt(tema.n) }) : undefined}
+              atrasoMs={180}
+              onAbrir={() => setDetalhe("validacao")}
               selo={tema ? <span className="inline-block rounded-full bg-[#ffe9db] px-2 py-0.5 text-xs font-medium text-[#8a3a00]">{t("painel.tela3.seloTema")}</span> : null}
             />
           </section>
@@ -100,10 +109,10 @@ export default function PaginaDados() {
               <ul className={`mt-2 ${todos ? "max-h-56 overflow-y-auto pr-1" : ""}`}>
                 {visiveis.map((p) => (
                   <li key={p.problema} className="entra" data-problema={nomeProblema(p.problema)}>
-                    <button type="button" onClick={() => setProblema(p)} className="grid w-full grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3.5rem] items-center gap-x-3 rounded-lg px-2 py-1 text-left hover:bg-[#f6f4fd] sm:grid-cols-[11rem_minmax(0,1fr)_3.5rem]">
+                    <button type="button" onClick={() => setProblema(p)} className="group grid min-h-[2.5rem] w-full grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3.5rem] items-center gap-x-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta sm:grid-cols-[11rem_minmax(0,1fr)_3.5rem]">
                       <span className="truncate text-sm font-medium text-tinta">{nomeProblema(p.problema)}</span>
-                      <span className="relative block h-3 rounded bg-[#f1effc]" aria-hidden>
-                        <span className="absolute inset-y-0 left-0 rounded bg-violeta" style={{ width: `${Math.max((p.percentual ?? 0) > 0 ? 1.5 : 0, ((p.percentual ?? 0) / maximo) * 100)}%` }} />
+                      <span className="relative block h-4 rounded bg-[#f1effc]" aria-hidden>
+                        <span className="absolute inset-y-0 left-0 rounded bg-violeta transition-colors group-hover:bg-violeta-escuro" style={{ width: `${Math.max((p.percentual ?? 0) > 0 ? 1.5 : 0, ((p.percentual ?? 0) / maximo) * 100)}%` }} />
                       </span>
                       <span className="text-right font-display text-sm font-semibold text-slate-800">{formatarPct(p.percentual)}</span>
                     </button>
@@ -111,7 +120,7 @@ export default function PaginaDados() {
                 ))}
               </ul>
               {barras.length > LINHAS_INICIAIS ? (
-                <button type="button" onClick={() => setTodos(!todos)} className="mt-1 px-2 text-sm font-medium text-violeta hover:underline">
+                <button type="button" onClick={() => setTodos(!todos)} className="alvo mt-1 px-2 text-sm font-medium text-violeta hover:underline">
                   {todos ? t("painel.tela3.mostrarMenos") : t("painel.tela3.mostrarTodos", { n: barras.length })}
                 </button>
               ) : null}
@@ -162,9 +171,9 @@ export default function PaginaDados() {
       ) : null}
 
       {detalhe && q ? (
-        <PainelLateral titulo={t("painel.tela3.detalheTitulo")} onFechar={() => setDetalhe(false)}>
-          <DetalheQualidade lote={q.lote} reconciliacao={q.reconciliacao} validacao={q.validacao} />
-          {outros.length > 0 ? (
+        <PainelLateral titulo={detalhe === "conf" ? t("painel.tela3.detalheConf") : detalhe === "carga" ? t("painel.tela3.detalheCarga") : detalhe === "validacao" ? t("painel.tela3.detalheValidacao") : t("painel.tela3.detalheTitulo")} onFechar={() => setDetalhe(null)}>
+          <DetalheQualidade lote={q.lote} reconciliacao={q.reconciliacao} validacao={q.validacao} secao={detalhe} />
+          {detalhe === "tudo" && outros.length > 0 ? (
             <section className="cartao p-4 text-sm text-slate-800">
               {outros.map((p) => (
                 <p key={p.problema}>

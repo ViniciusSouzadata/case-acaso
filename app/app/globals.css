@@ -102,3 +102,25 @@ code, pre {
   letter-spacing: -0.02em;
   color: var(--color-tinta);
 }
+
+/* Cartão que abre um detalhe: sobe um pouco ao passar o mouse e mostra foco por teclado. */
+.clicavel {
+  cursor: pointer;
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+.clicavel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgb(106 72 235 / 0.16);
+}
+.clicavel:focus-visible {
+  outline: 3px solid var(--color-violeta);
+  outline-offset: 2px;
+}
+.cartao-escuro.clicavel:focus-visible {
+  outline-color: var(--color-violeta-claro);
+}
+
+/* Alvo de toque de pelo menos 40 px no celular. */
+@media (max-width: 639px) {
+  .alvo { min-height: 2.5rem; display: inline-flex; align-items: center; }
+}

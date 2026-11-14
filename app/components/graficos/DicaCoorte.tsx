@@ -3,7 +3,7 @@ import { amostraPequena, formatarInt, formatarPct, imatura } from "@/lib/regras"
 import { t } from "@/lib/mensagens";
 
 /** Texto da dica (hover) de um ponto: a dica também explica amostra pequena e coorte imatura (REQ-404/405). */
-export function DicaCoorte({ linha }: { linha: LinhaGrafico }) {
+export function DicaCoorte({ linha, clicavel = false }: { linha: LinhaGrafico; clicavel?: boolean }) {
   const ainda = imatura(linha.madura);
   const pequena = amostraPequena(linha.amostraOk);
   return (
@@ -21,6 +21,7 @@ export function DicaCoorte({ linha }: { linha: LinhaGrafico }) {
           {formatarPct(linha.taxaFracao)} ({t("painel.margemErro", { inf: formatarPct(linha.icInf), sup: formatarPct(linha.icSup) })})
         </div>
       )}
+      {clicavel ? <div className="mt-1 font-medium text-violeta-escuro">{t("painel.tela1.cliqueSemana")}</div> : null}
       {linha.inicioColeta ? <div className="mt-1 font-medium">{t("retencao.inicioColeta")}</div> : null}
     </div>
   );

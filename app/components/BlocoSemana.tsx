@@ -29,8 +29,8 @@ interface Decomposicao {
 const dataBr = (iso: string) => iso.split("-").reverse().join("/");
 
 /** Cascata base → quem chegou → comportamento → semana, com a frase de conclusão vinda da API. */
-export function BlocoSemana() {
-  const [semana, setSemana] = useState<string>(SEMANAS[0]);
+export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
+  const [semana, setSemana] = useState<string>(inicial);
   const r = useApi<Decomposicao>(`/api/semana/decomposicao?semana=${semana}`);
   const dados = r.estado === "ok" ? r.corpo.dados : null;
   const resumo = dados?.resumo ?? null;

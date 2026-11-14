@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LinhaDaFloresta } from "@/components/graficos/Floresta";
 import { PainelLateral } from "@/components/PainelLateral";
 import { DetalheBalanco } from "@/components/DetalheBalanco";
-import { prepararFloresta, type EfeitoApi, type GrupoFator, type LinhaFloresta } from "@/lib/floresta";
+import { grupoEfetivo, prepararFloresta, type EfeitoApi, type GrupoFator, type LinhaFloresta } from "@/lib/floresta";
 import { t } from "@/lib/mensagens";
 import { aCadaCem, efeitoDaLinha, nomeCurto, seloDaLinha, type Selo } from "@/lib/painel";
 
@@ -42,15 +42,15 @@ function Trilha({ l }: { l: LinhaFloresta }) {
   );
 }
 
-function LinhaRanking({ l, onAbrir }: { l: LinhaFloresta; onAbrir: () => void }) {
+function LinhaRanking({ l, onAbrir, realcada }: { l: LinhaFloresta; onAbrir: () => void; realcada: boolean }) {
   const selo = seloDaLinha(l);
   const efeito = efeitoDaLinha(l);
   const numero = efeito === null ? t("painel.tela2.selo.pequena") : aCadaCem(efeito);
   const destaque = selo === "sustenta";
   const classeNumero = `whitespace-nowrap font-display text-sm font-semibold ${destaque ? "text-[#8a3a00]" : "text-slate-800"}`;
   return (
-    <li className="entra" data-fator={l.fator} data-nivel={l.nivel}>
-      <button type="button" onClick={onAbrir} className="grid w-full grid-cols-1 items-center gap-x-3 gap-y-1 rounded-lg px-2 py-1 text-left hover:bg-[#f6f4fd] sm:grid-cols-[12rem_minmax(0,1fr)_8.75rem_8.5rem]">
+    <li className="entra" data-fator={l.fator} data-nivel={l.nivel} data-realce={realcada ? "sim" : undefined}>
+      <button type="button" onClick={onAbrir} className={`grid w-full grid-cols-1 items-center gap-x-3 gap-y-1 rounded-lg px-2 py-1 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta sm:grid-cols-[12rem_minmax(0,1fr)_8.75rem_8.5rem] ${realcada ? "bg-[#e6e0fb] ring-2 ring-violeta" : ""}`}>
         <div className="flex items-baseline justify-between gap-2 sm:block">
           <span className="text-sm font-medium text-tinta">{nomeCurto(l.fator, l.nivel)}</span>
           <span className={`${classeNumero} sm:hidden`}>{numero}</span>
@@ -64,13 +64,26 @@ function LinhaRanking({ l, onAbrir }: { l: LinhaFloresta; onAbrir: () => void })
 }
 
 /** Um ranking só: nome curto, barra com a margem de erro, número "a cada 100" e selo. Clicar na linha abre o detalhe. */
-export function Ranking({ efeitos }: { efeitos: EfeitoApi[] }) {
+export function Ranking({ efeitos, realce = null }: { efeitos: EfeitoApi[]; realce?: { fator: string; nivel: string } | null }) {
   const [grupo, setGrupo] = useState<GrupoFator>("assistente");
   const [todos, setTodos] = useState(false);
   const [aberta, setAberta] = useState<LinhaFloresta | null>(null);
   const [ajuda, setAjuda] = useState(false);
   const { linhas } = prepararFloresta(efeitos, grupo);
   const visiveis = todos ? linhas : linhas.slice(0, LINHAS_INICIAIS);
+
+  // cartão do achado realça a linha; se ela está em outro grupo (ou além das linhas iniciais), troca de aba / abre a lista
+  useEffect(() => {
+    if (!realce) return;
+    const alvo = efeitos.find((e) => e.metodo === "logit_ame" && e.fator === realce.fator && e.nivel === realce.nivel);
+    if (!alvo) return;
+    const g = grupoEfetivo(alvo);
+    if (g !== grupo) {
+      setGrupo(g);
+      setTodos(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [realce?.fator, realce?.nivel]);
 
   return (
     <section className="cartao p-4" aria-labelledby="rank-titulo">
@@ -84,24 +97,24 @@ export function Ranking({ efeitos }: { efeitos: EfeitoApi[] }) {
               type="button"
               aria-selected={grupo === g}
               onClick={() => { setGrupo(g); setTodos(false); }}
-              className={`rounded-full px-3 py-1 text-sm ${grupo === g ? "bg-violeta font-medium text-papel" : "bg-[#f1effc] text-slate-800 hover:bg-[#e6e2fa]"}`}
+              className={`alvo rounded-full px-3 py-1 text-sm ${grupo === g ? "bg-violeta font-medium text-papel" : "bg-[#f1effc] text-slate-800 hover:bg-[#e6e2fa]"}`}
             >
               {t(`fatores.abas.${g}`)}
             </button>
           ))}
         </div>
-        <button type="button" onClick={() => setAjuda(true)} className="text-sm font-medium text-violeta hover:underline">{t("painel.tela2.ajuda")}</button>
+        <button type="button" onClick={() => setAjuda(true)} className="alvo text-sm font-medium text-violeta hover:underline">{t("painel.tela2.ajuda")}</button>
       </div>
 
       <ul className={`mt-2 divide-y divide-[#efedf8] ${todos ? "max-h-[17.5rem] overflow-y-auto pr-1" : ""}`} role="tabpanel">
         {visiveis.map((l) => (
-          <LinhaRanking key={l.chave} l={l} onAbrir={() => setAberta(l)} />
+          <LinhaRanking key={l.chave} l={l} onAbrir={() => setAberta(l)} realcada={realce !== null && l.fator === realce.fator && l.nivel === realce.nivel} />
         ))}
       </ul>
       <div className="mt-1 flex items-center justify-between gap-2 px-2 text-xs text-slate-600">
         <span>{t("painel.tela2.eixo")}</span>
         {linhas.length > LINHAS_INICIAIS ? (
-          <button type="button" onClick={() => setTodos(!todos)} className="font-medium text-violeta hover:underline">
+          <button type="button" onClick={() => setTodos(!todos)} className="alvo font-medium text-violeta hover:underline">
             {todos ? "Mostrar menos" : `Mostrar todos (${linhas.length})`}
           </button>
         ) : null}
