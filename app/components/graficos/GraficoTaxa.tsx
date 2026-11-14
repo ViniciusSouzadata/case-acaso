@@ -88,7 +88,7 @@ export function GraficoTaxa({
           </ComposedChart>
         </ResponsiveContainer>
       </div>
-      <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-700" aria-label="Legenda">
+      <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-700" aria-label="Legenda">
         <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-0.5 w-4 bg-violeta" />{t("painel.tela1.legTaxa")}</li>
         <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-3 w-4 rounded-sm bg-violeta/20" />{t("painel.tela1.legFaixa")}</li>
         <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block w-4 border-t-2 border-dashed border-laranja" />{t("painel.tela1.legMedia")}</li>

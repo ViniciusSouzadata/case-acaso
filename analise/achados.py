@@ -11,7 +11,7 @@ from analise.gravar import substituir
 ARQUIVO = Path(__file__).resolve().parent.parent / "seeds" / "achados.yaml"
 COLUNAS = ["ordem", "titulo", "evidencia", "decisao", "limite"]
 # opcionais (migrações 012 e 013): número grande, rótulo e ação curta do cartão da Tela 2, e o detalhe técnico recolhido; ausentes viram NULL
-OPCIONAIS = ["numero_destaque", "rotulo_destaque", "acao_curta", "tecnico"]
+OPCIONAIS = ["numero_destaque", "rotulo_destaque", "acao_curta", "tecnico", "vimos_curto", "limite_curto"]
 
 
 def ler(caminho: Path = ARQUIVO) -> list[dict]:

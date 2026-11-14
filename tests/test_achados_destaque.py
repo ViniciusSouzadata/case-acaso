@@ -51,6 +51,10 @@ def test_numeros_de_destaque_batem_com_resultado():
             "SELECT ajustado_ic_inf, ajustado_ic_sup FROM resultado.efeito_fator "
             "WHERE metodo = 'logit_ame' AND fator = 'modelo_familia' AND nivel = 'gpt-4'"
         ).fetchone())
+        taxa_com, taxa_sem = (float(x) for x in c.execute(
+            "SELECT taxa_nivel, taxa_referencia FROM resultado.efeito_fator "
+            "WHERE metodo = 'logit_ame' AND fator = 'recusa' AND nivel = 'sim'"
+        ).fetchone())
         cur = c.execute(semana.SQL)
         df = pd.DataFrame(cur.fetchall(), columns=[d.name for d in cur.description])
         df["voltou_7d"] = df["voltou_7d"].astype(bool)
@@ -61,6 +65,11 @@ def test_numeros_de_destaque_batem_com_resultado():
     assert dados[2]["numero_destaque"] == "Sem ganho"
     assert inf_gpt4 <= 0 <= sup_gpt4
     assert dados[3]["numero_destaque"] == f"{sig} de {testadas}"
+    # frases curtas do painel (pedido 13): os números citados são os de resultado.*
+    assert f"{taxa_com * 100:.0f} voltaram" in dados[1]["vimos_curto"] and f"voltaram {taxa_sem * 100:.0f}." in dados[1]["vimos_curto"]
+    assert f"Das {testadas} semanas, só {sig} caiu" in dados[3]["vimos_curto"]
+    for a in dados.values():
+        assert a["vimos_curto"].strip() and a["limite_curto"].strip()
 
 
 @pytest.mark.usefixtures("usar_real")

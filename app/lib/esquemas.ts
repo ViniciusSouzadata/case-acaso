@@ -164,6 +164,9 @@ export const achadoSaida = z.strictObject({
   rotulo_destaque: z.string().nullable(),
   acao_curta: z.string().nullable(),
   tecnico: z.string().nullable(),
+  // opcionais (migração 014): painel curto do achado
+  vimos_curto: z.string().nullable(),
+  limite_curto: z.string().nullable(),
 });
 
 export const qualidadeSaida = z.strictObject({

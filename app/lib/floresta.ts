@@ -61,6 +61,9 @@ export interface LinhaFloresta {
   grupo: GrupoFator;
   nNivel: number;
   nReferencia: number;
+  /** quantos de cada grupo voltaram em até 7 dias, em fração (0 a 1); vem direto da rota */
+  taxaNivel: number | null;
+  taxaReferencia: number | null;
   pequena: boolean;
   bruto: Estimativa | null;
   /** nunca existe para o grupo "engajamento" (consequência, não causa) */
@@ -120,6 +123,8 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
       grupo,
       nNivel: e.n_nivel,
       nReferencia: e.n_referencia,
+      taxaNivel: e.taxa_nivel,
+      taxaReferencia: e.taxa_referencia,
       pequena,
       bruto,
       ajustado,

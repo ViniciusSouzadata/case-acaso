@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Estado } from "@/components/Estado";
 import { Cascata } from "@/components/graficos/Cascata";
+import { Tecnico } from "@/components/painel/Blocos";
+import { conclusaoSemana, deCadaCem } from "@/lib/painel";
 import { montarCascata, type ResumoSemanaApi } from "@/lib/graficos";
 import { t } from "@/lib/mensagens";
 import { formatarInt, formatarPP, formatarPct } from "@/lib/regras";
@@ -36,15 +38,14 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
   const resumo = dados?.resumo ?? null;
   const cascata = resumo ? montarCascata(resumo) : null;
 
-  return (
-    <section className="cartao p-4" aria-labelledby="semana-titulo">
-      <h2 id="semana-titulo" className="text-base font-semibold text-slate-900">{t("semana.titulo", { semana: dataBr(semana) })}</h2>
-      <p className="mt-1 text-sm text-slate-700">{t("semana.intro")}</p>
+  const concl = resumo ? conclusaoSemana(resumo) : null;
 
-      <div role="group" aria-label={t("semana.escolha")} className="mt-3 flex flex-wrap gap-2 text-sm">
+  return (
+    <section className="cartao space-y-3 p-4" aria-label={t("painel.tela1.detalheSemana")}>
+      <div role="group" aria-label={t("semana.escolha")} className="flex flex-wrap gap-2 text-sm">
         {SEMANAS.map((s) => (
-          <button key={s} type="button" aria-pressed={semana === s} onClick={() => setSemana(s)} className={`rounded border px-3 py-1 ${semana === s ? "border-azul bg-azul text-white" : "border-slate-300 bg-white text-slate-800"}`}>
-            {t("semana.chip", { data: dataBr(s) })}
+          <button key={s} type="button" aria-pressed={semana === s} onClick={() => setSemana(s)} className={`min-h-10 rounded-full px-3 sm:min-h-0 sm:py-1 ${semana === s ? "bg-laranja font-medium text-tinta" : "bg-[#f1effc] text-slate-800 hover:bg-[#e6e2fa]"}`}>
+            {dataBr(s)}
           </button>
         ))}
       </div>
@@ -54,31 +55,34 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
       {r.estado === "ok" && !resumo ? <Estado tipo="vazio" mensagem={t("semana.semResumo")} /> : null}
 
       {resumo && cascata ? (
-        <div className="mt-3">
-          <h3 className="mb-2 text-sm font-medium text-slate-800">
-            {t("semana.tituloGrafico", {
-              base: formatarPct(resumo.taxa_base),
-              semana: formatarPct(resumo.taxa_semana),
-              delta: formatarPP(resumo.delta_pp),
-              mix: formatarPP(resumo.mix_pp),
-              taxa: formatarPP(resumo.taxa_pp),
-            })}
-          </h3>
+        <>
+          <p className="text-sm text-slate-800" data-testid="conclusao">
+            {t("detalhe.semanaFrase", { semana: deCadaCem(resumo.taxa_semana ?? 0), base: deCadaCem(resumo.taxa_base ?? 0) })}
+            {concl ? ` ${concl.frase}` : ""}
+          </p>
           <Cascata degraus={cascata.degraus} />
-          {!cascata.fecha ? <p role="note" className="text-xs text-slate-700">{t("semana.naoFecha", { dif: formatarPP(cascata.diferenca).replace(" pontos", "") })}</p> : null}
-          <p className="mt-2 text-xs text-slate-600">{t("semana.legenda")}</p>
-          {resumo.conclusao ? <p className="mt-3 rounded bg-slate-50 p-3 text-sm text-slate-900" data-testid="conclusao">{resumo.conclusao}</p> : null}
-          <p className="mt-2 text-xs text-slate-600">
-            {resumo.base_descricao ? <>{t("semana.base", { descricao: resumo.base_descricao })}. </> : null}
-            {t("semana.n", { nBase: formatarInt(resumo.n_base), nSemana: formatarInt(resumo.n_semana) })}
+          <p className="text-xs text-slate-700">{t("detalhe.semanaComparada", { nBase: formatarInt(resumo.n_base), nSemana: formatarInt(resumo.n_semana) })}</p>
+          <p className="text-sm text-slate-800">
+            {resumo.p_valor !== null ? t("detalhe.semanaAcaso", { p: formatarInt(Math.round(resumo.p_valor * 100)) }) : t("detalhe.semanaSemP")}
           </p>
 
-          <details className="mt-3">
-            <summary className="cursor-pointer text-sm text-azul">{t("semana.detalhe")}</summary>
-            <div className="mt-2 space-y-2 text-xs text-slate-700">
-              {resumo.p_valor !== null ? <p>{t("semana.detalheP", { p: formatarPct(resumo.p_valor, 1) })}</p> : null}
-              {dados && dados.segmentos.length > 0 ? (
-                <div className="overflow-x-auto">
+          <Tecnico>
+            {!cascata.fecha ? <p role="note" className="text-xs text-slate-700">{t("semana.naoFecha", { dif: formatarPP(cascata.diferenca).replace(" pontos", "") })}</p> : null}
+            <p className="text-xs text-slate-700">
+              {t("semana.tituloGrafico", {
+                base: formatarPct(resumo.taxa_base),
+                semana: formatarPct(resumo.taxa_semana),
+                delta: formatarPP(resumo.delta_pp),
+                mix: formatarPP(resumo.mix_pp),
+                taxa: formatarPP(resumo.taxa_pp),
+              })}
+            </p>
+            <p className="text-xs text-slate-700">{t("semana.legenda")}</p>
+            {resumo.base_descricao ? <p className="text-xs text-slate-700">{t("semana.base", { descricao: resumo.base_descricao })}</p> : null}
+            {resumo.conclusao ? <p className="text-xs text-slate-700">{resumo.conclusao}</p> : null}
+            {resumo.p_valor !== null ? <p className="text-xs text-slate-700">{t("semana.detalheP", { p: formatarPct(resumo.p_valor, 1) })}</p> : null}
+            {dados && dados.segmentos.length > 0 ? (
+              <div className="overflow-x-auto text-xs text-slate-700">
                 <table className="w-full text-left">
                   <caption className="sr-only">{t("semana.porGrupo")}</caption>
                   <thead>
@@ -106,11 +110,10 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
                     ))}
                   </tbody>
                 </table>
-                </div>
-              ) : null}
-            </div>
-          </details>
-        </div>
+              </div>
+            ) : null}
+          </Tecnico>
+        </>
       ) : null}
     </section>
   );

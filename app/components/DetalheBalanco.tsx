@@ -14,19 +14,30 @@ interface Balanco {
   dp_depois: number | null;
 }
 
+/** "idioma::English" → "idioma da pergunta: inglês"; "era_modelo::2023-04..06" → "época de oferta de modelo: 2023-04..06". */
+export function nomeCovariavel(c: string): string {
+  const [f, ...resto] = c.split("::");
+  const chave = `fatores.rotulos.${f}`;
+  const rotulo = t(chave) === chave ? (f ?? c).replace(/_/g, " ") : t(chave);
+  const nivel = resto.join("::");
+  if (!nivel) return rotulo;
+  const chaveN = `fatores.niveis.${nivel}`;
+  const nivelPt = t(chaveN) === chaveN ? nivel.replace(/_/g, " ") : t(chaveN);
+  return `${rotulo}: ${nivelPt}`;
+}
+
 const num = (x: number | null) => (x === null ? "—" : x.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
 /** Detalhe recolhível: balanço antes/depois (aqui os termos técnicos podem aparecer). */
 export function DetalheBalanco() {
   const [tratamento, setTratamento] = useState<string>(TRATAMENTOS[0]);
-  const [aberto, setAberto] = useState(false);
-  const r = useApi<Balanco[]>(aberto ? `/api/fatores/balanco?tratamento=${encodeURIComponent(tratamento)}` : null);
+  const r = useApi<Balanco[]>(`/api/fatores/balanco?tratamento=${encodeURIComponent(tratamento)}`);
   const linhas = r.estado === "ok" ? r.corpo.dados : [];
 
   return (
-    <details className="cartao p-4" onToggle={(e) => setAberto((e.currentTarget as HTMLDetailsElement).open)}>
-      <summary className="cursor-pointer text-sm font-medium text-azul">{t("fatores.balancoResumo")}</summary>
-      <p className="mt-2 text-xs text-slate-700">{t("fatores.balancoIntro", { limite: String(LIMITE_BALANCO).replace(".", ",") })}</p>
+    <div>
+      <div className="text-xs font-semibold text-violeta-escuro">{t("fatores.balancoResumo")}</div>
+      <p className="mt-1 text-xs text-slate-700">{t("fatores.balancoIntro", { limite: String(LIMITE_BALANCO).replace(".", ",") })}</p>
       <label className="mt-2 block text-xs text-slate-700">
         {t("fatores.balancoEscolha")}{" "}
         <select value={tratamento} onChange={(e) => setTratamento(e.target.value)} className="ml-1 rounded border border-slate-300 bg-white px-2 py-1 text-sm">
@@ -35,7 +46,7 @@ export function DetalheBalanco() {
           ))}
         </select>
       </label>
-      {aberto && r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
+      {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
       {r.estado === "erro" ? <Estado tipo="erro" mensagem={r.mensagem} requestId={r.requestId} /> : null}
       {r.estado === "ok" && linhas.length === 0 ? <Estado tipo="vazio" mensagem={t("fatores.balancoVazio")} /> : null}
       {linhas.length > 0 ? (
@@ -52,7 +63,7 @@ export function DetalheBalanco() {
           <tbody>
             {linhas.map((b) => (
               <tr key={b.covariavel} className="border-b border-slate-100">
-                <th scope="row" className="py-1 pr-2 font-normal">{b.covariavel}</th>
+                <th scope="row" className="py-1 pr-2 font-normal">{nomeCovariavel(b.covariavel)}</th>
                 <td className="py-1 pr-2">{num(b.dp_antes)}</td>
                 <td className="py-1 pr-2">{num(b.dp_depois)}</td>
                 <td className="py-1">{b.dp_depois !== null && Math.abs(b.dp_depois) < LIMITE_BALANCO ? t("fatores.parecidos") : t("fatores.aindaDiferem")}</td>
@@ -61,6 +72,6 @@ export function DetalheBalanco() {
           </tbody>
         </table>
       ) : null}
-    </details>
+    </div>
   );
 }

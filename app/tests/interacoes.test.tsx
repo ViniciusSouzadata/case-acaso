@@ -67,7 +67,7 @@ describe("Tela 1 — interações", () => {
     fireEvent.click(screen.getByText("ponto 2023-05-01"));
     expect(screen.getByRole("heading", { name: /O que houve em 01\/05\/2023/ })).toBeTruthy();
     expect(mock.pedidos).toContain("/api/semana/decomposicao?semana=2023-05-01");
-    expect(screen.getByTestId("conclusao-semana").textContent).toContain("7,7");
+    expect(screen.getByTestId("conclusao-semana").textContent).toContain("voltaram menos");
   });
 
   it("no gráfico por mês nenhuma semana fica marcada; o controle Semana | Mês existe", () => {

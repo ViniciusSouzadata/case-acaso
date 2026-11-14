@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ItemEntrada } from "@/components/movimento/Entrada";
 import { MOV } from "@/lib/movimento";
-import { LinhaDaFloresta } from "@/components/graficos/Floresta";
+import { DetalheFator } from "@/components/DetalheFator";
+import { CampoTecnico, Frases, Tecnico, frasesDe } from "@/components/painel/Blocos";
 import { PainelLateral } from "@/components/PainelLateral";
 import { DetalheBalanco } from "@/components/DetalheBalanco";
 import { grupoEfetivo, prepararFloresta, type EfeitoApi, type GrupoFator, type LinhaFloresta } from "@/lib/floresta";
@@ -56,7 +57,7 @@ function Trilha({ l, indice = 0 }: { l: LinhaFloresta; indice?: number }) {
 function LinhaRanking({ l, onAbrir, realcada, indice }: { l: LinhaFloresta; onAbrir: () => void; realcada: boolean; indice: number }) {
   const selo = seloDaLinha(l);
   const efeito = efeitoDaLinha(l);
-  const numero = efeito === null ? t("painel.tela2.selo.pequena") : aCadaCem(efeito);
+  const numero = efeito === null ? "—" : aCadaCem(efeito);
   const destaque = selo === "sustenta";
   const classeNumero = `whitespace-nowrap font-display text-sm font-semibold ${destaque ? "text-[#8a3a00]" : "text-slate-800"}`;
   return (
@@ -133,20 +134,26 @@ export function Ranking({ efeitos, realce = null }: { efeitos: EfeitoApi[]; real
 
       {aberta ? (
         <PainelLateral titulo={nomeCurto(aberta.fator, aberta.nivel)} onFechar={() => setAberta(null)}>
-          <div className="cartao p-4">
-            <ul>
-              <LinhaDaFloresta l={aberta} indice={0} />
-            </ul>
-          </div>
-          <p className="text-sm text-slate-700">{t("fatores.explica")}</p>
+          <DetalheFator l={aberta} />
         </PainelLateral>
       ) : null}
       {ajuda ? (
         <PainelLateral titulo={t("painel.tela2.ajudaTitulo")} onFechar={() => setAjuda(false)}>
-          <p className="text-sm text-slate-800">{t("painel.tela2.ajudaTexto")}</p>
-          <p className="text-sm text-slate-700">{t("fatores.explica")}</p>
-          <p className="text-sm text-slate-700">{t(`fatores.abasAjuda.${grupo}`)}</p>
-          <DetalheBalanco />
+          <section className="cartao space-y-3 p-4">
+            <Frases itens={frasesDe("detalhe.comoLerTela2")} />
+            <ul className="space-y-1 text-sm text-slate-800">
+              {(["sustenta", "acaso", "semDiferenca", "pequena", "descritivo"] as const).map((x) => (
+                <li key={x} className="flex items-start gap-2">
+                  <span className={`mt-0.5 shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ${ESTILO_SELO[x]}`}>{t(`painel.tela2.selo.${x}`)}</span>
+                  <span>{t(`detalhe.selos.${x}`).split(": ").slice(1).join(": ")}</span>
+                </li>
+              ))}
+            </ul>
+            <Tecnico>
+              <CampoTecnico rotulo={t("fatores.explicaTitulo")}>{t("fatores.explica")}</CampoTecnico>
+              <DetalheBalanco />
+            </Tecnico>
+          </section>
         </PainelLateral>
       ) : null}
     </ItemEntrada>

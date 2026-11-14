@@ -44,8 +44,8 @@ describe.skipIf(!temBanco)("fumaça das telas contra o banco real", () => {
     expect(botoes.length).toBeGreaterThan(0);
     fireEvent.click(botoes[0]!);
     const dialogo = await screen.findByRole("dialog");
-    await waitFor(() => expect(dialogo.textContent).toMatch(/O que é|A conta/i), { timeout: 20000 });
-    expect(dialogo.querySelector("details")).not.toBeNull(); // fórmula e fonte ficam na parte técnica
+    await waitFor(() => expect(dialogo.querySelector("details")).not.toBeNull(), { timeout: 20000 }); // fórmula e fonte ficam na parte técnica
+    expect(dialogo.textContent).toMatch(/A conta/i);
     semDadoSensivel();
   }, 60000);
 

@@ -1,6 +1,6 @@
 {
   "app": {
-    "titulo": "Retenção de um assistente de IA"
+    "titulo": "Quem volta a usar o assistente"
   },
   "nav": {
     "retencao": "Quantos voltam",
@@ -9,7 +9,7 @@
   },
   "rodape": {
     "atualizado": "Dados atualizados em {data}",
-    "definicao": "Definição versão {versao}",
+    "definicao": "Regras de contagem: versão {versao}",
     "fonte": "Fonte: WildChat-1M, Brasil",
     "carregando": "Carregando informações da base…",
     "indisponivel": "Não foi possível ler a data da última carga."
@@ -115,7 +115,33 @@
       "burn_in_28d": "Descartando os primeiros 28 dias da base",
       "com_trafego_anomalo": "Incluindo uso com cara de robô",
       "com_perguntas_vazias": "Contando perguntas vazias",
-      "fuso_utc": "Dia contado pelo horário de Londres (UTC)"
+      "fuso_utc": "Contando o dia por outro fuso horário"
+    },
+    "frase": "Mudando a forma de contar, a taxa fica entre {min} e {max}. A maior diferença aparece {quando}.",
+    "clique": "Clique em uma linha para ver o que muda.",
+    "maior": {
+      "oficial": "na forma oficial",
+      "so_ip": "quando a pessoa é só o endereço de rede",
+      "ip_ua_completo": "quando a pessoa inclui a versão do navegador",
+      "sessao_60min": "quando a visita só acaba após 60 minutos parado",
+      "outro_dia": "quando “voltar” só vale em outro dia",
+      "sem_burn_in": "quando se inclui o início da base",
+      "burn_in_28d": "quando se descarta mais do início da base",
+      "com_trafego_anomalo": "quando se inclui o uso com cara de robô",
+      "com_perguntas_vazias": "quando se contam as perguntas vazias",
+      "fuso_utc": "quando o dia é contado por outro fuso horário"
+    },
+    "leigo": {
+      "oficial": "Forma oficial: a mesma pessoa é o mesmo endereço de rede com o mesmo tipo de navegador; uma visita acaba depois de 30 minutos sem uso; voltar é fazer outra visita em até 7 dias.",
+      "so_ip": "A pessoa é só o endereço de rede, sem olhar o navegador. Quem divide a mesma rede vira uma só pessoa.",
+      "ip_ua_completo": "A pessoa é o endereço de rede mais o navegador completo, com a versão. Cada atualização do navegador cria uma pessoa nova.",
+      "sessao_60min": "A visita só acaba depois de 60 minutos sem uso, em vez de 30.",
+      "outro_dia": "Só conta como voltar usar o assistente em outro dia, não em outra visita no mesmo dia.",
+      "sem_burn_in": "Inclui quem chegou nas duas primeiras semanas da base, que a forma oficial deixa de fora.",
+      "burn_in_28d": "Deixa de fora as quatro primeiras semanas da base, em vez de duas.",
+      "com_trafego_anomalo": "Inclui o uso com cara de robô, que a forma oficial deixa de fora.",
+      "com_perguntas_vazias": "Conta também as conversas com pergunta vazia como uso.",
+      "fuso_utc": "O dia e a semana são contados por outro fuso horário. A taxa geral não muda; só algumas pessoas trocam de semana."
     }
   },
   "semana": {
@@ -273,7 +299,7 @@
     "cargaRejeitadasAjuda": "Descartadas são as que não passaram nas verificações e ficaram de fora.",
     "cargaVazia": "Nenhuma carga concluída até agora.",
     "confTitulo": "Os números do painel batem com os dados de origem?",
-    "confAjuda": "Para cada número importante, comparamos o valor calculado direto nos dados de origem com o valor que o painel mostra.",
+    "confAjuda": "Para cada número importante, comparamos o valor nos dados originais com o que o painel mostra.",
     "confVazia": "Ainda não há conferência para esta carga.",
     "confOk": "confere",
     "confFalha": "não confere",
@@ -322,8 +348,12 @@
         "nota": "redacted: marca dos autores do conjunto de dados para dado pessoal ocultado"
       },
       " (ver figura 06)": {
-        "inline": " (a análise exploratória do projeto mostra o porquê)",
+        "inline": "",
         "nota": "figura 06 da análise exploratória (docs/figuras)"
+      },
+      "Registrado como limite (dado que falta).": {
+        "inline": "Fica como limite: é um dado que não temos.",
+        "nota": "texto original: registrado como limite (dado que falta)"
       }
     },
     "validacaoLinhaSemTipo": "{nome}: acerta {acuracia} das {n} conversas conferidas à mão"
@@ -350,24 +380,26 @@
       "cartaoVoltaramSub": "em até 7 dias",
       "cartaoDefinicao": "Se mudar a forma de contar",
       "cartaoDefinicaoSub": "ver as {n} formas",
-      "graficoTitulo": "Taxa de retorno por semana",
-      "legTaxa": "Taxa por semana (○ pouca gente)",
+      "graficoTitulo": "Quantos voltam, semana a semana",
+      "legTaxa": "Quantos voltaram (○ = pouca gente)",
       "legFaixa": "Margem de erro",
       "legMedia": "Média de 4 semanas",
       "emAndamento": "em andamento",
       "semanaTitulo": "O que houve em {data}",
-      "semanaSub": "Nessa semana voltaram {semana} de cada 100. Antes eram {base}.",
+      "semanaSub": "Voltaram {semana} de cada 100; antes eram {base}.",
       "detalheGrafico": "Detalhes do gráfico",
       "detalheSemana": "Detalhes da semana",
       "detalheDefinicoes": "As formas de contar “voltar”"
     },
     "semana": {
-      "caiu": "Caiu {abs} pontos {causa}.",
-      "subiu": "Subiu {abs} pontos {causa}.",
+      "caiu": "As pessoas voltaram menos; o público não mudou.",
+      "subiu": "As pessoas voltaram mais; o público não mudou.",
       "causaComportamento": "porque voltaram menos, não porque mudou o público",
       "causaPublico": "porque mudou o público",
       "normal": "oscilação normal",
-      "foraNormal": "queda fora do normal"
+      "foraNormal": "queda fora do normal",
+      "caiuPublico": "A queda veio de quem chegou, não de as pessoas voltarem menos.",
+      "subiuPublico": "A subida veio de quem chegou, não de as pessoas voltarem mais."
     },
     "tela2": {
       "titulo": "O que faz as pessoas voltarem?",
@@ -388,7 +420,9 @@
       },
       "cap1": "a cada 100 pessoas",
       "cap2": "GPT-4 no lugar do GPT-3.5",
-      "cap3": "semanas teve queda fora do normal"
+      "cap3": "semanas teve queda fora do normal",
+      "cuidado": "Cuidado",
+      "explicacaoCompleta": "Explicação completa"
     },
     "fatores": {
       "semDados": "Não há comparações disponíveis.",
@@ -428,13 +462,104 @@
       "detalheValidacao": "Como conferimos o que a IA classificou",
       "detalheDicionario": "O que significa cada número",
       "colMetrica": "Número conferido",
-      "colOrigem": "Origem",
-      "colPainel": "Painel",
+      "colOrigem": "Nos dados originais",
+      "colPainel": "No painel",
       "colDif": "Diferença",
       "problemaContagem": "{n} conversas ({pct})",
       "semanasContagem": "{n} semanas ({pct} das semanas)",
-      "oQueFizemos": "O que fizemos"
+      "oQueFizemos": "O que fizemos",
+      "dicionarioLink": "Dicionário dos números",
+      "dicionarioTitulo": "Dicionário dos números",
+      "nomesConferencia": {
+        "conversas_lidas": "Conversas lidas",
+        "conversas_aceitas": "Conversas aproveitadas",
+        "elegiveis": "Pessoas que entram na conta",
+        "ips_distintos": "Endereços de rede diferentes",
+        "usuarios_oficiais": "Pessoas reconhecidas",
+        "voltaram_7d": "Voltaram em até 7 dias",
+        "semanas_maduras": "Semanas completas",
+        "semanas_com_novos_divergentes": "Semanas em que a contagem de pessoas novas não bate",
+        "semanas_com_voltaram_divergentes": "Semanas em que a contagem de voltas não bate"
+      },
+      "validacao": {
+        "recusa": {
+          "1": "Conferimos {n} conversas à mão. A IA acertou o que é recusa em {pct} delas."
+        },
+        "assunto": {
+          "1": "Conferimos {n} conversas à mão. A IA acertou o assunto em {pct} delas.",
+          "2": "Assuntos se misturam (uma pergunta pode ser de estudo e de programação), por isso usamos o assunto só para ilustrar."
+        }
+      },
+      "validacaoTecnicoRegras": "Versão por palavras-chave: acerta {pct} das {n} conversas (concordância com a conferência manual: {kappa}).",
+      "validacaoTecnicoIa": "Versão por IA, usada nos números: acerta {pct} das {n} conversas (concordância com a conferência manual: {kappa}).",
+      "semanasLinha": "{n} semanas",
+      "problemaFicaLimite": "Fica como limite: é um dado que não temos.",
+      "acerto": {
+        "recusa": "de acerto no que é recusa",
+        "assunto": "de acerto no assunto"
+      }
     },
-    "margemErro": "margem de erro: {inf} a {sup}"
+    "margemErro": "margem de erro: {inf} a {sup}",
+    "pistaClique": "Clique para ver detalhes"
+  },
+  "detalhe": {
+    "indicador": {
+      "taxa_retorno_7d": {
+        "1": "De cada 100 pessoas que usaram o assistente pela primeira vez, quantas usaram de novo em até 7 dias.",
+        "2": "Não entram na conta: as duas primeiras semanas da base e o uso com cara de robô.",
+        "3": "Cuidado: sem login, reconhecemos a pessoa pelo endereço de rede e pelo navegador. Quem troca de rede parece uma pessoa nova, então o número real pode ser um pouco maior."
+      },
+      "novos_usuarios": {
+        "1": "Quantas pessoas usaram o assistente pela primeira vez.",
+        "2": "Não entram na conta: as duas primeiras semanas da base e o uso com cara de robô.",
+        "3": "É uma contagem aproximada: sem login, a mesma pessoa pode ser contada duas vezes."
+      },
+      "voltaram_7d": {
+        "1": "Quantas das pessoas novas usaram o assistente de novo em até 7 dias depois da primeira vez.",
+        "2": "Voltas depois dos 7 dias não contam."
+      }
+    },
+    "rotulo": {
+      "taxa_retorno_7d": "voltam em até 7 dias",
+      "novos_usuarios": "pessoas novas",
+      "voltaram_7d": "voltaram em até 7 dias"
+    },
+    "taxaFrase": "Nas semanas com gente suficiente, a taxa foi de {min} a {max}.",
+    "taxaFraseMes": "Nos meses com gente suficiente, a taxa foi de {min} a {max}.",
+    "legTaxa": "Taxa do período",
+    "legFaixa": "Margem de erro",
+    "legMedia": "Média de 4 semanas",
+    "comoLer": "Como ler",
+    "mostrarEpocas": "Mostrar épocas do produto",
+    "esconderEpocas": "Esconder épocas do produto",
+    "semanaFrase": "Nessa semana voltaram {semana} de cada 100; antes eram {base}.",
+    "semanaComparada": "Comparada com as 4 semanas anteriores ({nBase} pessoas); {nSemana} pessoas nessa semana.",
+    "semanaAcaso": "Uma diferença assim aparece por acaso em {p} de cada 100 vezes.",
+    "semanaSemP": "Com tão pouca gente por semana, só diferenças grandes são sinal de mudança.",
+    "veredito": {
+      "sustenta": "É uma diferença real: continua mesmo levando em conta que comparamos muitas coisas ao mesmo tempo.",
+      "acaso": "Parece diferença, mas pode ser sorte: quando se comparam muitas coisas, algumas aparecem por acaso.",
+      "semDiferenca": "A margem de erro inclui o zero: não dá para dizer que muda algo.",
+      "pequena": "Só {n} pessoas neste grupo: é pouco para concluir.",
+      "descritivoUso": "Só descreve: quem usa mais na primeira visita já é diferente de quem usa menos; isso não mostra causa.",
+      "descritivoAssunto": "Só descreve: aqui não comparamos pessoas parecidas, e a IA acerta o assunto em pouco mais da metade das vezes."
+    },
+    "barra": "{grupo}: {n} de cada 100 voltaram",
+    "pessoasGrupo": "{n} pessoas",
+    "tecnicoDiretaTitulo": "Diferença direta",
+    "tecnicoOutraForma": "Outra forma de comparar pessoas parecidas",
+    "tecnicoTamanhos": "Tamanho dos grupos",
+    "comoLerTela2": {
+      "1": "Cada linha compara dois grupos de pessoas parecidas: quem passou por aquilo e quem não passou.",
+      "2": "O ponto é a diferença, em pessoas a cada 100; a barra é a margem de erro.",
+      "3": "Barra que passa pelo zero: não dá para afirmar diferença."
+    },
+    "selos": {
+      "sustenta": "diferença real: continua mesmo comparando muitas coisas",
+      "acaso": "pode ser acaso: parece diferença, mas pode ser sorte",
+      "semDiferenca": "sem diferença clara: a margem de erro inclui o zero",
+      "pequena": "pouca gente: pequeno demais para concluir",
+      "descritivo": "só descreve: mostra o que acontece, não a causa"
+    }
   }
 }

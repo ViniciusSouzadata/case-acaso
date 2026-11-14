@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { variantesHeroi } from "@/components/CartaoKpi";
 import { ConteudoEntrada, GrupoEntrada, variantesItem } from "@/components/movimento/Entrada";
 import { MOV } from "@/lib/movimento";
+import { CampoTecnico, Destaque, Tecnico } from "@/components/painel/Blocos";
 import { Estado } from "@/components/Estado";
 import { PainelLateral } from "@/components/PainelLateral";
 import { frases } from "@/lib/achados";
@@ -22,6 +23,8 @@ interface Achado {
   rotulo_destaque: string | null;
   acao_curta: string | null;
   tecnico: string | null;
+  vimos_curto: string | null;
+  limite_curto: string | null;
 }
 
 /** Três cartões curtos: número grande, uma frase e "o que fazer" em uma linha. O resto fica em "Ver detalhes". */
@@ -75,15 +78,22 @@ export function CartoesAchados({ onRealcar }: { onRealcar?: (alvo: { fator: stri
       </GrupoEntrada>
       {aberto ? (
         <PainelLateral titulo={aberto.titulo} onFechar={() => setAberto(null)}>
-          <div className="cartao space-y-3 p-4 text-sm text-slate-800">
-            <p><span className="font-medium">{t("fatores.achadoEvidencia")}:</span> {aberto.evidencia}</p>
-            <p><span className="font-medium">{t("fatores.achadoDecisao")}:</span> {aberto.decisao}</p>
-            <p className="text-slate-700"><span className="font-medium">{t("fatores.achadoLimite")}:</span> {aberto.limite}</p>
+          <div className="cartao space-y-3 p-4">
+            {aberto.numero_destaque ? <Destaque valor={aberto.numero_destaque} rotulo={aberto.rotulo_destaque ?? undefined} /> : null}
+            <div className="space-y-2 text-sm text-slate-800">
+              <p><span className="font-medium text-violeta-escuro">{t("fatores.achadoEvidencia")}:</span> {aberto.vimos_curto ?? frases(aberto.evidencia)[0] ?? aberto.evidencia}</p>
+              <p><span className="font-medium text-violeta-escuro">{t("painel.tela2.oQueFazer")}:</span> {aberto.acao_curta ?? frases(aberto.decisao)[0] ?? aberto.decisao}</p>
+              <p><span className="font-medium text-violeta-escuro">{t("painel.tela2.cuidado")}:</span> {aberto.limite_curto ?? frases(aberto.limite)[0] ?? aberto.limite}</p>
+            </div>
+            <Tecnico titulo={t("painel.tela2.explicacaoCompleta")}>
+              <CampoTecnico rotulo={t("fatores.achadoEvidencia")}>{aberto.evidencia}</CampoTecnico>
+              <CampoTecnico rotulo={t("fatores.achadoDecisao")}>{aberto.decisao}</CampoTecnico>
+              <CampoTecnico rotulo={t("fatores.achadoLimite")}>{aberto.limite}</CampoTecnico>
+            </Tecnico>
             {aberto.tecnico ? (
-              <details className="rounded-lg border border-[#e3e0f3] p-2">
-                <summary className="cursor-pointer font-medium text-violeta-escuro">{t("glossario.tecnicoTitulo")}</summary>
-                <p className="mt-2 text-slate-700" data-testid="achado-tecnico">{aberto.tecnico}</p>
-              </details>
+              <Tecnico>
+                <p data-testid="achado-tecnico">{aberto.tecnico}</p>
+              </Tecnico>
             ) : null}
           </div>
         </PainelLateral>

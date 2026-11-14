@@ -1,6 +1,7 @@
 "use client";
 
 import { Estado } from "@/components/Estado";
+import { CampoTecnico, Destaque, Frases, Tecnico, frasesDe } from "@/components/painel/Blocos";
 import { t } from "@/lib/mensagens";
 import { useApi } from "@/lib/useApi";
 
@@ -15,38 +16,30 @@ interface Indicador {
   limitacoes: string;
 }
 
-function Campo({ rotulo, children }: { rotulo: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <dt className="text-xs font-semibold uppercase tracking-wide text-violeta-escuro">{rotulo}</dt>
-      <dd className="mt-0.5 text-slate-900">{children}</dd>
-    </div>
-  );
-}
-
-/** Conteúdo do painel lateral de um cartão: definição em linguagem comum primeiro; fórmula e fonte na parte técnica. Vem do dicionário de indicadores. */
-export function DetalheIndicador({ indicador }: { indicador: string }) {
+/**
+ * Conteúdo do painel de um cartão: número em destaque, até 3 frases curtas e o resto (definição completa, fórmula, fonte) no bloco técnico.
+ * As frases vêm de `detalhe.indicador.<id>` (arquivo de mensagens); o dicionário só alimenta o técnico.
+ */
+export function DetalheIndicador({ indicador, destaque }: { indicador: string; destaque?: { valor: string; rotulo: string } }) {
   const r = useApi<Indicador[]>(`/api/dicionario?indicador=${encodeURIComponent(indicador)}`);
   const item = r.estado === "ok" ? r.corpo.dados[0] : undefined;
+  const frases = frasesDe(`detalhe.indicador.${indicador}`);
   return (
-    <section className="cartao p-4" data-testid="detalhe-indicador">
+    <section className="cartao space-y-3 p-4" data-testid="detalhe-indicador">
+      {destaque ? <Destaque valor={destaque.valor} rotulo={destaque.rotulo} /> : null}
+      {frases.length > 0 ? <Frases itens={frases} /> : item ? <Frases itens={[item.definicao]} /> : null}
       {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
       {r.estado === "erro" ? <Estado tipo="erro" mensagem={r.mensagem} requestId={r.requestId} /> : null}
       {r.estado === "ok" && !item ? <Estado tipo="vazio" mensagem={t("glossario.naoEncontrado")} /> : null}
       {item ? (
-        <dl className="space-y-3 text-sm">
-          <Campo rotulo={t("glossario.definicao")}>{item.definicao}</Campo>
-          <Campo rotulo={t("glossario.denominador")}>{item.denominador}</Campo>
-          <Campo rotulo={t("glossario.periodo")}>{item.periodo_referencia}</Campo>
-          <Campo rotulo={t("glossario.limitacoes")}>{item.limitacoes}</Campo>
-          <details className="rounded-lg border border-[#e3e0f3] p-2">
-            <summary className="cursor-pointer font-medium text-violeta-escuro">{t("glossario.tecnicoTitulo")}</summary>
-            <div className="mt-2 space-y-3">
-              <Campo rotulo={t("glossario.formula")}>{item.formula}</Campo>
-              <Campo rotulo={t("glossario.fonte")}>{item.fonte}</Campo>
-            </div>
-          </details>
-        </dl>
+        <Tecnico>
+          <CampoTecnico rotulo={t("glossario.definicao")}>{item.definicao}</CampoTecnico>
+          <CampoTecnico rotulo={t("glossario.denominador")}>{item.denominador}</CampoTecnico>
+          <CampoTecnico rotulo={t("glossario.periodo")}>{item.periodo_referencia}</CampoTecnico>
+          <CampoTecnico rotulo={t("glossario.limitacoes")}>{item.limitacoes}</CampoTecnico>
+          <CampoTecnico rotulo={t("glossario.formula")}>{item.formula}</CampoTecnico>
+          <CampoTecnico rotulo={t("glossario.fonte")}>{item.fonte}</CampoTecnico>
+        </Tecnico>
       ) : null}
     </section>
   );

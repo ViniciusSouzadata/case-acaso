@@ -24,7 +24,14 @@ export function numeroGrande(pp: number | null | undefined): string {
 
 /** Nome curto, em linguagem comum, de uma linha do ranking. Sem tradução cadastrada, cai em "rótulo: nível". */
 export function nomeCurto(fator: string, nivel: string): string {
-  return NOMES[`${fator}|${nivel}`] ?? `${rotuloFator(fator)}: ${nivel}`;
+  return NOMES[`${fator}|${nivel}`] ?? `${rotuloFator(fator)}: ${nivelPt(nivel)}`;
+}
+
+/** Valor de um nível em português ("Spanish" → "espanhol"). */
+export function nivelPt(nivel: string): string {
+  const chave = `fatores.niveis.${nivel}`;
+  const r = t(chave);
+  return r === chave ? nivel : r;
 }
 
 function rotuloFator(f: string): string {
@@ -44,6 +51,14 @@ const NOMES: Record<string, string> = {
   "idioma|Spanish": "Escreve em espanhol",
   "idioma|English": "Escreve em inglês",
   "idioma|outros": "Escreve em outro idioma",
+  "tema_descritivo|conversa pessoal/conselho": "Conversa pessoal ou conselho",
+  "tema_descritivo|trabalho/negócios": "Trabalho e negócios",
+  "tema_descritivo|escrita e tradução": "Escrita e tradução",
+  "tema_descritivo|criação/ficção e roleplay": "Criação e ficção",
+  "tema_descritivo|programação/TI": "Programação e TI",
+  "tema_descritivo|informação geral/curiosidade": "Informação geral",
+  "tema_descritivo|estudo/dever de casa": "Estudo",
+  "tema_descritivo|outros/indefinido": "Outros",
   "tema|conversa pessoal/conselho": "Assunto: conversa pessoal",
   "tema|estudo/dever de casa": "Assunto: estudo",
   "tema|informação geral/curiosidade": "Assunto: curiosidade",
@@ -104,9 +119,8 @@ export function conclusaoFatores(sustentam: string[], total: number): string {
 /** Linha de conclusão da semana: quanto caiu/subiu, por quê, e se cabe na variação normal. */
 export function conclusaoSemana(r: ResumoSemanaApi): { frase: string; normal: boolean | null } | null {
   if (r.delta_pp === null || r.mix_pp === null || r.taxa_pp === null) return null;
-  const abs = nf(1).format(Math.abs(r.delta_pp));
-  const causa = Math.abs(r.taxa_pp) >= Math.abs(r.mix_pp) ? t("painel.semana.causaComportamento") : t("painel.semana.causaPublico");
-  const frase = t(r.delta_pp < 0 ? "painel.semana.caiu" : "painel.semana.subiu", { abs, causa });
+  const publico = Math.abs(r.taxa_pp) < Math.abs(r.mix_pp);
+  const frase = t(`painel.semana.${r.delta_pp < 0 ? "caiu" : "subiu"}${publico ? "Publico" : ""}`);
   return { frase, normal: r.p_valor === null ? null : r.p_valor >= 0.05 };
 }
 
@@ -160,3 +174,66 @@ export const ALVO_ACHADO: Record<number, { fator: string; nivel: string }> = {
   1: { fator: "recusa", nivel: "sim" },
   2: { fator: "modelo_familia", nivel: "gpt-4" },
 };
+
+
+// ---------------------------------------------------------------- Detalhe de uma linha do ranking (Tela 2)
+
+const cem = (x: number) => {
+  const a = Math.abs(x);
+  return a >= 10 ? nf(0).format(a) : nf(1).format(a);
+};
+
+/** "entre 11 e 21 a menos" / "entre 3 a menos e 5 a mais"; sem sufixo quando `sufixo` é falso e os dois lados têm o mesmo sinal. */
+export function faixaCem(inf: number, sup: number, sufixo: boolean): string {
+  if (inf >= 0 && sup >= 0) return `entre ${cem(inf)} e ${cem(sup)}${sufixo ? " a mais" : ""}`;
+  if (inf <= 0 && sup <= 0) return `entre ${cem(sup)} e ${cem(inf)}${sufixo ? " a menos" : ""}`;
+  return `entre ${cem(inf)} a menos e ${cem(sup)} a mais`;
+}
+
+/** Frase do resultado: "Entre pessoas parecidas, voltam 16 a menos a cada 100 (entre 11 e 21 a menos)." Abas só descritivas usam a diferença direta. */
+export function fraseResultado(l: LinhaFloresta): string | null {
+  const descritivo = l.grupo === "engajamento" || l.grupo === "descritivo";
+  const e = descritivo ? l.bruto : (l.ajustado ?? l.bruto);
+  if (!e || l.pequena) return null;
+  const prefixo = descritivo ? "" : "Entre pessoas parecidas, ";
+  const faixa = faixaCem(e.inf, e.sup, !descritivo);
+  const zero = Number(cem(e.efeito).replace(",", ".")) === 0;
+  const corpo = zero ? `quase nenhuma diferença na chance de voltar (${faixa}, a cada 100)` : `voltam ${cem(e.efeito)} ${e.efeito < 0 ? "a menos" : "a mais"} a cada 100 (${faixa})`;
+  const frase = `${prefixo}${corpo}.`;
+  return frase.charAt(0).toUpperCase() + frase.slice(1);
+}
+
+/** Veredito, conforme o selo da linha. */
+export function fraseVeredito(l: LinhaFloresta): string {
+  const selo = seloDaLinha(l);
+  if (selo === "pequena") return t("detalhe.veredito.pequena", { n: new Intl.NumberFormat("pt-BR").format(l.nNivel) });
+  if (selo === "descritivo") return t(l.grupo === "descritivo" ? "detalhe.veredito.descritivoAssunto" : "detalhe.veredito.descritivoUso");
+  return t(`detalhe.veredito.${selo}`);
+}
+
+const ROTULOS_GRUPO: Record<string, [string, string]> = {
+  "recusa": ["Com recusa", "Sem recusa"],
+  "idioma_divergente": ["Respondeu em outro idioma", "Respondeu no mesmo idioma"],
+  "modelo_familia": ["Com GPT-4", "Com GPT-3.5"],
+  "virada_dez2023": ["Depois de dez/2023", "Antes (abr a nov/2023)"],
+  "fim_de_semana": ["Fim de semana", "Dia de semana"],
+};
+
+const ROTULO_REFERENCIA: Record<string, string> = {
+  "demais temas": "Os outros assuntos",
+  "até 300": "Resposta curta (até 300 caracteres)",
+  "até 30": "Pergunta curta (até 30 caracteres)",
+  "Portuguese": "Escreve em português",
+  "tarde": "Usa à tarde",
+  "Sudeste": "Região Sudeste",
+  "computador": "Usa o computador",
+  "2023-12+ (4 padrão)": "Chegou de dez/2023 em diante",
+};
+
+/** Nomes dos dois grupos comparados, para as duas barras do detalhe. */
+export function rotulosGrupos(l: LinhaFloresta): [string, string] {
+  const fixo = ROTULOS_GRUPO[l.fator];
+  if (fixo) return fixo;
+  const ref = l.referencia === "1" ? (l.fator === "n_turnos_sessao" ? "1 mensagem na 1ª visita" : "1 conversa na 1ª visita") : (ROTULO_REFERENCIA[l.referencia] ?? nivelPt(l.referencia));
+  return [nomeCurto(l.fator, l.nivel), ref];
+}

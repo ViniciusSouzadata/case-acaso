@@ -1,6 +1,7 @@
 # Achados em linguagem leiga (pedido 12, 14/11/2026): frases curtas, falando de pessoas; o que é técnico de verdade fica em `tecnico`.
 # Os números não mudam: conferidos contra resultado.* e docs/robustez_recusa.md em 14/11 (−16,41 [−21,35; −11,47] e −2,91 [−7,99; +2,16] de efeito_fator;
 # 20/11/2023: 26,4% (n=197) → 21,5% (n=65); 33 semanas testadas, 1 com p<0,05 por analise.semana.contar_semanas_significativas; 132 recusas em 131 IPs).
+# vimos_curto e limite_curto (opcionais, pedido 13): "O que vimos" e "Cuidado" do painel que abre ao clicar (10/25 e 33/1 conferidos contra resultado.* em 14/11).
 # numero_destaque, rotulo_destaque e acao_curta (opcionais): cartão curto da Tela 2. tecnico (opcional): bloco recolhido "Para conferir (técnico)".
 # Achados aprovados pelo Vinícius (ponto de controle 1, 12/11/2026); a redação leiga foi pedida pelo planejador em 14/11/2026.
 - ordem: 1
@@ -8,6 +9,8 @@
   numero_destaque: "−16"
   rotulo_destaque: "a cada 100 pessoas"
   acao_curta: "Medir as recusas todo mês e rever as que não precisavam acontecer."
+  vimos_curto: "De cada 100 pessoas que receberam uma recusa, 10 voltaram. Sem recusa, voltaram 25."
+  limite_curto: "É comparação, não teste: a recusa pode só indicar um pedido que o produto não atende."
   evidencia: >-
     De 2.372 pessoas novas, 132 receberam uma recusa logo na primeira resposta. Dessas 132, só 13 voltaram em até
     7 dias (10 a cada 100). Entre as 2.240 que não receberam recusa, voltaram 553 (25 a cada 100). Comparando pessoas
@@ -38,6 +41,8 @@
   numero_destaque: "Sem ganho"
   rotulo_destaque: "GPT-4 no lugar do GPT-3.5"
   acao_curta: "Não pagar por um modelo mais caro esperando mais retorno."
+  vimos_curto: "Quem foi atendido pelo GPT-4 voltou tanto quanto quem foi atendido pelo GPT-3.5."
+  limite_curto: "Diferenças pequenas, de menos de 5 a cada 100, podem passar despercebidas."
   evidencia: >-
     Comparando pessoas parecidas, quem foi atendido pelo GPT-4 não voltou mais do que quem foi atendido pelo GPT-3.5: a
     diferença foi de 3 a menos a cada 100, dentro da margem de erro (de 8 a menos até 2 a mais). Os dados não mostram
@@ -60,6 +65,8 @@
   numero_destaque: "1 de 33"
   rotulo_destaque: "semanas teve queda fora do normal"
   acao_curta: "Só soar o alarme quando a queda for maior que a oscilação normal."
+  vimos_curto: "A maior queda vista era efeito do começo da base. Das 33 semanas, só 1 caiu fora do normal."
+  limite_curto: "Com poucas pessoas por semana, só quedas grandes aparecem."
   evidencia: >-
     A maior queda que apareceu foi na semana de 1º/05/2023: 17 pontos a menos que nas duas semanas anteriores. Parecia
     grave. Mas aquelas duas semanas eram as primeiras da base, e nelas pessoas antigas foram contadas como novas — e

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { Contagem } from "@/components/movimento/Contagem";
 import { variantesConteudo, variantesItem } from "@/components/movimento/Entrada";
+import { t } from "@/lib/mensagens";
 import { MOV } from "@/lib/movimento";
 
 const HEROI: Variants = {
@@ -44,7 +45,10 @@ export function CartaoKpi({
     <motion.div variants={variantesConteudo(reduzido)}>
       <div className={`flex items-center justify-between gap-2 text-sm ${escuro ? "text-white" : "text-slate-600"}`}>
         <span>{rotulo}</span>
-        {extra}
+        <span className="flex items-center gap-2">
+          {extra}
+          {onAbrir ? <span aria-hidden title={t("painel.pistaClique")} className={`text-xl leading-none ${escuro ? "text-white" : "text-slate-400"}`}>›</span> : null}
+        </span>
       </div>
       <div className={`mt-1 font-display text-3xl font-semibold leading-none tracking-tight tabular-nums sm:text-4xl ${escuro ? "text-papel" : "text-tinta"}`} data-testid={testid}>
         {animar ? <Contagem valor={animar.valor} formato={animar.formato} /> : valor}

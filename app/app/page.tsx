@@ -78,7 +78,6 @@ export default function PaginaRetencao() {
               apoio={t("painel.tela1.cartaoTaxaSub", { inf: formatarPct(r.ic_inf), sup: formatarPct(r.ic_sup) })}
               testid="valor"
               onAbrir={() => setDetalhe("taxa")}
-              extra={<span aria-hidden className="flex h-5 w-5 items-center justify-center rounded-full border border-violeta-claro text-xs font-semibold text-violeta-claro">i</span>}
             />
             <CartaoKpi rotulo={t("painel.tela1.cartaoPessoas")} valor={formatarInt(r.usuarios)} animar={{ valor: r.usuarios, formato: (n) => formatarInt(Math.round(n)) }} apoio={t("painel.tela1.cartaoPessoasSub")} onAbrir={() => setDetalhe("pessoas")} />
             <CartaoKpi rotulo={t("painel.tela1.cartaoVoltaram")} valor={formatarInt(r.voltaram_7d)} animar={{ valor: r.voltaram_7d, formato: (n) => formatarInt(Math.round(n)) }} apoio={t("painel.tela1.cartaoVoltaramSub")} onAbrir={() => setDetalhe("voltaram")} />
@@ -158,7 +157,12 @@ export default function PaginaRetencao() {
           }
           onFechar={() => setDetalhe(null)}
         >
-          {INDICADOR[detalhe] ? <DetalheIndicador indicador={INDICADOR[detalhe]!} /> : null}
+          {INDICADOR[detalhe] && r ? (
+            <DetalheIndicador
+              indicador={INDICADOR[detalhe]!}
+              destaque={{ valor: detalhe === "taxa" ? formatarPct(r.taxa) : formatarInt(detalhe === "pessoas" ? r.usuarios : r.voltaram_7d), rotulo: t(`detalhe.rotulo.${INDICADOR[detalhe]!}`) }}
+            />
+          ) : null}
           {detalhe === "grafico" ? <DetalheTaxa /> : null}
           {detalhe === "semana" ? <BlocoSemana inicial={semanaSel} /> : null}
           {detalhe === "definicoes" ? <BlocoSensibilidade /> : null}

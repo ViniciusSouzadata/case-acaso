@@ -24,8 +24,15 @@ interface Qualidade {
 }
 
 const TERMOS = (todasAsMensagens.dados as { termosTecnicos: Record<string, { inline: string; nota: string }> }).termosTecnicos;
-const LINHAS_INICIAIS = 6;
+const LINHAS_INICIAIS = 5;
 const ITENS = ["1", "2", "3"];
+const TITULOS: Record<SecaoQualidade, string> = {
+  conf: t("painel.tela3.detalheConf"),
+  carga: t("painel.tela3.detalheCarga"),
+  recusa: t("painel.tela3.cartaoRecusa"),
+  assunto: t("painel.tela3.cartaoTema"),
+  dicionario: t("painel.tela3.dicionarioTitulo"),
+};
 
 /** Tela 3 — Confiança nos dados, em formato de painel: 4 cartões, barras de problemas e o que o painel mostra e nunca mostra. */
 export default function PaginaDados() {
@@ -57,8 +64,8 @@ export default function PaginaDados() {
           </BlocoBlur>
         </div>
         {q ? (
-          <button type="button" onClick={() => setDetalhe("tudo")} className="alvo rounded-lg border border-violeta px-3 py-1.5 text-sm font-medium text-violeta hover:bg-violeta hover:text-papel">
-            {t("painel.verDetalhes")}
+          <button type="button" onClick={() => setDetalhe("dicionario")} className="alvo text-sm font-medium text-violeta hover:underline">
+            {t("painel.tela3.dicionarioLink")}
           </button>
         ) : null}
       </header>
@@ -89,13 +96,13 @@ export default function PaginaDados() {
               rotulo={t("painel.tela3.cartaoRecusa")}
               valor={recusa ? formatarPct(recusa.acuracia, 0) : "—"}
               apoio={recusa ? t("painel.tela3.cartaoAcertoSub", { n: formatarInt(recusa.n) }) : undefined}
-              onAbrir={() => setDetalhe("validacao")}
+              onAbrir={() => setDetalhe("recusa")}
             />
             <CartaoKpi
               rotulo={t("painel.tela3.cartaoTema")}
               valor={tema ? formatarPct(tema.acuracia, 0) : "—"}
               apoio={tema ? t("painel.tela3.cartaoAcertoSub", { n: formatarInt(tema.n) }) : undefined}
-              onAbrir={() => setDetalhe("validacao")}
+              onAbrir={() => setDetalhe("assunto")}
               selo={tema ? <span className="inline-block rounded-full bg-[#ffe9db] px-2 py-0.5 text-xs font-medium text-[#8a3a00]">{t("painel.tela3.seloTema")}</span> : null}
             />
           </GrupoEntrada>
@@ -116,6 +123,14 @@ export default function PaginaDados() {
                         <BarraCrescente indice={i} className="absolute inset-y-0 left-0 rounded bg-violeta transition-colors group-hover:bg-violeta-escuro" style={{ width: `${Math.max((p.percentual ?? 0) > 0 ? 1.5 : 0, ((p.percentual ?? 0) / maximo) * 100)}%` }} />
                       </span>
                       <span className="text-right font-display text-sm font-semibold text-slate-800">{formatarPct(p.percentual)}</span>
+                    </button>
+                  </li>
+                ))}
+                {outros.map((p) => (
+                  <li key={p.problema} data-problema={nomeProblema(p.problema)}>
+                    <button type="button" onClick={() => setProblema(p)} className="grid min-h-[2.5rem] w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta">
+                      <span className="text-sm font-medium text-tinta">{nomeProblema(p.problema)}</span>
+                      <span className="text-right font-display text-sm font-semibold text-slate-800">{t("painel.tela3.semanasLinha", { n: formatarInt(p.contagem) })}</span>
                     </button>
                   </li>
                 ))}
@@ -155,7 +170,7 @@ export default function PaginaDados() {
             return (
               <div className="cartao space-y-2 p-4 text-sm text-slate-800">
                 <p className="font-medium text-tinta">{prob.texto}</p>
-                <p>{t("painel.tela3.problemaContagem", { n: formatarInt(problema.contagem), pct: formatarPct(problema.percentual) })}</p>
+                <p>{t(unidadeProblema(problema.problema) === "semanas" ? "painel.tela3.semanasContagem" : "painel.tela3.problemaContagem", { n: formatarInt(problema.contagem), pct: formatarPct(problema.percentual) })}</p>
                 {problema.tratamento ? <p><span className="font-medium">{t("painel.tela3.oQueFizemos")}:</span> {trat.texto}</p> : null}
                 {tecnicos.length > 0 ? (
                   <details>
@@ -172,17 +187,8 @@ export default function PaginaDados() {
       ) : null}
 
       {detalhe && q ? (
-        <PainelLateral titulo={detalhe === "conf" ? t("painel.tela3.detalheConf") : detalhe === "carga" ? t("painel.tela3.detalheCarga") : detalhe === "validacao" ? t("painel.tela3.detalheValidacao") : t("painel.tela3.detalheTitulo")} onFechar={() => setDetalhe(null)}>
+        <PainelLateral titulo={TITULOS[detalhe]} onFechar={() => setDetalhe(null)}>
           <DetalheQualidade lote={q.lote} reconciliacao={q.reconciliacao} validacao={q.validacao} secao={detalhe} />
-          {detalhe === "tudo" && outros.length > 0 ? (
-            <section className="cartao p-4 text-sm text-slate-800">
-              {outros.map((p) => (
-                <p key={p.problema}>
-                  <span className="font-medium">{nomeProblema(p.problema)}:</span> {t("painel.tela3.semanasContagem", { n: formatarInt(p.contagem), pct: formatarPct(p.percentual) })}. {p.tratamento}
-                </p>
-              ))}
-            </section>
-          ) : null}
         </PainelLateral>
       ) : null}
     </div>

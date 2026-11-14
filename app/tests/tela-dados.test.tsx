@@ -49,10 +49,11 @@ describe("Tela 3 — Confiança nos dados (painel)", () => {
     expect(document.querySelectorAll("[data-problema]").length).toBe(1);
   });
 
-  it("conferências uma a uma ficam atrás de 'Ver detalhes', com ok/falha", () => {
+  it("conferências uma a uma ficam atrás do cartão 'Números conferidos', com ok/falha e nomes em linguagem comum", () => {
     render(<PaginaDados />);
     expect(document.querySelectorAll("[data-ok]").length).toBe(0);
-    fireEvent.click(screen.getAllByRole("button", { name: /Ver detalhes/ })[0]!);
+    expect(screen.queryByRole("button", { name: /Ver detalhes/ })).toBeNull(); // o botão geral saiu: cada cartão abre o seu pedaço
+    fireEvent.click(screen.getAllByRole("button", { name: /Números conferidos/ })[0]!);
     expect([...document.querySelectorAll("[data-ok]")].map((i) => i.getAttribute("data-ok"))).toEqual(["true", "false"]);
   });
 
