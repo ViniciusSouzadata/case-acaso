@@ -29,6 +29,7 @@ from loader import carregar, migrar, transformar
 
 DB_SINT = "acaso_t_sint"
 DB_REAL = "acaso_t_real"
+DB_GERAL = "acaso_t_geral"  # test_carregar e test_migracoes: nunca no banco padrão (o da stack no ar)
 SNAPSHOT = Path(carregar.SNAPSHOT)
 RAIZ = Path(carregar.RAIZ)
 
@@ -144,6 +145,17 @@ def banco_real() -> str:
         with psycopg.connect(_dsn_admin(), autocommit=True) as c:
             c.execute(sql.SQL("COMMENT ON DATABASE {} IS {}").format(sql.Identifier(DB_REAL), sql.Literal(_estado["impressao"])))
     return DB_REAL
+
+
+@pytest.fixture(scope="module")
+def banco_geral():
+    """Banco descartável migrado para os testes que gravam em stg/ops (carga, migrações): o banco padrão é o da stack no ar."""
+    _recriar_banco(DB_GERAL)
+    with _em_banco(DB_GERAL):
+        migrar.migrar()
+        yield DB_GERAL
+    with psycopg.connect(_dsn_admin(), autocommit=True) as c:
+        c.execute(f'DROP DATABASE IF EXISTS "{DB_GERAL}" WITH (FORCE)')
 
 
 @pytest.fixture
