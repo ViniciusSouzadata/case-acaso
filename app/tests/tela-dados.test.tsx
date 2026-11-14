@@ -88,3 +88,47 @@ describe("Tela 3 — Confiança nos dados (painel)", () => {
     expect(screen.getByText(/nem navegador de ninguém/)).toBeTruthy();
   });
 });
+
+describe("Tela 3 — pedido 14 (barras, recusa e fonte)", () => {
+  const p = (problema: string, contagem: number, percentual: number) => ({ problema, contagem, percentual, tratamento: null });
+  const detalhe = (precisao: number, revocacao: number) => ({ por_classe: { sim: { n_humano: 20, precisao, n_maquina: 24, revocacao } } });
+  beforeEach(() => {
+    mock.corpo = {
+      lote,
+      reconciliacao: [rec("elegiveis", true)],
+      problemas: [
+        p("Conversas de endereços com uso com cara de robô (7 endereços)", 3284, 0.2826),
+        p("Conversas do endereço de rede mais ativo", 1557, 0.134),
+        p("Idioma divergente em pergunta curta", 964, 0.0835),
+        p("Semanas com queda forte de volume", 4, 0.0702),
+        p("Conversas tóxicas marcadas na base", 0, 0),
+      ],
+      validacao: [{ classificador: "recusa", n: 200, acuracia: 0.92, kappa: 0.5, versao_prompt: "v1", modelo: "openrouter:x", detalhe_json: detalhe(0.5833, 0.7) }],
+    };
+  });
+
+  it("o endereço mais ativo vem recuado sob o uso com cara de robô, e a fonte aparece", () => {
+    render(<PaginaDados />);
+    const itens = screen.getAllByRole("listitem").filter((li) => li.getAttribute("data-problema"));
+    expect(itens.map((li) => li.getAttribute("data-problema"))).toEqual(["Uso com cara de robô", "Um endereço com uso exagerado", "Idioma mal detectado"]);
+    expect(screen.getByText("dos quais, um único endereço")).toBeTruthy();
+    expect(screen.getByTestId("fonte-barras").textContent).toBe("Base: 11.621 conversas · WildChat-1M, Brasil");
+  });
+
+  it("semanas e tóxicas ficam fora das barras; tóxicas viram nota", () => {
+    render(<PaginaDados />);
+    expect(screen.queryByText("Conversas tóxicas")).toBeNull();
+    expect(screen.getByTestId("nao-temos").textContent).toContain("as conversas ofensivas foram retiradas pelos autores da base");
+    expect(screen.getByText(/4 semanas com queda forte de volume/)).toBeTruthy();
+    expect(screen.getAllByRole("listitem").some((li) => li.getAttribute("data-problema") === "Semanas com queda de volume")).toBe(false);
+  });
+
+  it("cartão da recusa usa precisão e cobertura da tabela; o 92% vai para o detalhe", () => {
+    render(<PaginaDados />);
+    expect(screen.getByText("6 em cada 10")).toBeTruthy();
+    expect(screen.getByText(/encontra 70 de cada 100 recusas · 200 conversas conferidas à mão/)).toBeTruthy();
+    expect(screen.queryByText("92%")).toBeNull();
+    fireEvent.click(screen.getByText("6 em cada 10"));
+    expect(screen.getAllByText(/92%/).length).toBeGreaterThan(0);
+  });
+});

@@ -47,7 +47,7 @@ const NOMES: Record<string, string> = {
   "faixa_chars_resposta|mais de 2.500": "Resposta muito longa",
   "modelo_familia|gpt-4": "GPT-4 no lugar do GPT-3.5",
   "idioma_divergente|sim": "Respondeu em outro idioma",
-  "virada_dez2023|depois (dez/2023 em diante, GPT-4 padrão)": "Chegou depois de dez/2023",
+  "virada_dez2023|depois (dez/2023 em diante, GPT-4 padrão)": "Depois que o GPT-4 virou o padrão (dez/2023)",
   "idioma|Spanish": "Escreve em espanhol",
   "idioma|English": "Escreve em inglês",
   "idioma|outros": "Escreve em outro idioma",
@@ -169,6 +169,17 @@ export function acertoIA(validacao: { classificador: string; modelo: string | nu
   return v ? { acuracia: v.acuracia as number, n: v.n as number } : null;
 }
 
+/** Da conferência manual da IA de recusa: de cada 100 conversas que a IA marca como recusa, quantas são (precisão); de cada 100 recusas reais, quantas ela acha (cobertura). Null se a tabela não trouxer. */
+export function desempenhoRecusa(validacao: { classificador: string; modelo: string | null; n: number | null; detalhe_json?: unknown }[]): { precisao: number; cobertura: number; n: number } | null {
+  const v = validacao.find((x) => x.classificador === "recusa" && x.modelo !== null && !x.modelo.startsWith("regras") && x.n !== null);
+  const sim = (v?.detalhe_json as { por_classe?: Record<string, { precisao?: number | null; revocacao?: number | null }> } | undefined)?.por_classe?.sim;
+  if (!v || !sim || typeof sim.precisao !== "number" || typeof sim.revocacao !== "number") return null;
+  return { precisao: sim.precisao, cobertura: sim.revocacao, n: v.n as number };
+}
+
+/** Problema que está contido em outro: aparece recuado sob o pai ("dos quais, um único endereço"). */
+export const PROBLEMA_FILHO = { pai: "Conversas de endereços com uso com cara de robô", filho: "Conversas do endereço de rede mais ativo" };
+
 /** Ligação cartão de achado → linha do ranking da Tela 2 (pela ordem do achado no seed). O achado 3 (semanas) não tem linha própria. */
 export const ALVO_ACHADO: Record<number, { fator: string; nivel: string }> = {
   1: { fator: "recusa", nivel: "sim" },
@@ -236,4 +247,46 @@ export function rotulosGrupos(l: LinhaFloresta): [string, string] {
   if (fixo) return fixo;
   const ref = l.referencia === "1" ? (l.fator === "n_turnos_sessao" ? "1 mensagem na 1ª visita" : "1 conversa na 1ª visita") : (ROTULO_REFERENCIA[l.referencia] ?? nivelPt(l.referencia));
   return [nomeCurto(l.fator, l.nivel), ref];
+}
+
+/** "2023-04-17" a "2024-04-22" → "abr/2023 a abr/2024" (período da base, para a linha de fonte). */
+export function periodoBase(inicio: string, fim: string): string {
+  const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  const f = (iso: string) => `${meses[Number(iso.slice(5, 7)) - 1]}/${iso.slice(0, 4)}`;
+  return `${f(inicio)} a ${f(fim)}`;
+}
+
+// ---------------------------------------------------------------- Linha do ranking: "em vez de …"
+
+/** Com o que a linha compara, em cinza pequeno. Vazio quando o próprio nome já diz (ex.: "GPT-4 no lugar do GPT-3.5"). */
+const EM_VEZ_DE: Record<string, string> = {
+  "recusa": "em vez de ter respondido",
+  "idioma_divergente": "em vez de responder no mesmo idioma",
+  "virada_dez2023": "em vez de antes",
+  "fim_de_semana": "em vez de dia de semana",
+  "dispositivo": "em vez de computador",
+  "periodo_dia": "em vez de tarde",
+  "regiao": "em vez de Sudeste",
+  "idioma": "em vez de português",
+  "faixa_chars_resposta": "em vez de resposta curta",
+  "faixa_chars_pergunta": "em vez de pergunta curta",
+  "era_modelo": "em vez de dez/2023 em diante",
+  "tema": "em vez dos outros assuntos",
+  "tema_descritivo": "em vez dos outros assuntos",
+};
+
+export function emVezDe(fator: string, nivel: string, referencia: string): string {
+  if (fator === "modelo_familia") return "";
+  if (fator === "n_turnos_sessao") return referencia === "1" ? "em vez de 1 mensagem" : "";
+  if (fator === "n_conversas_sessao") return referencia === "1" ? "em vez de 1 conversa" : "";
+  return EM_VEZ_DE[fator] ?? "";
+}
+
+/** "16 a menos" e, ao lado, "(entre 11 e 21)": o número e a margem, sem repetir "a cada 100" (que fica no eixo). */
+export function efeitoComMargem(l: LinhaFloresta): { numero: string; margem: string } | null {
+  const e = l.referenciaDoRotulo;
+  if (!e || l.pequena) return null;
+  const zero = Number(cem(e.efeito).replace(",", ".")) === 0;
+  const numero = zero ? t("painel.pertoDeZero") : `${cem(e.efeito)} ${e.efeito < 0 ? "a menos" : "a mais"}`;
+  return { numero, margem: `(${faixaCem(e.inf, e.sup, false)})` };
 }

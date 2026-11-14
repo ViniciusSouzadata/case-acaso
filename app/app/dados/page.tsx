@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { CartaoKpi } from "@/components/CartaoKpi";
 import { BarraCrescente } from "@/components/movimento/Barra";
 import { BlocoBlur, BlurTexto } from "@/components/movimento/BlurTexto";
@@ -11,7 +11,7 @@ import { Estado } from "@/components/Estado";
 import { PainelLateral } from "@/components/PainelLateral";
 import type { LoteQualidade, Problema, Reconciliacao, Validacao } from "@/lib/consultas/qualidade";
 import { t, todasAsMensagens } from "@/lib/mensagens";
-import { acertoIA, fraseConfianca, nomeProblema, unidadeProblema } from "@/lib/painel";
+import { PROBLEMA_FILHO, acertoIA, desempenhoRecusa, fraseConfianca, nomeProblema, unidadeProblema } from "@/lib/painel";
 import { traduzirTermos, veredicto } from "@/lib/qualidade";
 import { formatarInt, formatarPct } from "@/lib/regras";
 import { useApi } from "@/lib/useApi";
@@ -34,6 +34,21 @@ const TITULOS: Record<SecaoQualidade, string> = {
   dicionario: t("painel.tela3.dicionarioTitulo"),
 };
 
+/** Uma linha de barra de problema; a recuada (contida no problema acima) leva o texto "dos quais, …". */
+function LinhaBarra({ p, i, maximo, recuada, onAbrir }: { p: Problema; i: number; maximo: number; recuada?: boolean; onAbrir: () => void }) {
+  return (
+    <li data-problema={nomeProblema(p.problema)} className={recuada ? "ml-4" : undefined}>
+      <button type="button" onClick={onAbrir} className={`group grid ${recuada ? "min-h-[1.75rem] py-0.5" : "min-h-[2.25rem] py-1.5"} w-full grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3.5rem] items-center gap-x-3 rounded-lg px-2 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta ${recuada ? "sm:grid-cols-[12.5rem_minmax(0,1fr)_3.5rem]" : "sm:grid-cols-[11rem_minmax(0,1fr)_3.5rem]"}`}>
+        <span className={`text-sm ${recuada ? "text-[13px] leading-tight text-slate-700" : "truncate font-medium text-tinta"}`}>{recuada ? t("painel.tela3.filhoEndereco") : nomeProblema(p.problema)}</span>
+        <span className="relative block h-4 rounded bg-[#f1effc]" aria-hidden>
+          <BarraCrescente indice={i} className={`absolute inset-y-0 left-0 rounded ${recuada ? "bg-violeta-claro" : "bg-violeta"} transition-colors group-hover:bg-violeta-escuro`} style={{ width: `${Math.max((p.percentual ?? 0) > 0 ? 1.5 : 0, ((p.percentual ?? 0) / maximo) * 100)}%` }} />
+        </span>
+        <span className="text-right font-display text-sm font-semibold text-slate-800">{formatarPct(p.percentual)}</span>
+      </button>
+    </li>
+  );
+}
+
 /** Tela 3 — Confiança nos dados, em formato de painel: 4 cartões, barras de problemas e o que o painel mostra e nunca mostra. */
 export default function PaginaDados() {
   const r = useApi<Qualidade>("/api/qualidade");
@@ -46,13 +61,20 @@ export default function PaginaDados() {
   const resposta = ver ? fraseConfianca(ver.v, ver.total, ver.falhas, q?.lote?.linhas_rejeitadas ?? null) : null;
   const batem = q ? q.reconciliacao.filter((c) => c.ok).length : 0;
   const recusa = q ? acertoIA(q.validacao, "recusa") : null;
+  const desempenho = q ? desempenhoRecusa(q.validacao) : null;
   const tema = q ? acertoIA(q.validacao, "tema") : null;
 
   // Barras: só problemas medidos em % de conversas, do maior para o menor.
-  const barras = q ? q.problemas.filter((p) => unidadeProblema(p.problema) === "conversas").sort((a, b) => (b.percentual ?? 0) - (a.percentual ?? 0)) : [];
+  // O que está contido em outro problema aparece recuado sob ele; "tóxicas" (0 por falta de dado) sai das barras e vira nota.
+  const ehToxica = (p: Problema) => p.problema.startsWith("Conversas tóxicas");
+  const filho = q ? q.problemas.find((p) => p.problema.startsWith(PROBLEMA_FILHO.filho)) ?? null : null;
+  const temPai = q ? q.problemas.some((p) => p.problema.startsWith(PROBLEMA_FILHO.pai)) : false;
+  const barras = q ? q.problemas.filter((p) => unidadeProblema(p.problema) === "conversas" && !ehToxica(p) && !(temPai && p === filho)).sort((a, b) => (b.percentual ?? 0) - (a.percentual ?? 0)) : [];
+  const temToxicas = q ? q.problemas.some(ehToxica) : false;
   const visiveis = todos ? barras : barras.slice(0, LINHAS_INICIAIS);
   const maximo = Math.max(...barras.map((p) => p.percentual ?? 0), 0.0001);
   const outros = q ? q.problemas.filter((p) => unidadeProblema(p.problema) === "semanas") : [];
+  const base = q?.lote?.linhas_lidas ?? null;
 
   return (
     <div className="space-y-4">
@@ -93,9 +115,9 @@ export default function PaginaDados() {
               onAbrir={() => setDetalhe("carga")}
             />
             <CartaoKpi
-              rotulo={t("painel.tela3.cartaoRecusa")}
-              valor={recusa ? formatarPct(recusa.acuracia, 0) : "—"}
-              apoio={recusa ? t("painel.tela3.cartaoAcertoSub", { n: formatarInt(recusa.n) }) : undefined}
+              rotulo={desempenho ? t("painel.tela3.cartaoRecusa") : t("painel.tela3.cartaoRecusaGeral")}
+              valor={desempenho ? t("painel.tela3.cartaoRecusaValor", { n: String(Math.round(desempenho.precisao * 10)) }) : recusa ? formatarPct(recusa.acuracia, 0) : "—"}
+              apoio={desempenho ? t("painel.tela3.cartaoRecusaSub", { c: String(Math.round(desempenho.cobertura * 100)), n: formatarInt(desempenho.n) }) : recusa ? t("painel.tela3.cartaoAcertoSub", { n: formatarInt(recusa.n) }) : undefined}
               onAbrir={() => setDetalhe("recusa")}
             />
             <CartaoKpi
@@ -116,30 +138,26 @@ export default function PaginaDados() {
               {barras.length === 0 ? <Estado tipo="vazio" mensagem={t("dados.problemasVazio")} /> : null}
               <ul className={`mt-2 ${todos ? "max-h-56 overflow-y-auto pr-1" : ""}`}>
                 {visiveis.map((p, i) => (
-                  <li key={p.problema} data-problema={nomeProblema(p.problema)}>
-                    <button type="button" onClick={() => setProblema(p)} className="group grid min-h-[2.5rem] w-full grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3.5rem] items-center gap-x-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta sm:grid-cols-[11rem_minmax(0,1fr)_3.5rem]">
-                      <span className="truncate text-sm font-medium text-tinta">{nomeProblema(p.problema)}</span>
-                      <span className="relative block h-4 rounded bg-[#f1effc]" aria-hidden>
-                        <BarraCrescente indice={i} className="absolute inset-y-0 left-0 rounded bg-violeta transition-colors group-hover:bg-violeta-escuro" style={{ width: `${Math.max((p.percentual ?? 0) > 0 ? 1.5 : 0, ((p.percentual ?? 0) / maximo) * 100)}%` }} />
-                      </span>
-                      <span className="text-right font-display text-sm font-semibold text-slate-800">{formatarPct(p.percentual)}</span>
-                    </button>
-                  </li>
-                ))}
-                {outros.map((p) => (
-                  <li key={p.problema} data-problema={nomeProblema(p.problema)}>
-                    <button type="button" onClick={() => setProblema(p)} className="grid min-h-[2.5rem] w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta">
-                      <span className="text-sm font-medium text-tinta">{nomeProblema(p.problema)}</span>
-                      <span className="text-right font-display text-sm font-semibold text-slate-800">{t("painel.tela3.semanasLinha", { n: formatarInt(p.contagem) })}</span>
-                    </button>
-                  </li>
+                  <Fragment key={p.problema}>
+                    <LinhaBarra p={p} i={i} maximo={maximo} onAbrir={() => setProblema(p)} />
+                    {filho && temPai && p.problema.startsWith(PROBLEMA_FILHO.pai) ? <LinhaBarra p={filho} i={i} maximo={maximo} recuada onAbrir={() => setProblema(filho)} /> : null}
+                  </Fragment>
                 ))}
               </ul>
+              {outros.map((p) => (
+                <button key={p.problema} type="button" data-problema={nomeProblema(p.problema)} onClick={() => setProblema(p)} className="alvo mt-1 w-full px-2 text-left text-xs text-slate-700 hover:underline">
+                  {t("painel.tela3.semanasNota", { n: formatarInt(p.contagem), pct: formatarPct(p.percentual) })}
+                </button>
+              ))}
+              {temToxicas ? <p className="mt-1 px-2 text-xs text-slate-700" data-testid="nao-temos">{t("painel.tela3.naoTemos")}</p> : null}
+              <div className="mt-1 flex flex-wrap items-center justify-between gap-x-3">
+              {base !== null ? <p className="px-2 text-xs text-slate-600" data-testid="fonte-barras">{t("painel.tela3.fonte", { n: formatarInt(base), fonte: t("painel.fonteNome") })}</p> : null}
               {barras.length > LINHAS_INICIAIS ? (
-                <button type="button" onClick={() => setTodos(!todos)} className="alvo mt-1 px-2 text-sm font-medium text-violeta hover:underline">
+                <button type="button" onClick={() => setTodos(!todos)} className="alvo px-2 text-sm font-medium text-violeta hover:underline">
                   {todos ? t("painel.tela3.mostrarMenos") : t("painel.tela3.mostrarTodos", { n: barras.length })}
                 </button>
               ) : null}
+              </div>
             </ItemEntrada>
 
             <ItemEntrada atraso={0.52} tag="section" className="cartao p-4" aria-labelledby="painel-titulo">

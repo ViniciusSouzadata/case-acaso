@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Estado } from "@/components/Estado";
-import { Cascata } from "@/components/graficos/Cascata";
+import { DiferencaSemana } from "@/components/graficos/DiferencaSemana";
 import { Tecnico } from "@/components/painel/Blocos";
 import { conclusaoSemana, deCadaCem } from "@/lib/painel";
 import { montarCascata, type ResumoSemanaApi } from "@/lib/graficos";
@@ -44,8 +44,8 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
     <section className="cartao space-y-3 p-4" aria-label={t("painel.tela1.detalheSemana")}>
       <div role="group" aria-label={t("semana.escolha")} className="flex flex-wrap gap-2 text-sm">
         {SEMANAS.map((s) => (
-          <button key={s} type="button" aria-pressed={semana === s} onClick={() => setSemana(s)} className={`min-h-10 rounded-full px-3 sm:min-h-0 sm:py-1 ${semana === s ? "bg-laranja font-medium text-tinta" : "bg-[#f1effc] text-slate-800 hover:bg-[#e6e2fa]"}`}>
-            {dataBr(s)}
+          <button key={s} type="button" aria-pressed={semana === s} onClick={() => setSemana(s)} className={`min-h-10 rounded-full px-3 sm:min-h-0 sm:py-1 ${semana === s ? "bg-violeta font-medium text-papel" : "bg-[#f1effc] text-slate-800 hover:bg-[#e6e2fa]"}`}>
+            {dataBr(s)} · {t(`painel.tela1.semanaMotivo.${s}`)}
           </button>
         ))}
       </div>
@@ -57,10 +57,9 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
       {resumo && cascata ? (
         <>
           <p className="text-sm text-slate-800" data-testid="conclusao">
-            {t("detalhe.semanaFrase", { semana: deCadaCem(resumo.taxa_semana ?? 0), base: deCadaCem(resumo.taxa_base ?? 0) })}
-            {concl ? ` ${concl.frase}` : ""}
+            {concl ? concl.frase : ""}
           </p>
-          <Cascata degraus={cascata.degraus} />
+          <DiferencaSemana resumo={resumo} />
           <p className="text-xs text-slate-700">{t("detalhe.semanaComparada", { nBase: formatarInt(resumo.n_base), nSemana: formatarInt(resumo.n_semana) })}</p>
           <p className="text-sm text-slate-800">
             {resumo.p_valor !== null ? t("detalhe.semanaAcaso", { p: formatarInt(Math.round(resumo.p_valor * 100)) }) : t("detalhe.semanaSemP")}

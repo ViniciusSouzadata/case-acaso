@@ -12,7 +12,7 @@ import { useApi } from "@/lib/useApi";
 
 /** Painel do gráfico de retenção: uma frase, o gráfico grande e 3 itens de legenda. "Como ler", épocas do produto e tabela ficam recolhidos. */
 export function DetalheTaxa() {
-  const [gran, setGran] = useState<Granularidade>("semana");
+  const [gran, setGran] = useState<Granularidade>("mes");
   const [epocas, setEpocas] = useState(false);
   const coortes = useApi<CoorteApi[]>(`/api/retencao/coortes?granularidade=${gran}`);
   const eras = coortes.estado === "ok" ? ((coortes.corpo.meta.eras as EraApi[] | undefined) ?? []) : [];
@@ -28,7 +28,7 @@ export function DetalheTaxa() {
           {variacao ? t(gran === "mes" ? "detalhe.taxaFraseMes" : "detalhe.taxaFrase", { min: formatarPct(variacao.min, 0), max: formatarPct(variacao.max, 0) }) : t("retencao.tituloGraficoCarregando")}
         </p>
         <div role="group" aria-label="Granularidade" className="flex overflow-hidden rounded-lg border border-[#cfc9ee] text-sm">
-          {(["semana", "mes"] as const).map((g) => (
+          {(["mes", "semana"] as const).map((g) => (
             <button key={g} type="button" aria-pressed={gran === g} onClick={() => setGran(g)} className={`min-h-10 px-3 sm:min-h-0 sm:py-1 ${gran === g ? "bg-violeta text-papel" : "bg-white text-slate-800"}`}>
               {t(g === "semana" ? "retencao.alternarSemana" : "retencao.alternarMes")}
             </button>

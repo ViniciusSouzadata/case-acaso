@@ -8,6 +8,7 @@ import { Estado } from "@/components/Estado";
 import { Ranking } from "@/components/Ranking";
 import { grupoEfetivo, type EfeitoApi } from "@/lib/floresta";
 import { t } from "@/lib/mensagens";
+import { formatarInt } from "@/lib/regras";
 import { conclusaoFatores, fraseFator } from "@/lib/painel";
 import { useApi } from "@/lib/useApi";
 
@@ -15,6 +16,8 @@ import { useApi } from "@/lib/useApi";
 export default function PaginaFatores() {
   const [realce, setRealce] = useState<{ fator: string; nivel: string } | null>(null);
   const r = useApi<EfeitoApi[]>("/api/fatores/efeitos");
+  const resumo = useApi<{ usuarios: number } | null>("/api/retencao/resumo");
+  const base = resumo.estado === "ok" && resumo.corpo.dados ? resumo.corpo.dados.usuarios : null;
   const efeitos = r.estado === "ok" ? r.corpo.dados : [];
   // Só o ajuste pelo perfil conta (o segundo método repete fatores); engajamento e tema são descrição.
   const validos = efeitos.filter((e) => e.metodo === "logit_ame" && grupoEfetivo(e) !== "engajamento" && grupoEfetivo(e) !== "descritivo" && e.amostra_suficiente && e.efeito_ajustado_pp !== null);
@@ -32,7 +35,7 @@ export default function PaginaFatores() {
       {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
       {r.estado === "erro" ? <Estado tipo="erro" mensagem={r.mensagem} requestId={r.requestId} /> : null}
       {r.estado === "ok" && efeitos.length === 0 ? <Estado tipo="vazio" mensagem={t("fatores.tituloGrupoVazio")} /> : null}
-      {efeitos.length > 0 ? <Ranking efeitos={efeitos} realce={realce} /> : null}
+      {efeitos.length > 0 ? <Ranking efeitos={efeitos} realce={realce} rodape={base !== null ? t("painel.tela2.fonte", { n: formatarInt(base), fonte: t("painel.fonteNome") }) : undefined} /> : null}
       {r.estado === "ok" ? <CartoesAchados onRealcar={setRealce} /> : null}
     </div>
   );

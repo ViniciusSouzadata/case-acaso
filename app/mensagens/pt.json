@@ -368,7 +368,7 @@
       "titulo": "Quantas pessoas voltam em até 7 dias?",
       "conclusao": "De cada 100 pessoas que testam o assistente, [[{n}]] voltam em até 7 dias.",
       "cartaoTaxa": "Voltam em até 7 dias",
-      "cartaoTaxaSub": "margem de erro: {inf} a {sup}",
+      "cartaoTaxaSub": "{voltaram} de {total} pessoas · margem de erro: {inf} a {sup}",
       "granSemana": "Semana",
       "granMes": "Mês",
       "semanaEscolha": "Semana explicada",
@@ -389,7 +389,17 @@
       "semanaSub": "Voltaram {semana} de cada 100; antes eram {base}.",
       "detalheGrafico": "Detalhes do gráfico",
       "detalheSemana": "Detalhes da semana",
-      "detalheDefinicoes": "As formas de contar “voltar”"
+      "detalheDefinicoes": "As formas de contar “voltar”",
+      "diferencaLegenda": "de cada 100 voltaram: antes → nessa semana",
+      "deOndeVeio": "De onde veio a diferença",
+      "semanasTitulo": "Duas semanas de queda, explicadas",
+      "semanaMotivo": {
+        "2023-11-20": "entrou um modelo novo",
+        "2023-05-01": "maior queda da série"
+      },
+      "graficoTituloMes": "Quantos voltam, mês a mês",
+      "rotuloMarca": "explicada",
+      "fonte": "Base: {n} pessoas novas · {fonte} · {periodo}"
     },
     "semana": {
       "caiu": "As pessoas voltaram menos; o público não mudou.",
@@ -422,7 +432,10 @@
       "cap2": "GPT-4 no lugar do GPT-3.5",
       "cap3": "semanas teve queda fora do normal",
       "cuidado": "Cuidado",
-      "explicacaoCompleta": "Explicação completa"
+      "explicacaoCompleta": "Explicação completa",
+      "eixoLado": "← menos · mais →",
+      "eixoUnidade": "a cada 100 pessoas",
+      "fonte": "Base: {n} pessoas novas · comparação entre pessoas parecidas · {fonte}"
     },
     "fatores": {
       "semDados": "Não há comparações disponíveis.",
@@ -440,7 +453,7 @@
       "cartaoConfSub": "o painel bate com os dados originais",
       "cartaoLidas": "Conversas lidas",
       "cartaoLidasSub": "{n} descartadas",
-      "cartaoRecusa": "A IA acerta o que é recusa",
+      "cartaoRecusa": "Quando a IA diz que foi recusa, acerta",
       "cartaoTema": "A IA acerta o assunto",
       "cartaoAcertoSub": "em {n} conversas conferidas à mão",
       "seloTema": "por isso o assunto é só ilustrativo",
@@ -497,10 +510,19 @@
       "acerto": {
         "recusa": "de acerto no que é recusa",
         "assunto": "de acerto no assunto"
-      }
+      },
+      "fonte": "Base: {n} conversas · {fonte}",
+      "cartaoRecusaGeral": "A IA acerta o que é recusa",
+      "cartaoRecusaValor": "{n} em cada 10",
+      "cartaoRecusaSub": "e encontra {c} de cada 100 recusas · {n} conversas conferidas à mão",
+      "filhoEndereco": "dos quais, um único endereço",
+      "semanasNota": "À parte: {n} semanas com queda forte de volume ({pct} das semanas)",
+      "naoTemos": "O que não temos: as conversas ofensivas foram retiradas pelos autores da base.",
+      "detalheRecusaPrecisao": "Olhando só as recusas: quando a IA marca uma conversa como recusa, acerta {n} em cada 10; e, de cada 100 recusas de verdade, ela encontra {c}."
     },
     "margemErro": "margem de erro: {inf} a {sup}",
-    "pistaClique": "Clique para ver detalhes"
+    "pistaClique": "Clique para ver detalhes",
+    "fonteNome": "WildChat-1M, Brasil"
   },
   "detalhe": {
     "indicador": {

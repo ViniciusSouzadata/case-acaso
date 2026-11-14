@@ -50,7 +50,7 @@ export function CartaoKpi({
           {onAbrir ? <span aria-hidden title={t("painel.pistaClique")} className={`text-xl leading-none ${escuro ? "text-white" : "text-slate-400"}`}>›</span> : null}
         </span>
       </div>
-      <div className={`mt-1 font-display text-3xl font-semibold leading-none tracking-tight tabular-nums sm:text-4xl ${escuro ? "text-papel" : "text-tinta"}`} data-testid={testid}>
+      <div className={`mt-1 font-display text-3xl font-semibold leading-none tracking-tight sm:text-4xl ${escuro ? "text-papel" : "text-tinta"}`} data-testid={testid}>
         {animar ? <Contagem valor={animar.valor} formato={animar.formato} /> : valor}
       </div>
       {apoio ? <div className={`mt-2 text-xs ${escuro ? "text-white" : "text-slate-600"}`}>{apoio}</div> : null}

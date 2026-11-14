@@ -5,7 +5,7 @@ import { Estado } from "@/components/Estado";
 import { CampoTecnico, Destaque, Frases, Tecnico, frasesDe } from "@/components/painel/Blocos";
 import type { LoteQualidade, Reconciliacao, Validacao } from "@/lib/consultas/qualidade";
 import { t } from "@/lib/mensagens";
-import { acertoIA } from "@/lib/painel";
+import { acertoIA, desempenhoRecusa } from "@/lib/painel";
 import { nomeLegivel, tipoClassificador } from "@/lib/qualidade";
 import { formatarDataHora, formatarInt, formatarPct } from "@/lib/regras";
 import { useApi } from "@/lib/useApi";
@@ -76,6 +76,7 @@ export type SecaoQualidade = "conf" | "carga" | "recusa" | "assunto" | "dicionar
 /** Frases da conferência manual de um classificador de IA (recusa ou assunto) e, recolhido, o resultado de cada versão. */
 function ConferenciaIA({ validacao, qual }: { validacao: Validacao[]; qual: "recusa" | "tema" }) {
   const ia = acertoIA(validacao, qual);
+  const des = qual === "recusa" ? desempenhoRecusa(validacao) : null;
   const deste = validacao.filter((v) => v.classificador === qual);
   if (!ia) return <Estado tipo="vazio" mensagem={t("dados.validacaoVazia")} />;
   const rotulo = qual === "recusa" ? "recusa" : "assunto";
@@ -83,6 +84,7 @@ function ConferenciaIA({ validacao, qual }: { validacao: Validacao[]; qual: "rec
     <section className="cartao space-y-3 p-4">
       <Destaque valor={formatarPct(ia.acuracia, 0)} rotulo={t(`painel.tela3.acerto.${rotulo}`)} />
       <Frases itens={frasesDe(`painel.tela3.validacao.${rotulo}`, { n: formatarInt(ia.n), pct: formatarPct(ia.acuracia, 0) })} />
+      {des ? <Frases itens={[t("painel.tela3.detalheRecusaPrecisao", { n: String(Math.round(des.precisao * 10)), c: String(Math.round(des.cobertura * 100)) })]} /> : null}
       <Tecnico>
         {deste.map((v) => {
           const tipo = tipoClassificador(v.modelo);

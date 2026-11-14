@@ -105,7 +105,8 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
     const ref = ajustado ?? bruto;
     return { e, outro, bruto, ajustado, ref };
   });
-  base.sort((a, b) => Math.abs(b.ref?.efeito ?? 0) - Math.abs(a.ref?.efeito ?? 0));
+  // do maior para o menor efeito em valor absoluto; "pouca gente" sempre no fim (o efeito dela não é confiável)
+  base.sort((a, b) => Number(amostraPequena(a.e.amostra_suficiente)) - Number(amostraPequena(b.e.amostra_suficiente)) || Math.abs(b.ref?.efeito ?? 0) - Math.abs(a.ref?.efeito ?? 0));
 
   const extremos = base.flatMap((b) => [b.bruto, b.ajustado]).flatMap((x) => (x ? [Math.abs(x.inf), Math.abs(x.sup)] : []));
   const limite = extremos.length ? Math.max(...extremos) * 1.1 || 1 : 1;

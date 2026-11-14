@@ -10,13 +10,15 @@ import { PainelLateral } from "@/components/PainelLateral";
 import { DetalheBalanco } from "@/components/DetalheBalanco";
 import { grupoEfetivo, prepararFloresta, type EfeitoApi, type GrupoFator, type LinhaFloresta } from "@/lib/floresta";
 import { t } from "@/lib/mensagens";
-import { aCadaCem, efeitoDaLinha, nomeCurto, seloDaLinha, type Selo } from "@/lib/painel";
+import { efeitoComMargem, emVezDe, nomeCurto, seloDaLinha, type Selo } from "@/lib/painel";
 
 const GRUPOS: GrupoFator[] = ["assistente", "perfil", "engajamento", "descritivo"];
 const LARANJA = "#ff6c0e";
 const CINZA = "#8a8f98";
 const CINZA_CLARO = "#c4c8d0";
-const LINHAS_INICIAIS = 7;
+const LINHAS_INICIAIS = 5;
+const COLUNAS = "sm:grid-cols-[13rem_minmax(0,1fr)_17.5rem_7.5rem]";
+const MARCAS = [-20, -10, 0, 10, 20];
 
 const ESTILO_SELO: Record<Selo, string> = {
   sustenta: "bg-[#ffe9db] text-[#8a3a00]",
@@ -56,17 +58,26 @@ function Trilha({ l, indice = 0 }: { l: LinhaFloresta; indice?: number }) {
 
 function LinhaRanking({ l, onAbrir, realcada, indice }: { l: LinhaFloresta; onAbrir: () => void; realcada: boolean; indice: number }) {
   const selo = seloDaLinha(l);
-  const efeito = efeitoDaLinha(l);
-  const numero = efeito === null ? "—" : aCadaCem(efeito);
+  const ef = efeitoComMargem(l);
+  const vez = emVezDe(l.fator, l.nivel, l.referencia);
   const destaque = selo === "sustenta";
   const classeNumero = `whitespace-nowrap font-display text-sm font-semibold ${destaque ? "text-[#8a3a00]" : "text-slate-800"}`;
+  const numero = ef ? (
+    <>
+      {ef.numero} <span className="font-sans text-xs font-normal text-slate-600">{ef.margem}</span>
+    </>
+  ) : (
+    "—"
+  );
   return (
     <li data-fator={l.fator} data-nivel={l.nivel} data-realce={realcada ? "sim" : undefined}>
-      <button type="button" onClick={onAbrir} className={`grid w-full grid-cols-1 items-center gap-x-3 gap-y-1 rounded-lg px-2 py-1 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta sm:grid-cols-[15rem_minmax(0,1fr)_13.5rem_7.75rem] ${realcada ? "bg-[#e6e0fb] ring-2 ring-violeta" : ""}`}>
-        <div className="flex items-baseline justify-between gap-2 sm:block">
-          <span className="text-sm font-medium text-tinta">{nomeCurto(l.fator, l.nivel)}</span>
-          <span className={`${classeNumero} sm:hidden`}>{numero}</span>
+      <button type="button" onClick={onAbrir} className={`grid w-full grid-cols-1 items-center gap-x-3 gap-y-1 rounded-lg px-2 py-1 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta ${COLUNAS} ${realcada ? "bg-[#e6e0fb] ring-2 ring-violeta" : ""}`}>
+        <div>
+          <span className="block text-sm font-medium leading-tight text-tinta">{nomeCurto(l.fator, l.nivel)}</span>
+          {vez ? <span className="block text-xs leading-tight text-slate-600">{vez}</span> : null}
+          <span className={`${classeNumero} mt-0.5 block sm:hidden`}>{numero}</span>
         </div>
+        
         <Trilha l={l} indice={indice} />
         <span className={`${classeNumero} hidden text-right sm:block`}>{numero}</span>
         <span className={`w-fit whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium sm:justify-self-start ${ESTILO_SELO[selo]}`}>{t(`painel.tela2.selo.${selo}`)}</span>
@@ -76,12 +87,12 @@ function LinhaRanking({ l, onAbrir, realcada, indice }: { l: LinhaFloresta; onAb
 }
 
 /** Um ranking só: nome curto, barra com a margem de erro, número "a cada 100" e selo. Clicar na linha abre o detalhe. */
-export function Ranking({ efeitos, realce = null }: { efeitos: EfeitoApi[]; realce?: { fator: string; nivel: string } | null }) {
+export function Ranking({ efeitos, realce = null, rodape }: { efeitos: EfeitoApi[]; realce?: { fator: string; nivel: string } | null; /** linha de fonte no pé do cartão (base, método, origem) */ rodape?: string }) {
   const [grupo, setGrupo] = useState<GrupoFator>("assistente");
   const [todos, setTodos] = useState(false);
   const [aberta, setAberta] = useState<LinhaFloresta | null>(null);
   const [ajuda, setAjuda] = useState(false);
-  const { linhas } = prepararFloresta(efeitos, grupo);
+  const { linhas, limite } = prepararFloresta(efeitos, grupo);
   const visiveis = todos ? linhas : linhas.slice(0, LINHAS_INICIAIS);
 
   // cartão do achado realça a linha; se ela está em outro grupo (ou além das linhas iniciais), troca de aba / abre a lista
@@ -123,14 +134,25 @@ export function Ranking({ efeitos, realce = null }: { efeitos: EfeitoApi[]; real
           <LinhaRanking key={l.chave} indice={i} l={l} onAbrir={() => setAberta(l)} realcada={realce !== null && l.fator === realce.fator && l.nivel === realce.nivel} />
         ))}
       </ul>
-      <div className="mt-1 flex items-center justify-between gap-2 px-2 text-xs text-slate-600">
-        <span>{t("painel.tela2.eixo")}</span>
+      <div className={`mt-1 hidden gap-x-3 px-2 text-xs text-slate-600 sm:grid ${COLUNAS}`} aria-hidden>
+        <span>{t("painel.tela2.eixoLado")}</span>
+        <span className="relative block h-4">
+          {MARCAS.filter((m) => Math.abs(m) <= limite).map((m) => (
+            <span key={m} className="absolute -translate-x-1/2" style={{ left: `${((m + limite) / (2 * limite)) * 100}%` }}>{m > 0 ? `+${m}` : m < 0 ? `−${-m}` : "0"}</span>
+          ))}
+        </span>
+        <span className="text-right">{t("painel.tela2.eixoUnidade")}</span>
+      </div>
+      <div className="flex items-center justify-between gap-2 px-2 text-xs text-slate-600 sm:justify-between">
+        {rodape ? <p className="order-last w-full text-[11px] text-slate-500 sm:order-none sm:w-auto" data-testid="fonte-ranking">{rodape}</p> : <span />}
+        <span className="sm:hidden">{t("painel.tela2.eixo")} · {t("painel.tela2.eixoUnidade")}</span>
         {linhas.length > LINHAS_INICIAIS ? (
           <button type="button" onClick={() => setTodos(!todos)} className="alvo font-medium text-violeta hover:underline">
             {todos ? "Mostrar menos" : `Mostrar todos (${linhas.length})`}
           </button>
         ) : null}
       </div>
+
 
       {aberta ? (
         <PainelLateral titulo={nomeCurto(aberta.fator, aberta.nivel)} onFechar={() => setAberta(null)}>

@@ -10,12 +10,12 @@ import { DestacaNumeros } from "@/components/DestacaNumeros";
 import { DetalheIndicador } from "@/components/DetalheIndicador";
 import { BlocoBlur, BlurTexto } from "@/components/movimento/BlurTexto";
 import { GrupoEntrada, ItemEntrada } from "@/components/movimento/Entrada";
-import { Cascata } from "@/components/graficos/Cascata";
+import { DiferencaSemana } from "@/components/graficos/DiferencaSemana";
 import { GraficoTaxa } from "@/components/graficos/GraficoTaxa";
 import { PainelLateral } from "@/components/PainelLateral";
 import { montarCascata, prepararCoortes, resumoSensibilidade, type CoorteApi, type Granularidade, type ResumoSemanaApi, type SensibilidadeApi } from "@/lib/graficos";
 import { t } from "@/lib/mensagens";
-import { conclusaoSemana, deCadaCem } from "@/lib/painel";
+import { conclusaoSemana, deCadaCem, periodoBase } from "@/lib/painel";
 import { formatarInt, formatarPct } from "@/lib/regras";
 import { useApi } from "@/lib/useApi";
 
@@ -25,6 +25,8 @@ interface Resumo {
   taxa: number;
   ic_inf: number;
   ic_sup: number;
+  periodo_inicio: string;
+  periodo_fim: string;
 }
 
 type Detalhe = null | "grafico" | "semana" | "definicoes" | "taxa" | "pessoas" | "voltaram";
@@ -36,7 +38,7 @@ const dataBr = (iso: string) => iso.split("-").reverse().join("/");
 /** Tela 1 — Retenção, em formato de painel: números grandes, um gráfico, a semana em compacto. Explicações ficam atrás de "Ver detalhes". */
 export default function PaginaRetencao() {
   const [detalhe, setDetalhe] = useState<Detalhe>(null);
-  const [gran, setGran] = useState<Granularidade>("semana");
+  const [gran, setGran] = useState<Granularidade>("mes");
   const [semanaSel, setSemanaSel] = useState<string>(SEMANAS[0]);
   const resumo = useApi<Resumo | null>("/api/retencao/resumo");
   const coortes = useApi<CoorteApi[]>(`/api/retencao/coortes?granularidade=${gran}`);
@@ -75,7 +77,7 @@ export default function PaginaRetencao() {
               rotulo={t("painel.tela1.cartaoTaxa")}
               valor={formatarPct(r.taxa)}
               animar={{ valor: r.taxa * 100, formato: (n) => formatarPct(n / 100) }}
-              apoio={t("painel.tela1.cartaoTaxaSub", { inf: formatarPct(r.ic_inf), sup: formatarPct(r.ic_sup) })}
+              apoio={t("painel.tela1.cartaoTaxaSub", { voltaram: formatarInt(r.voltaram_7d), total: formatarInt(r.usuarios), inf: formatarPct(r.ic_inf), sup: formatarPct(r.ic_sup) })}
               testid="valor"
               onAbrir={() => setDetalhe("taxa")}
             />
@@ -95,10 +97,10 @@ export default function PaginaRetencao() {
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
         <ItemEntrada atraso={0.45} tag="section" className="cartao p-4" aria-labelledby="g-titulo">
           <div className="flex items-start justify-between gap-3">
-            <h2 id="g-titulo" className="text-base font-semibold text-tinta">{t("painel.tela1.graficoTitulo")}</h2>
+            <h2 id="g-titulo" className="text-base font-semibold text-tinta">{t(gran === "mes" ? "painel.tela1.graficoTituloMes" : "painel.tela1.graficoTitulo")}</h2>
             <div className="flex shrink-0 items-center gap-3">
               <div role="group" aria-label="Granularidade" className="flex overflow-hidden rounded-lg border border-[#cfc9ee] text-sm">
-                {(["semana", "mes"] as const).map((g) => (
+                {(["mes", "semana"] as const).map((g) => (
                   <button key={g} type="button" aria-pressed={gran === g} onClick={() => setGran(g)} className={`min-h-[2.5rem] px-3 sm:min-h-0 sm:py-0.5 ${gran === g ? "bg-violeta text-papel" : "bg-white text-slate-800 hover:bg-[#f6f4fd]"}`}>
                     {t(g === "semana" ? "painel.tela1.granSemana" : "painel.tela1.granMes")}
                   </button>
@@ -110,18 +112,19 @@ export default function PaginaRetencao() {
           {coortes.estado === "carregando" ? <Estado tipo="carregando" /> : null}
           {coortes.estado === "erro" ? <Estado tipo="erro" mensagem={coortes.mensagem} requestId={coortes.requestId} /> : null}
           {coortes.estado === "ok" && linhas.length === 0 ? <Estado tipo="vazio" /> : null}
-          {linhas.length > 0 ? <GraficoTaxa linhas={linhas} altura="h-[19.5rem]" marcadas={gran === "semana" ? [...SEMANAS] : []} selecionada={semanaSel} onEscolher={setSemanaSel} /> : null}
+          {linhas.length > 0 ? <GraficoTaxa linhas={linhas} altura="h-[17.25rem]" marcadas={gran === "semana" ? [...SEMANAS] : []} selecionada={semanaSel} onEscolher={setSemanaSel} /> : null}
+          {r && r.periodo_inicio && r.periodo_fim ? <p className="mt-1 text-[11px] text-slate-500" data-testid="fonte-grafico">{t("painel.tela1.fonte", { n: formatarInt(r.usuarios), fonte: t("painel.fonteNome"), periodo: periodoBase(r.periodo_inicio, r.periodo_fim) })}</p> : null}
         </ItemEntrada>
 
         <ItemEntrada atraso={0.52} tag="section" className="cartao p-4" aria-labelledby="s-titulo">
           <div className="flex items-start justify-between gap-3">
-            <h2 id="s-titulo" className="text-base font-semibold text-tinta">{t("painel.tela1.semanaTitulo", { data: dataBr(semanaSel) })}</h2>
+            <h2 id="s-titulo" className="text-base font-semibold text-tinta">{t("painel.tela1.semanasTitulo")}</h2>
             <button type="button" onClick={() => setDetalhe("semana")} className="alvo shrink-0 text-sm font-medium text-violeta hover:underline">{t("painel.verDetalhes")}</button>
           </div>
-          <div role="group" aria-label={t("painel.tela1.semanaEscolha")} className="mt-1 flex gap-2">
+          <div role="group" aria-label={t("painel.tela1.semanaEscolha")} className="mt-1 flex flex-wrap gap-2">
             {SEMANAS.map((d) => (
-              <button key={d} type="button" aria-pressed={semanaSel === d} onClick={() => setSemanaSel(d)} className={`min-h-[2.5rem] rounded-full px-3 text-xs sm:min-h-0 sm:py-0.5 ${semanaSel === d ? "bg-laranja font-medium text-tinta" : "bg-[#f1effc] text-slate-800 hover:bg-[#e6e2fa]"}`}>
-                {dataBr(d)}
+              <button key={d} type="button" aria-pressed={semanaSel === d} onClick={() => setSemanaSel(d)} className={`min-h-[2.5rem] rounded-full px-3 text-xs sm:min-h-0 sm:py-0.5 ${semanaSel === d ? "bg-violeta font-medium text-papel" : "bg-[#f1effc] text-slate-800 hover:bg-[#e6e2fa]"}`}>
+                {dataBr(d)} · {t(`painel.tela1.semanaMotivo.${d}`)}
               </button>
             ))}
           </div>
@@ -129,9 +132,8 @@ export default function PaginaRetencao() {
           {semana.estado === "erro" ? <Estado tipo="erro" mensagem={semana.mensagem} requestId={semana.requestId} /> : null}
           {semana.estado === "ok" && !rs ? <Estado tipo="vazio" mensagem={t("semana.semResumo")} /> : null}
           {rs && cascata ? (
-            <>
-              <p className="text-xs text-slate-600">{t("painel.tela1.semanaSub", { base: deCadaCem(rs.taxa_base ?? 0), semana: deCadaCem(rs.taxa_semana ?? 0) })}</p>
-              <Cascata degraus={cascata.degraus} altura="h-52" semJargao />
+            <div className="mt-2 space-y-3">
+              <DiferencaSemana resumo={rs} />
               {concl ? (
                 <p className="text-sm text-slate-800" data-testid="conclusao-semana">
                   {concl.frase}{" "}
@@ -142,7 +144,7 @@ export default function PaginaRetencao() {
                   ) : null}
                 </p>
               ) : null}
-            </>
+            </div>
           ) : null}
         </ItemEntrada>
       </div>

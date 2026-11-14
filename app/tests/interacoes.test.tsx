@@ -35,7 +35,7 @@ describe("Tela 1 — interações", () => {
   beforeEach(() => {
     mock.pedidos = [];
     mock.respostas = {
-      "/api/retencao/resumo": { usuarios: 2372, voltaram_7d: 566, taxa: 0.2386, ic_inf: 0.2219, ic_sup: 0.2562 },
+      "/api/retencao/resumo": { periodo_inicio: "2023-04-10", periodo_fim: "2024-04-01", usuarios: 2372, voltaram_7d: 566, taxa: 0.2386, ic_inf: 0.2219, ic_sup: 0.2562 },
       "/api/retencao/coortes": [{ periodo: "2023-05-01", ...coorte }, { periodo: "2023-11-20", ...coorte }],
       "/api/retencao/sensibilidade": [{ definicao: "a", taxa: 0.17 }, { definicao: "b", taxa: 0.25 }],
       "/api/semana/decomposicao?semana=2023-11-20": resumoSem("2023-11-20", -4.9),
@@ -61,17 +61,21 @@ describe("Tela 1 — interações", () => {
     expect(within(screen.getByRole("dialog")).getByTestId("detalhe-indicador").textContent).toContain("definição de Taxa de retorno em 7 dias");
   });
 
-  it("clicar na semana marcada troca o bloco 'O que houve em …'", () => {
+  it("clicar na semana marcada (ou na pílula) troca a semana explicada", () => {
     render(<PaginaRetencao />);
-    expect(screen.getByRole("heading", { name: /O que houve em 20\/11\/2023/ })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Semana" }));
+    expect(screen.getByRole("heading", { name: /Duas semanas de queda, explicadas/ })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /20\/11\/2023 · entrou um modelo novo/ }).getAttribute("aria-pressed")).toBe("true");
     fireEvent.click(screen.getByText("ponto 2023-05-01"));
-    expect(screen.getByRole("heading", { name: /O que houve em 01\/05\/2023/ })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /01\/05\/2023 · maior queda da série/ }).getAttribute("aria-pressed")).toBe("true");
     expect(mock.pedidos).toContain("/api/semana/decomposicao?semana=2023-05-01");
     expect(screen.getByTestId("conclusao-semana").textContent).toContain("voltaram menos");
   });
 
-  it("no gráfico por mês nenhuma semana fica marcada; o controle Semana | Mês existe", () => {
+  it("o gráfico abre por mês (nenhuma semana marcada); o controle Semana | Mês existe", () => {
     render(<PaginaRetencao />);
+    expect(screen.queryAllByText(/^ponto /).length).toBe(0);
+    fireEvent.click(screen.getByRole("button", { name: "Semana" }));
     expect(screen.getAllByText(/^ponto /).length).toBe(2);
     fireEvent.click(screen.getByRole("button", { name: "Mês" }));
     expect(mock.pedidos).toContain("/api/retencao/coortes?granularidade=mes");

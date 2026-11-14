@@ -14,19 +14,21 @@ export function Contagem({ valor, formato, duracao = MOV.contagem }: { valor: nu
   const ref = useRef<HTMLSpanElement>(null);
   const emVista = useInView(ref, { once: true });
   const [texto, setTexto] = useState(final);
+  const [contando, setContando] = useState(false); // algarismos tabulares só durante a contagem, para os dígitos não pularem
 
   useEffect(() => {
     if (reduzido || !emVista) return;
-    const controle = animate(0, valor, { duration: duracao, ease: MOV.curva.contagem, onUpdate: (v) => setTexto(formato(v)) });
+    setContando(true);
+    const controle = animate(0, valor, { duration: duracao, ease: MOV.curva.contagem, onUpdate: (v) => setTexto(formato(v)), onComplete: () => { setTexto(formato(valor)); setContando(false); } });
     return () => controle.stop();
     // formato é recriado a cada render do pai; a contagem só reinicia quando o valor muda
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reduzido, emVista, valor, duracao]);
 
-  if (reduzido) return <span className="tabular-nums">{final}</span>;
+  if (reduzido) return <span>{final}</span>;
   return (
     <>
-      <span ref={ref} aria-hidden className="tabular-nums">{texto}</span>
+      <span ref={ref} aria-hidden className={contando ? "tabular-nums" : undefined}>{texto}</span>
       <span className="sr-only">{final}</span>
     </>
   );
