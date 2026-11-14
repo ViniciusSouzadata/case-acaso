@@ -17,6 +17,7 @@ interface Achado {
   numero_destaque: string | null;
   rotulo_destaque: string | null;
   acao_curta: string | null;
+  tecnico: string | null;
 }
 
 /** Três cartões curtos: número grande, uma frase e "o que fazer" em uma linha. O resto fica em "Ver detalhes". */
@@ -69,6 +70,12 @@ export function CartoesAchados({ onRealcar }: { onRealcar?: (alvo: { fator: stri
             <p><span className="font-medium">{t("fatores.achadoEvidencia")}:</span> {aberto.evidencia}</p>
             <p><span className="font-medium">{t("fatores.achadoDecisao")}:</span> {aberto.decisao}</p>
             <p className="text-slate-700"><span className="font-medium">{t("fatores.achadoLimite")}:</span> {aberto.limite}</p>
+            {aberto.tecnico ? (
+              <details className="rounded-lg border border-[#e3e0f3] p-2">
+                <summary className="cursor-pointer font-medium text-violeta-escuro">{t("glossario.tecnicoTitulo")}</summary>
+                <p className="mt-2 text-slate-700" data-testid="achado-tecnico">{aberto.tecnico}</p>
+              </details>
+            ) : null}
           </div>
         </PainelLateral>
       ) : null}

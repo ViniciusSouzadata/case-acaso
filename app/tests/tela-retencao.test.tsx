@@ -70,10 +70,10 @@ describe("preparação dos dados do gráfico", () => {
 });
 
 describe("tabela da Tela 1", () => {
-  it("semana com amostra_suficiente=false exibe 'amostra pequena (n = X)' e não a taxa", () => {
+  it("semana com amostra_suficiente=false exibe 'pouca gente (X pessoas)' e não a taxa", () => {
     render(<TabelaCoortes linhas={prepararCoortes(coortes, "semana")} unidade="x" />);
     const linha = document.querySelector('[data-periodo="2023-05-08"]') as HTMLElement;
-    expect(within(linha).getByText("amostra pequena (n = 12)")).toBeTruthy();
+    expect(within(linha).getByText("pouca gente (12 pessoas)")).toBeTruthy();
     expect(within(linha).queryByText(/50,0%/)).toBeNull();
   });
 
@@ -101,12 +101,12 @@ describe("dica do ponto", () => {
   const linhas = prepararCoortes(coortes, "semana");
   it("amostra pequena: a dica explica", () => {
     render(<DicaCoorte linha={linhas[2]!} />);
-    expect(screen.getByText(/amostra pequena \(n = 12\)/)).toBeTruthy();
-    expect(screen.getByText(/poucas pessoas/)).toBeTruthy();
+    expect(screen.getByText(/pouca gente \(12 pessoas\)/)).toBeTruthy();
+    expect(screen.getByText(/pouca gente/)).toBeTruthy();
   });
   it("imatura: a dica diz que ainda não é uma queda", () => {
     render(<DicaCoorte linha={linhas[3]!} />);
-    expect(screen.getByText(/não é uma queda/)).toBeTruthy();
+    expect(screen.getByText(/Não é uma queda/)).toBeTruthy();
   });
 });
 
@@ -117,7 +117,7 @@ describe("início da coleta", () => {
     render(<TabelaCoortes linhas={prepararCoortes([...inicio, ...coortes], "semana")} unidade="x" />);
     const linha = document.querySelector('[data-periodo="2023-04-17"]') as HTMLElement;
     expect(within(linha).getByText("31,0%")).toBeTruthy();
-    expect(within(linha).getByText(/Início da coleta: pode incluir usuários antigos, então a taxa tende a sair mais alta/)).toBeTruthy();
+    expect(within(linha).getByText(/Início da coleta: pode incluir pessoas antigas, então a taxa tende a sair mais alta/)).toBeTruthy();
     const comum = document.querySelector('[data-periodo="2023-05-01"]') as HTMLElement;
     expect(within(comum).queryByText(/Início da coleta/)).toBeNull();
   });

@@ -5,13 +5,13 @@ import { t } from "./mensagens";
 
 const nf = (casas: number) => new Intl.NumberFormat("pt-BR", { minimumFractionDigits: casas, maximumFractionDigits: casas });
 
-/** Efeito em pontos percentuais → "−16 a cada 100" (sem jargão). Abaixo de 1 mantém uma casa; arredondado para zero vira "perto de zero". */
+/** Efeito em pontos → "16 a menos voltam, a cada 100" (sem jargão). Abaixo de 1 mantém uma casa; arredondado para zero vira "perto de zero". */
 export function aCadaCem(pp: number | null | undefined): string {
   if (pp == null) return "—";
   const abs = Math.abs(pp);
   const texto = abs >= 10 ? nf(0).format(abs) : nf(1).format(abs);
   if (Number(texto.replace(",", ".")) === 0) return t("painel.pertoDeZero");
-  return `${pp < 0 ? "−" : "+"}${texto} ${t("painel.aCadaCem")}`;
+  return `${texto} ${pp < 0 ? "a menos" : "a mais"} voltam, ${t("painel.aCadaCem")}`;
 }
 
 /** Só o número, para o destaque grande ("−16"). */
@@ -34,19 +34,19 @@ function rotuloFator(f: string): string {
 }
 
 const NOMES: Record<string, string> = {
-  "recusa|sim": "Recebeu recusa",
-  "faixa_chars_resposta|301–1.000": "Resposta média",
+  "recusa|sim": "O assistente se recusou a responder",
+  "faixa_chars_resposta|301–1.000": "Resposta de tamanho médio",
   "faixa_chars_resposta|1.001–2.500": "Resposta longa",
   "faixa_chars_resposta|mais de 2.500": "Resposta muito longa",
-  "modelo_familia|gpt-4": "GPT-4 (em vez de GPT-3.5)",
-  "idioma_divergente|sim": "Resposta em outro idioma",
-  "virada_dez2023|depois (dez/2023 em diante, GPT-4 padrão)": "Depois de dez/2023",
+  "modelo_familia|gpt-4": "GPT-4 no lugar do GPT-3.5",
+  "idioma_divergente|sim": "Respondeu em outro idioma",
+  "virada_dez2023|depois (dez/2023 em diante, GPT-4 padrão)": "Chegou depois de dez/2023",
   "idioma|Spanish": "Escreve em espanhol",
   "idioma|English": "Escreve em inglês",
   "idioma|outros": "Escreve em outro idioma",
-  "tema|conversa pessoal/conselho": "Tema: conversa pessoal",
-  "tema|estudo/dever de casa": "Tema: estudo",
-  "tema|informação geral/curiosidade": "Tema: curiosidade",
+  "tema|conversa pessoal/conselho": "Assunto: conversa pessoal",
+  "tema|estudo/dever de casa": "Assunto: estudo",
+  "tema|informação geral/curiosidade": "Assunto: curiosidade",
   "periodo_dia|manhã": "Usa de manhã",
   "periodo_dia|noite": "Usa à noite",
   "periodo_dia|madrugada": "Usa de madrugada",
@@ -61,8 +61,8 @@ const NOMES: Record<string, string> = {
   "fim_de_semana|sim": "Primeira vez no fim de semana",
   "dispositivo|celular": "Usa o celular",
   "dispositivo|outro": "Outro aparelho",
-  "n_turnos_sessao|2 a 3": "2 a 3 turnos na 1ª visita",
-  "n_turnos_sessao|4 ou mais": "4 ou mais turnos na 1ª visita",
+  "n_turnos_sessao|2 a 3": "2 a 3 mensagens na 1ª visita",
+  "n_turnos_sessao|4 ou mais": "4 ou mais mensagens na 1ª visita",
   "n_conversas_sessao|2": "2 conversas na 1ª visita",
   "n_conversas_sessao|3 ou mais": "3 ou mais conversas na 1ª visita",
 };
@@ -85,10 +85,19 @@ export function efeitoDaLinha(l: LinhaFloresta): number | null {
 }
 
 /** Frase única da Tela 2, a partir da contagem do que resiste à correção. */
+const FRASE_FATOR: Record<string, string> = {
+  "recusa|sim": "o assistente se recusar a responder logo na primeira pergunta",
+};
+
+/** Como o fator entra na frase-resposta da Tela 2 ("o assistente se recusar a responder…"); sem frase própria, usa o nome curto. */
+export function fraseFator(fator: string, nivel: string): string {
+  return FRASE_FATOR[`${fator}|${nivel}`] ?? nomeCurto(fator, nivel).toLowerCase();
+}
+
 export function conclusaoFatores(sustentam: string[], total: number): string {
   if (total === 0) return t("painel.fatores.semDados");
   if (sustentam.length === 0) return t("painel.fatores.nenhum");
-  if (sustentam.length === 1) return t("painel.fatores.um", { nome: sustentam[0]!.toLowerCase() });
+  if (sustentam.length === 1) return t("painel.fatores.um", { nome: sustentam[0]! });
   return t("painel.fatores.varios", { k: sustentam.length });
 }
 
@@ -110,14 +119,14 @@ export function deCadaCem(taxa: number): string {
 
 /** Nome curto, em linguagem comum, de um problema de qualidade. O texto longo (do banco) continua no detalhe. */
 const NOMES_PROBLEMA: [string, string][] = [
-  ["Conversas de IPs de tráfego anômalo", "Tráfego fora do comum"],
-  ["Conversas do IP mais ativo", "IP mais ativo"],
+  ["Conversas de endereços com uso com cara de robô", "Uso com cara de robô"],
+  ["Conversas do endereço de rede mais ativo", "Um endereço com uso exagerado"],
   ["Idioma divergente em pergunta curta", "Idioma mal detectado"],
-  ["IP muda no meio da conversa", "IP que muda"],
+  ["Endereço de rede muda no meio da conversa", "Endereço muda no meio da conversa"],
   ["Pergunta vazia", "Pergunta vazia"],
   ["Conteúdo repetido", "Conteúdo repetido"],
   ["Conversa sem nenhuma mensagem do usuário", "Sem mensagem do usuário"],
-  ["Conversas com dado pessoal ocultado", "Dado pessoal ocultado"],
+  ["Conversas com dado pessoal ocultado", "Dado pessoal escondido"],
   ["Semanas com queda forte", "Semanas com queda de volume"],
   ["Conversas tóxicas", "Conversas tóxicas"],
 ];

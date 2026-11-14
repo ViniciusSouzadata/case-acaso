@@ -61,8 +61,8 @@ describe("sensibilidade", () => {
   it("mostra nome simples, intervalo e diferença em relação à oficial", () => {
     render(<PontosSensibilidade linhas={sens} />);
     expect(screen.getByText("Voltou = em outro dia")).toBeTruthy();
-    expect(screen.getByText(/-7,0 p\.p\. em relação à oficial/)).toBeTruthy();
-    expect(screen.getByText(/é a definição oficial/)).toBeTruthy();
+    expect(screen.getByText(/-7,0 pontos em relação à forma oficial/)).toBeTruthy();
+    expect(screen.getByText(/é a forma oficial/)).toBeTruthy();
   });
 });
 

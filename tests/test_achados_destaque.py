@@ -20,7 +20,7 @@ def test_grande_formata_como_a_tela():
     assert _grande(0.52) == "+0,5"
 
 
-def test_seed_tem_numero_rotulo_e_acao_dos_tres_achados():
+def test_seed_tem_numero_rotulo_acao_e_tecnico_dos_tres_achados():
     dados = {a["ordem"]: a for a in achados.ler()}
     for ordem in (1, 2, 3):
         for campo in achados.OPCIONAIS:
@@ -47,13 +47,19 @@ def test_numeros_de_destaque_batem_com_resultado():
                 "WHERE metodo = 'logit_ame' AND efeito_ajustado_pp IS NOT NULL"
             ).fetchall()
         )
+        inf_gpt4, sup_gpt4 = (float(x) for x in c.execute(
+            "SELECT ajustado_ic_inf, ajustado_ic_sup FROM resultado.efeito_fator "
+            "WHERE metodo = 'logit_ame' AND fator = 'modelo_familia' AND nivel = 'gpt-4'"
+        ).fetchone())
         cur = c.execute(semana.SQL)
         df = pd.DataFrame(cur.fetchall(), columns=[d.name for d in cur.description])
         df["voltou_7d"] = df["voltou_7d"].astype(bool)
         testadas, sig = semana.contar_semanas_significativas(df, semana.n_minimo(c))
     dados = {a["ordem"]: a for a in achados.ler()}
     assert dados[1]["numero_destaque"] == _grande(float(efeito["recusa|sim"]))
-    assert dados[2]["numero_destaque"] == _grande(float(efeito["modelo_familia|gpt-4"]))
+    # achado 2: "Sem ganho" só vale enquanto a margem de erro do GPT-4 incluir o zero
+    assert dados[2]["numero_destaque"] == "Sem ganho"
+    assert inf_gpt4 <= 0 <= sup_gpt4
     assert dados[3]["numero_destaque"] == f"{sig} de {testadas}"
 
 
@@ -61,6 +67,6 @@ def test_numeros_de_destaque_batem_com_resultado():
 def test_gravar_leva_os_campos_para_o_banco():
     with psycopg.connect(dsn(), autocommit=True) as c:
         achados.gravar(c)
-        linhas = c.execute("SELECT ordem, numero_destaque, rotulo_destaque, acao_curta FROM resultado.achado ORDER BY ordem").fetchall()
+        linhas = c.execute("SELECT ordem, numero_destaque, rotulo_destaque, acao_curta, tecnico FROM resultado.achado ORDER BY ordem").fetchall()
     seed = achados.ler()
-    assert linhas == [(a["ordem"], a["numero_destaque"], a["rotulo_destaque"], a["acao_curta"]) for a in seed]
+    assert linhas == [(a["ordem"], a["numero_destaque"], a["rotulo_destaque"], a["acao_curta"], a["tecnico"]) for a in seed]

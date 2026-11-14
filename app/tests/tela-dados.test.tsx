@@ -43,7 +43,7 @@ describe("Tela 3 — Confiança nos dados (painel)", () => {
     render(<PaginaDados />);
     expect(screen.getByText("Conversas lidas")).toBeTruthy();
     expect(screen.getByText("11.621")).toBeTruthy();
-    expect(screen.getByText(/0 rejeitadas/)).toBeTruthy();
+    expect(screen.getByText(/0 descartadas/)).toBeTruthy();
     expect(screen.getByTestId("conferencias").textContent).toBe("1 de 2");
     expect(screen.getByTestId("frase-confianca").textContent).toContain("1 de 2");
     expect(document.querySelectorAll("[data-problema]").length).toBe(1);
@@ -76,14 +76,14 @@ describe("Tela 3 — Confiança nos dados (painel)", () => {
     mock.corpo = { lote, reconciliacao: [rec("a", true)], problemas: [], validacao: [v("tema"), v("recusa")] };
     render(<PaginaDados />);
     expect(screen.getAllByText("90%").length).toBe(2);
-    expect(screen.getAllByText(/em 200 conferidas à mão/).length).toBe(2);
-    expect(screen.getByText(/tema é só descritivo/)).toBeTruthy();
+    expect(screen.getAllByText(/em 200 conversas conferidas à mão/).length).toBe(2);
+    expect(screen.getByText(/o assunto é só ilustrativo/)).toBeTruthy();
   });
 
   it("quadro 'mostra / nunca mostra' sempre presente", () => {
     render(<PaginaDados />);
     expect(screen.getByText("O painel nunca mostra")).toBeTruthy();
     expect(screen.getByText("Texto de nenhuma conversa")).toBeTruthy();
-    expect(screen.getByText(/IP nem navegador/)).toBeTruthy();
+    expect(screen.getByText(/nem navegador de ninguém/)).toBeTruthy();
   });
 });

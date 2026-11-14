@@ -8,7 +8,7 @@ export function amostraPequena(amostraSuficiente: boolean | null | undefined): b
   return amostraSuficiente === false;
 }
 
-/** REQ-406: o intervalo de 95% inclui o zero (efeito não distinguível de zero). */
+/** REQ-406: a margem de erro inclui o zero (efeito não distinguível de zero). */
 export function cruzaZero(inf: number | null | undefined, sup: number | null | undefined): boolean {
   if (inf == null || sup == null) return false;
   return inf <= 0 && sup >= 0;
@@ -27,11 +27,11 @@ export function formatarPct(x: number | null | undefined, casas = 1): string {
   return x == null ? NUMERO_VAZIO : `${nf(casas).format(x * 100)}%`;
 }
 
-/** Efeito em pontos percentuais (já em pp) → "+4,9 p.p.". */
+/** Efeito em pontos (já em pp) → "+4,9 pontos". */
 export function formatarPP(x: number | null | undefined, casas = 1): string {
   if (x == null) return NUMERO_VAZIO;
   const sinal = x > 0 ? "+" : "";
-  return `${sinal}${nf(casas).format(x)} p.p.`;
+  return `${sinal}${nf(casas).format(x)} pontos`;
 }
 
 export function formatarInt(x: number | null | undefined): string {

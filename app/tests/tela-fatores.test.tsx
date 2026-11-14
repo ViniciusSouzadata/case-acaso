@@ -73,10 +73,10 @@ describe("componente Floresta", () => {
   };
   const linhaDe = (fator: string) => document.querySelector(`[data-fator="${fator}"]`) as HTMLElement;
 
-  it("efeito com IC cruzando o zero recebe o rótulo 'não dá para distinguir de zero'", () => {
+  it("efeito com IC cruzando o zero recebe o rótulo 'sem diferença clara'", () => {
     renderGrupo([base, cruza], "assistente");
-    expect(within(linhaDe("modelo_familia")).getByText("não dá para distinguir de zero")).toBeTruthy();
-    expect(within(linhaDe("recusa")).queryByText("não dá para distinguir de zero")).toBeNull();
+    expect(within(linhaDe("modelo_familia")).getByText("sem diferença clara")).toBeTruthy();
+    expect(within(linhaDe("recusa")).queryByText("sem diferença clara")).toBeNull();
   });
 
   it("efeito distinguível mostra a marca de que resiste à correção para muitos testes", () => {
@@ -96,8 +96,8 @@ describe("componente Floresta", () => {
     expect(l.querySelector('[data-ponto="bruto"]')).not.toBeNull();
     expect(l.querySelector('[data-ponto="ajustado"]')).not.toBeNull();
     expect(within(l).getByText(/voltou 6,0 p\.p\. menos/)).toBeTruthy();
-    expect(within(l).getByText(/Diferença bruta/)).toBeTruthy();
-    expect(within(l).getByText(/Ajustada/)).toBeTruthy();
+    expect(within(l).getByText(/Diferença direta/)).toBeTruthy();
+    expect(within(l).getByText(/Entre pessoas parecidas/)).toBeTruthy();
   });
 
   it("engajamento não mostra o ponto nem o texto de ajustado", () => {
@@ -105,16 +105,16 @@ describe("componente Floresta", () => {
     const l = linhaDe("n_turnos_sessao");
     expect(l.querySelector('[data-ponto="ajustado"]')).toBeNull();
     expect(l.querySelector('[data-ponto="bruto"]')).not.toBeNull();
-    expect(within(l).queryByText(/Ajustada/)).toBeNull();
-    expect(within(l).getByText(/sem ajuste/)).toBeTruthy();
+    expect(within(l).queryByText(/Entre pessoas parecidas/)).toBeNull();
+    expect(within(l).getByText(/sem comparar pessoas parecidas/)).toBeTruthy();
   });
 
   it("amostra pequena: aviso com o n, sem números em destaque", () => {
     renderGrupo([pequeno], "perfil");
     const l = linhaDe("idioma");
-    expect(within(l).getByRole("note").textContent).toContain("amostra pequena (n = 12)");
-    expect(within(l).queryByText(/Diferença bruta/)).toBeNull();
-    expect(within(l).queryByText("não dá para distinguir de zero")).toBeNull();
+    expect(within(l).getByRole("note").textContent).toContain("pouca gente (12 pessoas)");
+    expect(within(l).queryByText(/Diferença direta/)).toBeNull();
+    expect(within(l).queryByText("sem diferença clara")).toBeNull();
   });
 
   it("o texto principal não usa termo técnico proibido", () => {
@@ -138,7 +138,7 @@ describe("tema descritivo (grupo à parte)", () => {
     render(<Floresta linhas={linhas} limite={limite} />);
     const l = document.querySelector('[data-fator="tema_descritivo"]') as HTMLElement;
     expect(l.querySelector('[data-ponto="ajustado"]')).toBeNull();
-    expect(within(l).getByText(/sem ajuste/)).toBeTruthy();
+    expect(within(l).getByText(/sem comparar pessoas parecidas/)).toBeTruthy();
     expect(within(l).queryByText(/pode ser acaso/)).toBeNull();
   });
 });
@@ -146,21 +146,21 @@ describe("tema descritivo (grupo à parte)", () => {
 describe("frase-resposta: concordância", () => {
   it("singular quando é 1 (k = 1 e f = 1)", () => {
     const frase = fraseResposta(1, 27, 1);
-    expect(frase).toContain("1 tem intervalo");
+    expect(frase).toContain("1 tem margem de erro");
     expect(frase).toContain("1 continua diferente de zero");
     expect(frase).not.toMatch(/1 têm|1 continuam/);
   });
 
   it("plural quando é mais de 1 (k > 1 e f > 1)", () => {
     const frase = fraseResposta(5, 27, 3);
-    expect(frase).toContain("5 têm intervalo");
+    expect(frase).toContain("5 têm margem de erro");
     expect(frase).toContain("3 continuam diferentes de zero");
     expect(frase).toContain("27 comparações");
   });
 
   it("mistura: k plural com f singular, e o caso f = 0 (nenhuma continua)", () => {
     expect(fraseResposta(5, 27, 1)).toMatch(/5 têm .* 1 continua diferente de zero/);
-    expect(fraseResposta(1, 27, 0)).toMatch(/1 tem intervalo.*nenhuma continua diferente de zero/);
+    expect(fraseResposta(1, 27, 0)).toMatch(/1 tem margem de erro.*nenhuma continua diferente de zero/);
     expect(fraseResposta(0, 0, 0)).toBe("Ainda não há comparações para mostrar.");
   });
 });

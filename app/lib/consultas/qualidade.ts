@@ -9,10 +9,11 @@ export interface Achado {
   numero_destaque: string | null;
   rotulo_destaque: string | null;
   acao_curta: string | null;
+  tecnico: string | null;
 }
 
 export async function achados() {
-  return consultar<Achado>(`SELECT ordem, titulo, evidencia, decisao, limite, numero_destaque, rotulo_destaque, acao_curta FROM resultado.achado ORDER BY ordem`);
+  return consultar<Achado>(`SELECT ordem, titulo, evidencia, decisao, limite, numero_destaque, rotulo_destaque, acao_curta, tecnico FROM resultado.achado ORDER BY ordem`);
 }
 
 export interface LoteQualidade {

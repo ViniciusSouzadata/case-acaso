@@ -72,16 +72,16 @@ def _sem_jargao(texto):
 
 def test_veredito_dentro_do_ruido_em_linguagem_de_cliente():
     t = semana.veredito(0.264, 0.215, 197, 65, -0.4, -4.4, 0.434, 35, 2)
-    assert t.startswith("Nesta semana, 22 de cada 100 novos usuários (65 no total) voltaram, contra 26 de cada 100")
+    assert t.startswith("Nesta semana, 22 de cada 100 pessoas novas (65 no total) voltaram, contra 26 de cada 100")
     assert "Quase toda a queda veio de as pessoas voltarem menos, não de ter chegado um público diferente." in t
-    assert "dentro da variação normal entre semanas" in t and "não dá para afirmar que houve uma mudança real" in t
+    assert "dentro da oscilação normal entre semanas" in t and "não dá para afirmar que houve uma mudança real" in t
     _sem_jargao(t)
 
 
 def test_veredito_distinguivel_mas_com_cautela_de_comparacoes_multiplas():
     t = semana.veredito(0.338, 0.167, 74, 84, 0.7, -17.8, 0.013, 35, 2)
     assert "17 de cada 100" in t and "34 de cada 100" in t
-    assert "maior do que a variação normal entre semanas, mas" in t and "todas as 35 semanas" in t
+    assert "maior do que a oscilação normal entre semanas, mas" in t and "todas as 35 semanas" in t
     assert "2 tiveram uma diferença assim" in t and "cerca de 2" in t and "não dá para descartar coincidência" in t
     _sem_jargao(t)
 
@@ -122,7 +122,7 @@ def test_semanas_reais_gravadas_e_fecham():
     for _, n_b, n_s, delta, mix, taxa, p, conclusao in res:
         assert n_b > 0 and n_s > 0 and 0 <= float(p) <= 1
         assert float(mix) + float(taxa) == pytest.approx(float(delta), abs=2e-3)
-        assert "de cada 100" in conclusao and "variação normal entre semanas" in conclusao
+        assert "de cada 100" in conclusao and "oscilação normal entre semanas" in conclusao
         _sem_jargao(conclusao)
     for _, total, pb, ps in segs:
         assert float(pb) == pytest.approx(1.0, abs=1e-4) and float(ps) == pytest.approx(1.0, abs=1e-4)

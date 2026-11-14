@@ -40,11 +40,11 @@ describe.skipIf(!temBanco)("fumaça das telas contra o banco real", () => {
     // a frase vem de outra requisição que o cartão: espera por ela, em vez de supor que já chegou
     await waitFor(() => expect(screen.getByTestId("frase-resposta").textContent?.length).toBeGreaterThan(20), { timeout: 20000 });
 
-    const botoes = screen.getAllByRole("button", { name: /Taxa de retorno/i });
+    const botoes = screen.getAllByRole("button", { name: /Voltam em até 7 dias/i });
     expect(botoes.length).toBeGreaterThan(0);
     fireEvent.click(botoes[0]!);
     const dialogo = await screen.findByRole("dialog");
-    await waitFor(() => expect(dialogo.textContent).toMatch(/Defini|Fórmula/i), { timeout: 20000 });
+    await waitFor(() => expect(dialogo.textContent).toMatch(/O que é|A conta/i), { timeout: 20000 });
     expect(dialogo.querySelector("details")).not.toBeNull(); // fórmula e fonte ficam na parte técnica
     semDadoSensivel();
   }, 60000);

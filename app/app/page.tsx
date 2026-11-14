@@ -82,7 +82,7 @@ export default function PaginaRetencao() {
             <CartaoKpi rotulo={t("painel.tela1.cartaoVoltaram")} valor={formatarInt(r.voltaram_7d)} animar={{ valor: r.voltaram_7d, formato: (n) => formatarInt(Math.round(n)) }} apoio={t("painel.tela1.cartaoVoltaramSub")} atrasoMs={120} onAbrir={() => setDetalhe("voltaram")} />
             <CartaoKpi
               rotulo={t("painel.tela1.cartaoDefinicao")}
-              valor={faixa ? `${formatarPct(faixa.min)}–${formatarPct(faixa.max)}` : "—"}
+              valor={faixa ? `${formatarPct(faixa.min, 0)}–${formatarPct(faixa.max, 0)}` : "—"}
               apoio={sens.estado === "ok" ? t("painel.tela1.cartaoDefinicaoSub", { n: sens.corpo.dados.length }) : undefined}
               atrasoMs={180}
               onAbrir={faixa ? () => setDetalhe("definicoes") : undefined}
@@ -129,7 +129,7 @@ export default function PaginaRetencao() {
           {semana.estado === "ok" && !rs ? <Estado tipo="vazio" mensagem={t("semana.semResumo")} /> : null}
           {rs && cascata ? (
             <>
-              <p className="text-xs text-slate-600">{t("painel.tela1.semanaSub", { base: formatarPct(rs.taxa_base), semana: formatarPct(rs.taxa_semana) })}</p>
+              <p className="text-xs text-slate-600">{t("painel.tela1.semanaSub", { base: deCadaCem(rs.taxa_base ?? 0), semana: deCadaCem(rs.taxa_semana ?? 0) })}</p>
               <Cascata degraus={cascata.degraus} altura="h-52" semJargao />
               {concl ? (
                 <p className="text-sm text-slate-800" data-testid="conclusao-semana">

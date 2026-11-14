@@ -163,6 +163,7 @@ export const achadoSaida = z.strictObject({
   numero_destaque: z.string().nullable(),
   rotulo_destaque: z.string().nullable(),
   acao_curta: z.string().nullable(),
+  tecnico: z.string().nullable(),
 });
 
 export const qualidadeSaida = z.strictObject({

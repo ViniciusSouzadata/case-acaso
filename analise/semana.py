@@ -89,8 +89,8 @@ def veredito(taxa_base: float, taxa_semana: float, n_base: int, n_semana: int, m
     """
     por_100 = lambda x: f"{round(x * 100):d}"  # noqa: E731
     queda = taxa_semana < taxa_base
-    s1 = (f"Nesta semana, {por_100(taxa_semana)} de cada 100 novos usuários ({n_semana} no total) voltaram, contra "
-          f"{por_100(taxa_base)} de cada 100 {base_rotulo} ({n_base} usuários).")
+    s1 = (f"Nesta semana, {por_100(taxa_semana)} de cada 100 pessoas novas ({n_semana} no total) voltaram, contra "
+          f"{por_100(taxa_base)} de cada 100 {base_rotulo} ({n_base} pessoas).")
     total = abs(mix_pp) + abs(taxa_pp)
     parte_comportamento = abs(taxa_pp) / total if total else 0.0
     movimento = "queda" if queda else "subida"
@@ -104,10 +104,10 @@ def veredito(taxa_base: float, taxa_semana: float, n_base: int, n_semana: int, m
         s2 = f"Parte da {movimento} veio de um público diferente e parte de as pessoas terem mudado de comportamento."
     if p < 0.05:
         esperado = max(1, round(0.05 * n_semanas))
-        s3 = (f"A {movimento} é maior do que a variação normal entre semanas, mas, olhando todas as {n_semanas} semanas com amostra "
+        s3 = (f"A {movimento} é maior do que a oscilação normal entre semanas, mas, olhando todas as {n_semanas} semanas com gente "
               f"suficiente, {n_sig} tiveram uma diferença assim e só pelo acaso se esperam cerca de {esperado}: não dá para descartar coincidência.")
     else:
-        s3 = ("A diferença está dentro da variação normal entre semanas: com tão poucos usuários por semana, "
+        s3 = ("A diferença está dentro da oscilação normal entre semanas: com tão pouca gente por semana, "
               "não dá para afirmar que houve uma mudança real.")
     return f"{s1} {s2} {s3}"
 
@@ -162,10 +162,10 @@ def decompor(df: pd.DataFrame, semana: date, n_min: int, contra_seguintes: bool 
     testadas, sig = contar_semanas_significativas(df, n_min)
     delta, mix, taxa = (round(tot[k] * 100, 4) for k in ("delta", "mix", "taxa"))
     semanas_base = sorted(base["semana"].unique())
-    qual = "seguintes (a semana é do início da coleta; não há base anterior limpa)" if contra_seguintes else "anteriores"
+    qual = "seguintes (a semana é do início da coleta; não há semanas anteriores limpas)" if contra_seguintes else "anteriores"
     resumo = {
         "semana": semana,
-        "base_descricao": f"{len(semanas_base)} semanas de coorte {qual} ({semanas_base[0]:%d/%m/%Y} a {semanas_base[-1]:%d/%m/%Y}), só elegíveis, sem início de coleta",
+        "base_descricao": f"{len(semanas_base)} semanas {qual} ({semanas_base[0]:%d/%m/%Y} a {semanas_base[-1]:%d/%m/%Y}), sem as primeiras semanas da base",
         "n_base": n_b, "n_semana": n_s, "taxa_base": round(tot["taxa_base"], 6), "taxa_semana": round(tot["taxa_semana"], 6),
         "delta_pp": delta, "mix_pp": mix, "taxa_pp": taxa, "p_valor": round(p, 6),
         "conclusao": veredito(tot["taxa_base"], tot["taxa_semana"], n_b, n_s, mix, taxa, p, testadas, sig,

@@ -50,7 +50,7 @@ function LinhaRanking({ l, onAbrir, realcada }: { l: LinhaFloresta; onAbrir: () 
   const classeNumero = `whitespace-nowrap font-display text-sm font-semibold ${destaque ? "text-[#8a3a00]" : "text-slate-800"}`;
   return (
     <li className="entra" data-fator={l.fator} data-nivel={l.nivel} data-realce={realcada ? "sim" : undefined}>
-      <button type="button" onClick={onAbrir} className={`grid w-full grid-cols-1 items-center gap-x-3 gap-y-1 rounded-lg px-2 py-1 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta sm:grid-cols-[12rem_minmax(0,1fr)_8.75rem_8.5rem] ${realcada ? "bg-[#e6e0fb] ring-2 ring-violeta" : ""}`}>
+      <button type="button" onClick={onAbrir} className={`grid w-full grid-cols-1 items-center gap-x-3 gap-y-1 rounded-lg px-2 py-1 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta sm:grid-cols-[15rem_minmax(0,1fr)_13.5rem_7.75rem] ${realcada ? "bg-[#e6e0fb] ring-2 ring-violeta" : ""}`}>
         <div className="flex items-baseline justify-between gap-2 sm:block">
           <span className="text-sm font-medium text-tinta">{nomeCurto(l.fator, l.nivel)}</span>
           <span className={`${classeNumero} sm:hidden`}>{numero}</span>

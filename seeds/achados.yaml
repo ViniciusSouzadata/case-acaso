@@ -1,73 +1,80 @@
-# numero_destaque, rotulo_destaque e acao_curta (opcionais): só para o cartão curto da Tela 2; conferidos contra resultado.* em 14/11 (−16,4 e −2,9 de efeito_fator; 1 de 33 semanas com p<0,05 de analise.semana.contar_semanas_significativas).
-# Achados aprovados pelo Vinícius (ponto de controle 1, 12/11/2026). Só números que existem em resultado.* e em docs/robustez_recusa.md.
-# Taxa de retorno em 7 dias: 23,9% (IC 22,2% a 25,6%; 2.372 usuários elegíveis; 566 voltaram).
-# Efeito mínimo detectável: 4,9 p.p. com grupos iguais.
+# Achados em linguagem leiga (pedido 12, 14/11/2026): frases curtas, falando de pessoas; o que é técnico de verdade fica em `tecnico`.
+# Os números não mudam: conferidos contra resultado.* e docs/robustez_recusa.md em 14/11 (−16,41 [−21,35; −11,47] e −2,91 [−7,99; +2,16] de efeito_fator;
+# 20/11/2023: 26,4% (n=197) → 21,5% (n=65); 33 semanas testadas, 1 com p<0,05 por analise.semana.contar_semanas_significativas; 132 recusas em 131 IPs).
+# numero_destaque, rotulo_destaque e acao_curta (opcionais): cartão curto da Tela 2. tecnico (opcional): bloco recolhido "Para conferir (técnico)".
+# Achados aprovados pelo Vinícius (ponto de controle 1, 12/11/2026); a redação leiga foi pedida pelo planejador em 14/11/2026.
 - ordem: 1
-  titulo: "A recusa na primeira resposta é o único comportamento do assistente ligado a menos retorno"
+  titulo: "Quando o assistente se recusa a responder, a pessoa quase não volta"
   numero_destaque: "−16"
-  rotulo_destaque: "a cada 100 · quem recebeu recusa"
-  acao_curta: "Acompanhar a taxa de recusa e revisar as recusas desnecessárias."
+  rotulo_destaque: "a cada 100 pessoas"
+  acao_curta: "Medir as recusas todo mês e rever as que não precisavam acontecer."
   evidencia: >-
-    Entre 2.372 novos usuários, 132 (5,6%) receberam uma recusa na primeira resposta. Voltaram em até 7 dias 13 de 132
-    com recusa (9,8%), contra 553 de 2.240 sem recusa (24,7%). Comparando pessoas de perfil parecido, a diferença é de
-    16,4 pontos a menos de retorno a cada 100 usuários (de 11,5 a 21,4 a menos). Se "voltar" exigir outro dia, o quadro
-    é o mesmo: 9 de 132 com recusa (6,8%) contra 391 de 2.240 sem (17,5%), 11,5 pontos a menos (de 7,3 a 15,7 a menos).
-    O grupo com recusa é pequeno (132 pessoas, 13 delas voltaram), e os intervalos mostram essa incerteza. Dos fatores
-    do assistente comparados, é o único que se mantém depois da correção para muitos testes. O número quase não muda
-    com as quatro definições de usuário e sessão (de 14,4 a 16,4 pontos a menos) nem com um aquecimento maior da base
-    (16,3 a menos). As recusas não vêm de poucos usuários (132 recusas em 131 IPs) e a direção se repete nos 5 temas
-    com recusas suficientes. Sobre a ordem dos fatos: a forma de marcar a recusa foi trocada porque a validação manual
-    de 200 conversas mostrou que as regras de palavras-chave erravam (só 30% do que marcavam era recusa, ponderando
-    pela população), antes de olhar o efeito com o novo rótulo; a ordem está nos commits. Com as regras, a diferença
-    parecia pequena (3,3 pontos a menos, de 10,1 a menos até 3,5 a mais), porque os falsos alarmes a diluíam.
+    De 2.372 pessoas novas, 132 receberam uma recusa logo na primeira resposta. Dessas 132, só 13 voltaram em até
+    7 dias (10 a cada 100). Entre as 2.240 que não receberam recusa, voltaram 553 (25 a cada 100). Comparando pessoas
+    parecidas (mesmo assunto, idioma, aparelho, horário, região e época), a diferença continua: 16 a menos voltam, a
+    cada 100 (pode ser de 11 a 21 a menos). Testamos de outras formas — mudando a forma de reconhecer a mesma pessoa,
+    ou exigindo que a volta seja em outro dia — e o resultado se mantém. As recusas não vêm de poucas pessoas: são 132
+    recusas em 131 endereços diferentes.
   decisao: >-
-    Tratar a taxa de recusa como indicador de saúde do assistente, ao lado da retenção, e revisar quais pedidos estão
-    sendo recusados sem necessidade. Antes de mudar para todos, testar de forma controlada (metade dos usuários com
-    cada versão) uma recusa que ofereça uma alternativa útil, que é o que permite afirmar causa.
+    Acompanhar todo mês quantas pessoas recebem recusa, do mesmo jeito que se acompanha quantas voltam. Rever os
+    pedidos que o assistente recusa sem precisar. Antes de mudar para todo mundo, testar: metade das pessoas recebe a
+    recusa de hoje, metade recebe uma recusa que oferece uma alternativa. Só esse teste prova que a recusa é a causa.
   limite: >-
-    É comparação, não experimento: a recusa pode ser o sinal de um pedido que o produto não atende, e não o motivo
-    de a pessoa não voltar. Com 132 casos não foi possível montar um grupo de comparação equilibrado (o segundo método
-    ficou "não comparável"). Para explicar a diferença, um fator escondido precisaria estar fortemente ligado às duas
-    coisas (E-value 5,3). Os autores do conjunto de dados removeram as conversas tóxicas, onde as recusas tendem a ser
-    mais comuns; vemos só parte das recusas. A recusa foi marcada por IA conferida contra 200 rótulos manuais (precisão
-    de 81% e revocação de 86%, ponderadas pela população); erro desse tipo tende a diminuir a diferença, não a criar.
+    Isto é uma comparação, não um teste controlado. Pode ser que a recusa só mostre que a pessoa pediu algo que o
+    produto não faz, e ela não voltaria de qualquer jeito. O grupo com recusa é pequeno (132 pessoas). As conversas
+    ofensivas foram retiradas da base por quem a publicou, então vemos só parte das recusas. Quem marcou o que é recusa
+    foi uma IA, conferida à mão em 200 conversas (acerta 92%).
+  tecnico: >-
+    Entre pessoas parecidas (regressão logística, efeito marginal médio): −16,4 p.p., intervalo de 95% de −21,4 a −11,5.
+    Se "voltar" exigir outro dia: 9 de 132 (6,8%) contra 391 de 2.240 (17,5%), −11,5 p.p. (de −15,7 a −7,3). É o único
+    fator do assistente que resiste à correção de Benjamini-Hochberg para muitas comparações. E-value 5,3. Segundo
+    método (ponderação por propensão): não comparável, porque os grupos diferem demais no perfil. Robustez: de −14,4 a
+    −16,4 p.p. nas quatro definições de usuário e sessão; −16,3 p.p. com burn-in maior; 132 recusas em 131 IPs; mesma
+    direção nos 5 temas com recusas suficientes. Rótulo da recusa: IA validada em 200 conversas (precisão 81% e
+    revocação 86%, ponderadas pela população). Com as regras de palavras-chave, a diferença era −3,3 p.p. (de −10,1 a
+    +3,5), porque os falsos alarmes a diluíam.
 - ordem: 2
-  titulo: "Trocar de modelo ou mudar o formato da resposta não mostrou ganho de retorno"
-  numero_destaque: "−2,9"
-  rotulo_destaque: "a cada 100 · GPT-4 em vez de GPT-3.5"
-  acao_curta: "Não trocar de modelo esperando mais retorno."
+  titulo: "O modelo mais caro (GPT-4) não fez mais gente voltar"
+  numero_destaque: "Sem ganho"
+  rotulo_destaque: "GPT-4 no lugar do GPT-3.5"
+  acao_curta: "Não pagar por um modelo mais caro esperando mais retorno."
   evidencia: >-
-    GPT-4 em vez de GPT-3.5, entre perfis parecidos: 2,9 pontos a menos de retorno a cada 100 usuários (de 8,0 a
-    menos até 2,2 a mais); pelo segundo método (comparação ponderada), 6,1 pontos a menos (de 12,7 a menos até 0,4 a
-    mais). Os dados descartam um ganho de retorno acima de cerca de 2 pontos com o modelo mais novo. Tamanho da
-    resposta (de 1,5 a menos até 4,7 a mais, conforme a faixa) e resposta em outro idioma (0,1 a mais, de 7,7 a menos
-    até 7,9 a mais) também não se distinguem de zero. Nenhum desses passa na correção para muitos testes.
+    Comparando pessoas parecidas, quem foi atendido pelo GPT-4 não voltou mais do que quem foi atendido pelo GPT-3.5: a
+    diferença foi de 3 a menos a cada 100, dentro da margem de erro (de 8 a menos até 2 a mais). Os dados não mostram
+    ganho e praticamente descartam um ganho maior que 2 a cada 100. O tamanho da resposta e a resposta em outro idioma
+    também não mudaram o retorno de forma clara.
   decisao: >-
-    Não justificar a troca para um modelo mais caro por ganho de retenção: o modelo mais caro não trouxe mais retorno
-    nestes dados. Se a troca acontecer por qualidade ou outro motivo, medir o efeito com teste controlado.
+    Não pagar por um modelo mais caro esperando que mais gente volte. Se a troca for feita por outro motivo (qualidade,
+    por exemplo), medir o efeito com um teste controlado.
   limite: >-
-    Com esta base só se enxergam diferenças a partir de cerca de 5 pontos (4,9 com grupos iguais); efeitos menores
-    podem existir. Ganhos acima de 2 pontos para o modelo mais novo são incompatíveis com os dados, mas não se exclui
-    um efeito menor. A comparação é de pessoas que escolheram ou receberam situações diferentes, então não prova causa.
+    Com esta quantidade de pessoas, só dá para enxergar diferenças a partir de uns 5 a cada 100. Diferenças menores
+    podem existir e passar despercebidas. E é uma comparação entre pessoas que receberam modelos diferentes, não um
+    teste controlado.
+  tecnico: >-
+    GPT-4 contra GPT-3.5, efeito marginal médio: −2,9 p.p. (de −8,0 a +2,2). Segundo método (comparação ponderada):
+    −6,1 p.p. (de −12,7 a +0,4). Efeito mínimo detectável: 4,9 p.p. com grupos iguais. Tamanho da resposta: de −1,5 a
+    +4,7 p.p. conforme a faixa; resposta em outro idioma: +0,1 p.p. (de −7,7 a +7,9). Nenhum desses se distingue de
+    zero e nenhum passa na correção de Benjamini-Hochberg.
 - ordem: 3
-  titulo: "Quedas semanais isoladas enganam: a maior era efeito do início da coleta"
+  titulo: "Uma semana ruim sozinha não é sinal de problema"
   numero_destaque: "1 de 33"
-  rotulo_destaque: "semanas caiu além do acaso (2 seriam esperadas por sorte)"
-  acao_curta: "Só alarmar quando a queda passar da variação normal."
+  rotulo_destaque: "semanas teve queda fora do normal"
+  acao_curta: "Só soar o alarme quando a queda for maior que a oscilação normal."
   evidencia: >-
-    A maior queda da série, na semana de 1º/05/2023 (17 a cada 100 novos usuários voltaram, 84 usuários), era de 17,1
-    pontos (p = 0,013) quando comparada às duas semanas anteriores. Mas essas duas semanas ficam logo no início da
-    coleta e incluem usuários antigos contados como novos. Com o início da coleta tratado com mais folga (semanas de
-    comparação começando pelo menos 28 dias depois do primeiro dado), a queda contra as quatro semanas seguintes é de
-    7,7 pontos (p = 0,13), dentro da variação normal. Na semana de 20/11/2023, quando chegou um novo modelo, 22 de cada
-    100 voltaram (65 usuários) contra 26 de cada 100 (197 usuários): 4,9 pontos a menos, quase todo de as pessoas
-    voltarem menos e não de mudança de público (p = 0,43). Nas 33 semanas testadas, só 1 passou do limite de 5%, o que
-    é perto do que o acaso produz (cerca de 2).
+    A maior queda que apareceu foi na semana de 1º/05/2023: 17 pontos a menos que nas duas semanas anteriores. Parecia
+    grave. Mas aquelas duas semanas eram as primeiras da base, e nelas pessoas antigas foram contadas como novas — e
+    gente antiga volta mais. Comparando com as quatro semanas seguintes, a queda cai para cerca de 8 pontos, dentro da
+    oscilação normal. Na semana de 20/11/2023 voltaram 22 de cada 100 (65 pessoas), contra 26 antes (197 pessoas):
+    também oscilação normal. Das 33 semanas testadas, só 1 teve queda fora do normal; por puro acaso seriam esperadas
+    umas 2.
   decisao: >-
-    O alerta do painel só dispara quando a queda passa da variação normal, ignora as semanas do início da coleta
-    (as que começam a menos de 28 dias do primeiro dado) e mostra quantas semanas passariam por acaso. É a mesma lição
-    do incidente: conferir a definição antes de alarmar.
+    O alerta do painel só dispara quando a queda é maior que a oscilação normal e ignora as primeiras semanas da base.
+    É a mesma lição do incidente: antes de soar o alarme, conferir se a forma de contar está certa.
   limite: >-
-    As semanas têm de 33 a 197 usuários, então só quedas grandes são detectáveis. Escolher a semana de maior efeito
-    entre várias exagera a chance de achar algo; por isso a leitura conta quantas semanas passariam por acaso.
-    Não há dado de versão do produto por data para explicar por que cada semana variou.
+    Cada semana tem poucas pessoas novas (de 33 a 197), então só quedas grandes aparecem. E não temos o histórico de
+    mudanças do produto para explicar por que cada semana variou.
+  tecnico: >-
+    Semana de 01/05/2023 contra as duas semanas anteriores: −17,1 p.p. (p = 0,013). Com a base de comparação começando
+    pelo menos 28 dias depois do primeiro dado (as quatro semanas seguintes): −7,7 p.p. (p = 0,13). Semana de
+    20/11/2023: −4,9 p.p. (p = 0,43), 21,5% (n = 65) contra 26,4% (n = 197). Nas 33 semanas testadas, 1 teve p < 0,05;
+    por acaso seriam esperadas cerca de 2.

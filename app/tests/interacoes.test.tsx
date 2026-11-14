@@ -46,7 +46,7 @@ describe("Tela 1 — interações", () => {
 
   it("cada cartão de número é um botão que abre o seu detalhe, e Esc fecha", () => {
     render(<PaginaRetencao />);
-    for (const nome of [/Taxa de retorno/, /Pessoas analisadas/, /Voltaram/, /Conforme a definição/]) {
+    for (const nome of [/Voltam em até 7 dias/, /Pessoas novas/, /^Voltaram/, /Se mudar a forma de contar/]) {
       fireEvent.click(screen.getAllByRole("button", { name: nome })[0]!);
       expect(screen.getByRole("dialog")).toBeTruthy();
       fireEvent.keyDown(window, { key: "Escape" });
@@ -56,7 +56,7 @@ describe("Tela 1 — interações", () => {
 
   it("o cartão da taxa abre a definição do dicionário em linguagem comum", () => {
     render(<PaginaRetencao />);
-    fireEvent.click(screen.getAllByRole("button", { name: /Taxa de retorno/ })[0]!);
+    fireEvent.click(screen.getAllByRole("button", { name: /Voltam em até 7 dias/ })[0]!);
     expect(mock.pedidos).toContain("/api/dicionario?indicador=taxa_retorno_7d");
     expect(within(screen.getByRole("dialog")).getByTestId("detalhe-indicador").textContent).toContain("definição de Taxa de retorno em 7 dias");
   });
@@ -110,7 +110,7 @@ describe("Tela 2 — cartão do achado realça a linha do ranking", () => {
     render(<PaginaFatores />);
     expect(document.querySelector("[data-fator='modelo_familia']")).toBeNull(); // a aba Assistente não o mostra
     fireEvent.mouseEnter(document.querySelector("[data-achado='2']")!);
-    expect(screen.getByRole("tab", { name: /Perfil/ }).getAttribute("aria-selected")).toBe("true");
+    expect(screen.getByRole("tab", { name: /Quem é a pessoa/ }).getAttribute("aria-selected")).toBe("true");
     expect(realcadas()).toEqual(["modelo_familia|gpt-4"]);
   });
 

@@ -43,9 +43,9 @@ describe("uma linha por fator", () => {
     const { linhas, limite } = prepararFloresta([base, ipwSem, modelo, modeloIpw], "assistente");
     render(<Floresta linhas={linhas} limite={limite} />);
     const m = document.querySelector('[data-fator="modelo_familia"]') as HTMLElement;
-    expect(within(m).getByText(/Pelo segundo método \(grupos parecidos, 284 contra 643\)/)).toBeTruthy();
+    expect(within(m).getByText(/Por outra forma de comparar pessoas parecidas \(284 contra 643\)/)).toBeTruthy();
     const r = document.querySelector('[data-fator="recusa"]') as HTMLElement;
-    expect(within(r).getByText(/segundo método \(grupos parecidos\): não comparável/)).toBeTruthy();
+    expect(within(r).getByText(/Por outra forma de comparar pessoas parecidas: não dá para comparar/)).toBeTruthy();
     expect(within(r).getByText("grupos não comparáveis")).toBeTruthy();
     expect(document.querySelectorAll('[data-fator="recusa"]').length).toBe(1);
   });
@@ -53,7 +53,7 @@ describe("uma linha por fator", () => {
 
 describe("títulos em frase", () => {
   it("nenhum identificador de variável vira título", () => {
-    expect(tituloLinha("recusa", "sim", "não")).toBe("Recebeu recusa na 1ª resposta, contra não recebeu");
+    expect(tituloLinha("recusa", "sim", "não")).toBe("O assistente se recusou a responder logo na 1ª resposta, contra não se recusou");
     expect(tituloLinha("virada_dez2023", "x", "y")).not.toMatch(/virada_dez2023/);
     expect(tituloLinha("idioma", "Spanish", "Portuguese")).toBe("Idioma da pergunta: espanhol, contra português");
     expect(tituloLinha("era_modelo", "2023-07..10 (só 3.5)", "2023-12+ (4 padrão)")).toContain("jul a out/2023");

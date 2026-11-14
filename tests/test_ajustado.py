@@ -74,7 +74,7 @@ def test_leitura_nunca_vende_ruido_como_efeito():
     assert "cerca de 6,0 a cada 100 a menos" in t and "não dá para afirmar" not in t and "por acaso" not in t
     _sem_jargao(t)
     t = ajustado.leitura_efeito("faixa_chars_resposta", "301–1.000", "até 300", 6.2, 0.4, 12.1, sobrevive_fdr=False)
-    assert "a mais" in t and "muitos fatores ao mesmo tempo" in t
+    assert "a mais" in t and "muitas coisas ao mesmo tempo" in t
     _sem_jargao(t)
 
 
