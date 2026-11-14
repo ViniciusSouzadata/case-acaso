@@ -169,12 +169,28 @@ export function acertoIA(validacao: { classificador: string; modelo: string | nu
   return v ? { acuracia: v.acuracia as number, n: v.n as number } : null;
 }
 
-/** Da conferência manual da IA de recusa: de cada 100 conversas que a IA marca como recusa, quantas são (precisão); de cada 100 recusas reais, quantas ela acha (cobertura). Null se a tabela não trouxer. */
-export function desempenhoRecusa(validacao: { classificador: string; modelo: string | null; n: number | null; detalhe_json?: unknown }[]): { precisao: number; cobertura: number; n: number } | null {
+/** Da conferência manual da IA de recusa. Os números do cartão são os PONDERADOS (a amostra de 200 foi montada com mais casos suspeitos de recusa;
+ * o peso de cada tipo de conversa corrige isso): de cada 100 que a IA aponta, quantas são recusa (precisão); de cada 100 recusas reais, quantas ela acha (cobertura).
+ * Os crus (sobre as 200 como estão) vêm junto, para o detalhe técnico. Null se a tabela não trouxer as ponderadas. */
+export interface DesempenhoRecusa {
+  precisao: number;
+  cobertura: number;
+  n: number;
+  /** recusas de verdade nas 200 */
+  nRecusas: number;
+  cru: { precisao: number; cobertura: number; acertos: number } | null;
+  acuraciaGeral: number | null;
+  kappa: number | null;
+}
+export function desempenhoRecusa(validacao: { classificador: string; modelo: string | null; n: number | null; acuracia?: number | null; kappa?: number | null; detalhe_json?: unknown }[]): DesempenhoRecusa | null {
   const v = validacao.find((x) => x.classificador === "recusa" && x.modelo !== null && !x.modelo.startsWith("regras") && x.n !== null);
-  const sim = (v?.detalhe_json as { por_classe?: Record<string, { precisao?: number | null; revocacao?: number | null }> } | undefined)?.por_classe?.sim;
-  if (!v || !sim || typeof sim.precisao !== "number" || typeof sim.revocacao !== "number") return null;
-  return { precisao: sim.precisao, cobertura: sim.revocacao, n: v.n as number };
+  const d = v?.detalhe_json as { por_classe?: Record<string, { n_humano?: number; precisao?: number | null; revocacao?: number | null }>; ponderadas?: { precisao_recusa?: number | null; revocacao_recusa?: number | null } } | undefined;
+  const pond = d?.ponderadas;
+  if (!v || !pond || typeof pond.precisao_recusa !== "number" || typeof pond.revocacao_recusa !== "number") return null;
+  const sim = d?.por_classe?.sim;
+  const nRecusas = sim?.n_humano ?? 0;
+  const cru = sim && typeof sim.precisao === "number" && typeof sim.revocacao === "number" ? { precisao: sim.precisao, cobertura: sim.revocacao, acertos: Math.round(sim.revocacao * nRecusas) } : null;
+  return { precisao: pond.precisao_recusa, cobertura: pond.revocacao_recusa, n: v.n as number, nRecusas, cru, acuraciaGeral: v.acuracia ?? null, kappa: v.kappa ?? null };
 }
 
 /** Problema que está contido em outro: aparece recuado sob o pai ("dos quais, um único endereço"). */

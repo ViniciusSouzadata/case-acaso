@@ -52,12 +52,13 @@ describe("textos do ranking", () => {
     expect(periodoBase("2023-04-10", "2024-04-01")).toBe("abr/2023 a abr/2024");
   });
 
-  it("desempenhoRecusa: lê precisão e cobertura da tabela; sem esses campos devolve null", () => {
+  it("desempenhoRecusa: usa as ponderadas (com as cruas ao lado); sem as ponderadas devolve null", () => {
+    const sim = { n_humano: 20, precisao: 0.5833, revocacao: 0.7 };
     const v = [
-      { classificador: "recusa", modelo: "regras:1", n: 200, detalhe_json: { por_classe: { sim: { precisao: 0.32, revocacao: 0.8 } } } },
-      { classificador: "recusa", modelo: "openrouter:x", n: 200, detalhe_json: { por_classe: { sim: { precisao: 0.5833, revocacao: 0.7 } } } },
+      { classificador: "recusa", modelo: "regras", n: 200, detalhe_json: { por_classe: { sim: { precisao: 0.32, revocacao: 0.8 } }, ponderadas: { precisao_recusa: 0.3, revocacao_recusa: 0.49 } } },
+      { classificador: "recusa", modelo: "openrouter:x", n: 200, acuracia: 0.92, kappa: 0.59, detalhe_json: { por_classe: { sim }, ponderadas: { precisao_recusa: 0.811, revocacao_recusa: 0.8607 } } },
     ];
-    expect(desempenhoRecusa(v)).toEqual({ precisao: 0.5833, cobertura: 0.7, n: 200 });
-    expect(desempenhoRecusa([{ classificador: "recusa", modelo: "openrouter:x", n: 200, detalhe_json: {} }])).toBeNull();
+    expect(desempenhoRecusa(v)).toEqual({ precisao: 0.811, cobertura: 0.8607, n: 200, nRecusas: 20, cru: { precisao: 0.5833, cobertura: 0.7, acertos: 14 }, acuraciaGeral: 0.92, kappa: 0.59 });
+    expect(desempenhoRecusa([{ classificador: "recusa", modelo: "openrouter:x", n: 200, detalhe_json: { por_classe: { sim } } }])).toBeNull();
   });
 });

@@ -91,7 +91,7 @@ describe("Tela 3 — Confiança nos dados (painel)", () => {
 
 describe("Tela 3 — pedido 14 (barras, recusa e fonte)", () => {
   const p = (problema: string, contagem: number, percentual: number) => ({ problema, contagem, percentual, tratamento: null });
-  const detalhe = (precisao: number, revocacao: number) => ({ por_classe: { sim: { n_humano: 20, precisao, n_maquina: 24, revocacao } } });
+  const detalhe = (precisao: number, revocacao: number, ponderadas = true) => ({ por_classe: { sim: { n_humano: 20, precisao, n_maquina: 24, revocacao } }, ...(ponderadas ? { ponderadas: { precisao_recusa: 0.811, revocacao_recusa: 0.8607 } } : {}) });
   beforeEach(() => {
     mock.corpo = {
       lote,
@@ -125,10 +125,23 @@ describe("Tela 3 — pedido 14 (barras, recusa e fonte)", () => {
 
   it("cartão da recusa usa precisão e cobertura da tabela; o 92% vai para o detalhe", () => {
     render(<PaginaDados />);
-    expect(screen.getByText("6 em cada 10")).toBeTruthy();
-    expect(screen.getByText(/encontra 70 de cada 100 recusas · 200 conversas conferidas à mão/)).toBeTruthy();
+    expect(screen.getByText("8 em cada 10")).toBeTruthy();
+    expect(screen.getByText(/Quando a IA diz que foi recusa, acerta cerca de/)).toBeTruthy();
+    expect(screen.getByText(/encontra cerca de 86 de cada 100 recusas · estimado a partir de 200 conversas conferidas à mão/)).toBeTruthy();
     expect(screen.queryByText("92%")).toBeNull();
-    fireEvent.click(screen.getByText("6 em cada 10"));
-    expect(screen.getAllByText(/92%/).length).toBeGreaterThan(0);
+    fireEvent.click(screen.getByText("8 em cada 10"));
+    const d = screen.getByRole("dialog");
+    expect(d.textContent).toContain("Levando em conta o peso de cada tipo de conversa na base, a IA acerta cerca de 8 de cada 10 recusas que aponta e encontra cerca de 86 de cada 100");
+    expect(d.textContent).toContain("nas 200 havia só 20 recusas de verdade");
+    expect(d.textContent).toContain("58,3%");   // cru, no técnico
+    expect(d.textContent).toContain("14 de 20");
+    expect(d.textContent).toContain("92%");
+  });
+
+  it("sem as ponderadas na tabela, o cartão da recusa mantém o 92% de antes", () => {
+    (mock.corpo as { validacao: { detalhe_json: unknown }[] }).validacao[0]!.detalhe_json = detalhe(0.5833, 0.7, false);
+    render(<PaginaDados />);
+    expect(screen.getByText("92%")).toBeTruthy();
+    expect(screen.queryByText(/em cada 10/)).toBeNull();
   });
 });

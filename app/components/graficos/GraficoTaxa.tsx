@@ -46,7 +46,10 @@ export function GraficoTaxa({
   onEscolher?: (periodo: string) => void;
 }) {
   const anima = !useMovimentoReduzido();
-  const imaturas = faixasImaturas(linhas);
+  // só desenha o "em andamento" quando há área visível (pelo menos dois pontos); um período solto não tem onde ficar
+  const imaturas = faixasImaturas(linhas).filter((f) => f.x1 !== f.x2);
+  const temMedia = linhas.some((l) => l.mm4 !== null);
+  const temPoucaGente = linhas.some((l) => l.taxa !== null && (!l.amostraOk || l.inicioColeta));
   // amostra pequena nunca vira ponto clicável "firme"
   const clicaveis = linhas.filter((l) => marcadas.includes(l.periodo) && l.amostraOk && l.taxa !== null);
   const escolher = (p: string | undefined) => {
@@ -93,9 +96,9 @@ export function GraficoTaxa({
         </ResponsiveContainer>
       </div>
       <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-700" aria-label="Legenda">
-        <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-0.5 w-4 bg-violeta" />{t("painel.tela1.legTaxa")}</li>
+        <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-0.5 w-4 bg-violeta" />{t(temPoucaGente ? "painel.tela1.legTaxa" : "painel.tela1.legTaxaSimples")}</li>
         <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-3 w-4 rounded-sm bg-violeta/20" />{t("painel.tela1.legFaixa")}</li>
-        <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block w-4 border-t-[1.5px] border-slate-600" />{t("painel.tela1.legMedia")}</li>
+        {temMedia ? <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block w-4 border-t-[1.5px] border-slate-600" />{t("painel.tela1.legMedia")}</li> : null}
         {clicaveis.length > 0 ? <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-3 w-3 rounded-full border-[3px] border-violeta bg-white" />{t("painel.tela1.legMarcada")}</li> : null}
       </ul>
     </div>

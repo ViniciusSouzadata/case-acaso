@@ -82,10 +82,22 @@ function ConferenciaIA({ validacao, qual }: { validacao: Validacao[]; qual: "rec
   const rotulo = qual === "recusa" ? "recusa" : "assunto";
   return (
     <section className="cartao space-y-3 p-4">
-      <Destaque valor={formatarPct(ia.acuracia, 0)} rotulo={t(`painel.tela3.acerto.${rotulo}`)} />
-      <Frases itens={frasesDe(`painel.tela3.validacao.${rotulo}`, { n: formatarInt(ia.n), pct: formatarPct(ia.acuracia, 0) })} />
-      {des ? <Frases itens={[t("painel.tela3.detalheRecusaPrecisao", { n: String(Math.round(des.precisao * 10)), c: String(Math.round(des.cobertura * 100)) })]} /> : null}
+      {des ? (
+        <Frases itens={frasesDe("painel.tela3.detalheRecusa", { n: formatarInt(des.n), p: String(Math.round(des.precisao * 10)), c: String(Math.round(des.cobertura * 100)), r: formatarInt(des.nRecusas) })} />
+      ) : (
+        <>
+          <Destaque valor={formatarPct(ia.acuracia, 0)} rotulo={t(`painel.tela3.acerto.${rotulo}`)} />
+          <Frases itens={frasesDe(`painel.tela3.validacao.${rotulo}`, { n: formatarInt(ia.n), pct: formatarPct(ia.acuracia, 0) })} />
+        </>
+      )}
       <Tecnico>
+        {des ? (
+          <>
+            {des.cru ? <p>{t("painel.tela3.detalheRecusaTecnico.cru", { n: formatarInt(des.n), p: formatarPct(des.cru.precisao), c: formatarPct(des.cru.cobertura), a: des.cru.acertos, r: des.nRecusas })}</p> : null}
+            <p>{t("painel.tela3.detalheRecusaTecnico.geral", { pct: formatarPct(ia.acuracia, 0), kappa: des.kappa === null ? "—" : des.kappa.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) })}</p>
+            <p>{t("painel.tela3.detalheRecusaTecnico.amostra")}</p>
+          </>
+        ) : null}
         {deste.map((v) => {
           const tipo = tipoClassificador(v.modelo);
           const kappa = v.kappa === null ? "—" : v.kappa.toLocaleString("pt-BR", { maximumFractionDigits: 2 });

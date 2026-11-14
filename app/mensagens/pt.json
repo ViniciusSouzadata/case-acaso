@@ -399,7 +399,8 @@
       },
       "graficoTituloMes": "Quantos voltam, mês a mês",
       "rotuloMarca": "explicada",
-      "fonte": "Base: {n} pessoas novas · {fonte} · {periodo}"
+      "fonte": "Base: {n} pessoas novas · {fonte} · {periodo}",
+      "legTaxaSimples": "Quantos voltaram"
     },
     "semana": {
       "caiu": "As pessoas voltaram menos; o público não mudou.",
@@ -453,7 +454,7 @@
       "cartaoConfSub": "o painel bate com os dados originais",
       "cartaoLidas": "Conversas lidas",
       "cartaoLidasSub": "{n} descartadas",
-      "cartaoRecusa": "Quando a IA diz que foi recusa, acerta",
+      "cartaoRecusa": "Quando a IA diz que foi recusa, acerta cerca de",
       "cartaoTema": "A IA acerta o assunto",
       "cartaoAcertoSub": "em {n} conversas conferidas à mão",
       "seloTema": "por isso o assunto é só ilustrativo",
@@ -514,11 +515,19 @@
       "fonte": "Base: {n} conversas · {fonte}",
       "cartaoRecusaGeral": "A IA acerta o que é recusa",
       "cartaoRecusaValor": "{n} em cada 10",
-      "cartaoRecusaSub": "e encontra {c} de cada 100 recusas · {n} conversas conferidas à mão",
+      "cartaoRecusaSub": "e encontra cerca de {c} de cada 100 recusas · estimado a partir de {n} conversas conferidas à mão",
       "filhoEndereco": "dos quais, um único endereço",
       "semanasNota": "À parte: {n} semanas com queda forte de volume ({pct} das semanas)",
       "naoTemos": "O que não temos: as conversas ofensivas foram retiradas pelos autores da base.",
-      "detalheRecusaPrecisao": "Olhando só as recusas: quando a IA marca uma conversa como recusa, acerta {n} em cada 10; e, de cada 100 recusas de verdade, ela encontra {c}."
+      "detalheRecusa": {
+        "1": "Conferimos {n} conversas à mão. Levando em conta o peso de cada tipo de conversa na base, a IA acerta cerca de {p} de cada 10 recusas que aponta e encontra cerca de {c} de cada 100.",
+        "2": "Cuidado: nas {n} havia só {r} recusas de verdade, então esses números têm margem grande."
+      },
+      "detalheRecusaTecnico": {
+        "cru": "Sem o peso (sobre as {n} como estão): quando aponta recusa, acerta {p}; das recusas de verdade, encontra {c} ({a} de {r}).",
+        "geral": "Acerto geral (recusa e não recusa juntas): {pct}; concordância com a conferência manual: {kappa}.",
+        "amostra": "A amostra foi montada com mais casos suspeitos de recusa (estratificada pela previsão das palavras-chave), por isso os números com peso são os que valem para a base."
+      }
     },
     "margemErro": "margem de erro: {inf} a {sup}",
     "pistaClique": "Clique para ver detalhes",
