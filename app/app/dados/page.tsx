@@ -11,7 +11,7 @@ import { Estado } from "@/components/Estado";
 import { PainelLateral } from "@/components/PainelLateral";
 import type { LoteQualidade, Problema, Reconciliacao, Validacao } from "@/lib/consultas/qualidade";
 import { t, todasAsMensagens } from "@/lib/mensagens";
-import { PROBLEMA_FILHO, acertoIA, desempenhoRecusa, fraseConfianca, nomeProblema, unidadeProblema } from "@/lib/painel";
+import { PROBLEMA_FILHO, acertoIA, desempenhoRecusa, fraseConfianca, fraseProblemaEndereco, nomeProblema, unidadeProblema } from "@/lib/painel";
 import { traduzirTermos, veredicto } from "@/lib/qualidade";
 import { formatarInt, formatarPct } from "@/lib/regras";
 import { useApi } from "@/lib/useApi";
@@ -185,10 +185,11 @@ export default function PaginaDados() {
             const prob = traduzirTermos(problema.problema, TERMOS);
             const trat = traduzirTermos(problema.tratamento ?? "", TERMOS);
             const tecnicos = [...prob.tecnicos, ...trat.tecnicos];
+            const frase = fraseProblemaEndereco(problema, formatarInt, formatarPct);
             return (
               <div className="cartao space-y-2 p-4 text-sm text-slate-800">
-                <p className="font-medium text-tinta">{prob.texto}</p>
-                <p>{t(unidadeProblema(problema.problema) === "semanas" ? "painel.tela3.semanasContagem" : "painel.tela3.problemaContagem", { n: formatarInt(problema.contagem), pct: formatarPct(problema.percentual) })}</p>
+                <p className="font-medium text-tinta">{frase ?? prob.texto}</p>
+                {frase ? null : <p>{t(unidadeProblema(problema.problema) === "semanas" ? "painel.tela3.semanasContagem" : "painel.tela3.problemaContagem", { n: formatarInt(problema.contagem), pct: formatarPct(problema.percentual) })}</p>}
                 {problema.tratamento ? <p><span className="font-medium">{t("painel.tela3.oQueFizemos")}:</span> {trat.texto}</p> : null}
                 {tecnicos.length > 0 ? (
                   <details>

@@ -126,8 +126,8 @@ describe("Tela 3 — pedido 14 (barras, recusa e fonte)", () => {
   it("cartão da recusa usa precisão e cobertura da tabela; o 92% vai para o detalhe", () => {
     render(<PaginaDados />);
     expect(screen.getByText("8 em cada 10")).toBeTruthy();
-    expect(screen.getByText(/Quando a IA diz que foi recusa, acerta cerca de/)).toBeTruthy();
-    expect(screen.getByText(/encontra cerca de 86 de cada 100 recusas · estimado a partir de 200 conversas conferidas à mão/)).toBeTruthy();
+    expect(screen.getByText(/Quando a IA aponta recusa, acerta/)).toBeTruthy();
+    expect(screen.getByText(/encontra 86 de cada 100 · 200 conversas conferidas à mão/)).toBeTruthy();
     expect(screen.queryByText("92%")).toBeNull();
     fireEvent.click(screen.getByText("8 em cada 10"));
     const d = screen.getByRole("dialog");

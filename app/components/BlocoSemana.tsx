@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Estado } from "@/components/Estado";
 import { DiferencaSemana } from "@/components/graficos/DiferencaSemana";
 import { Tecnico } from "@/components/painel/Blocos";
-import { conclusaoSemana, deCadaCem } from "@/lib/painel";
+import { baseSeguinte, conclusaoSemana, deCadaCem } from "@/lib/painel";
 import { montarCascata, type ResumoSemanaApi } from "@/lib/graficos";
 import { t } from "@/lib/mensagens";
 import { formatarInt, formatarPP, formatarPct } from "@/lib/regras";
@@ -60,7 +60,7 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
             {concl ? concl.frase : ""}
           </p>
           <DiferencaSemana resumo={resumo} />
-          <p className="text-xs text-slate-700">{t("detalhe.semanaComparada", { nBase: formatarInt(resumo.n_base), nSemana: formatarInt(resumo.n_semana) })}</p>
+          <p className="text-xs text-slate-700">{t(baseSeguinte(resumo) ? "detalhe.semanaComparadaSeguintes" : "detalhe.semanaComparada", { nBase: formatarInt(resumo.n_base), nSemana: formatarInt(resumo.n_semana) })}</p>
           <p className="text-sm text-slate-800">
             {resumo.p_valor !== null ? t("detalhe.semanaAcaso", { p: formatarInt(Math.round(resumo.p_valor * 100)) }) : t("detalhe.semanaSemP")}
           </p>
@@ -69,6 +69,7 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
             {!cascata.fecha ? <p role="note" className="text-xs text-slate-700">{t("semana.naoFecha", { dif: formatarPP(cascata.diferenca).replace(" pontos", "") })}</p> : null}
             <p className="text-xs text-slate-700">
               {t("semana.tituloGrafico", {
+                ref: t(baseSeguinte(resumo) ? "semana.refSeguintes" : "semana.refAntes"),
                 base: formatarPct(resumo.taxa_base),
                 semana: formatarPct(resumo.taxa_semana),
                 delta: formatarPP(resumo.delta_pp),

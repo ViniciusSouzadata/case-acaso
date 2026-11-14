@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import type { ResumoSemanaApi } from "@/lib/graficos";
 import { t } from "@/lib/mensagens";
 import { MOV } from "@/lib/movimento";
-import { deCadaCem, numeroGrande } from "@/lib/painel";
+import { baseSeguinte, deCadaCem, numeroGrande } from "@/lib/painel";
 
 /** Barra horizontal que sai de um zero comum: para a esquerda quando tira, para a direita quando soma. */
 function BarraDoZero({ rotulo, valor, maximo, indice }: { rotulo: string; valor: number; maximo: number; indice: number }) {
@@ -41,7 +41,7 @@ export function DiferencaSemana({ resumo }: { resumo: ResumoSemanaApi }) {
           <span aria-hidden className="text-2xl text-slate-400">→</span>
           <span className="text-4xl">{deCadaCem(resumo.taxa_semana)}</span>
         </div>
-        <div className="mt-1 text-xs text-slate-600">{t("painel.tela1.diferencaLegenda")}</div>
+        <div className="mt-1 text-xs text-slate-600">{t(baseSeguinte(resumo) ? "painel.tela1.diferencaLegendaSeguintes" : "painel.tela1.diferencaLegenda")}</div>
       </div>
       <div>
         <div className="mb-1 text-xs font-medium text-slate-600">{t("painel.tela1.deOndeVeio")}</div>

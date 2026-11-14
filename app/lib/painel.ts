@@ -58,7 +58,7 @@ const NOMES: Record<string, string> = {
   "tema_descritivo|programação/TI": "Programação e TI",
   "tema_descritivo|informação geral/curiosidade": "Informação geral",
   "tema_descritivo|estudo/dever de casa": "Estudo",
-  "tema_descritivo|outros/indefinido": "Outros",
+  "tema_descritivo|outros/indefinido": "Sem assunto definido",
   "tema|conversa pessoal/conselho": "Assunto: conversa pessoal",
   "tema|estudo/dever de casa": "Assunto: estudo",
   "tema|informação geral/curiosidade": "Assunto: curiosidade",
@@ -145,6 +145,16 @@ const NOMES_PROBLEMA: [string, string][] = [
   ["Conversas tóxicas", "Conversas tóxicas"],
 ];
 
+/** Frase curta do detalhe de dois problemas de endereço (os números vêm da API; o nº de endereços está no texto do problema). Null para os demais. */
+export function fraseProblemaEndereco(p: { problema: string; contagem: number | null; percentual: number | null }, fmt: (n: number | null) => string, pct: (x: number | null) => string): string | null {
+  if (p.problema.startsWith(PROBLEMA_FILHO.pai)) {
+    const k = p.problema.match(/\((\d+) endere/)?.[1];
+    return k ? t("painel.tela3.fraseRobo", { k, n: fmt(p.contagem), pct: pct(p.percentual) }) : null;
+  }
+  if (p.problema.startsWith(PROBLEMA_FILHO.filho)) return t("painel.tela3.fraseUnico", { n: fmt(p.contagem), pct: pct(p.percentual) });
+  return null;
+}
+
 export function nomeProblema(texto: string): string {
   return NOMES_PROBLEMA.find(([prefixo]) => texto.startsWith(prefixo))?.[1] ?? texto;
 }
@@ -167,6 +177,11 @@ export function fraseConfianca(v: "sem_lote" | "sem_conferencia" | "ok" | "falha
 export function acertoIA(validacao: { classificador: string; modelo: string | null; acuracia: number | null; n: number | null }[], classificador: string): { acuracia: number; n: number } | null {
   const v = validacao.find((x) => x.classificador === classificador && x.modelo !== null && !x.modelo.startsWith("regras") && x.acuracia !== null && x.n !== null);
   return v ? { acuracia: v.acuracia as number, n: v.n as number } : null;
+}
+
+/** A semana é comparada com as 4 semanas SEGUINTES quando é do início da coleta (não há semanas anteriores limpas); o texto da base diz qual. */
+export function baseSeguinte(resumo: { base_descricao: string | null }): boolean {
+  return /seguintes/i.test(resumo.base_descricao ?? "");
 }
 
 /** Da conferência manual da IA de recusa. Os números do cartão são os PONDERADOS (a amostra de 200 foi montada com mais casos suspeitos de recusa;

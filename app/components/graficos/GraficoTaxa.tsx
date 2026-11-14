@@ -87,7 +87,6 @@ export function GraficoTaxa({
                 stroke={VIOLETA}
                 strokeWidth={3}
                 ifOverflow="visible"
-                label={{ value: t("painel.tela1.rotuloMarca"), position: "top", fontSize: 10, fill: "#583ecb" }}
                 style={{ cursor: "pointer" }}
                 onClick={() => escolher(l.periodo)}
               />

@@ -108,7 +108,7 @@
     "nomes": {
       "oficial": "Forma oficial",
       "so_ip": "Pessoa = só o endereço de rede",
-      "ip_ua_completo": "Pessoa = endereço de rede + navegador",
+      "ip_ua_completo": "Pessoa = endereço de rede + navegador com a versão exata",
       "sessao_60min": "Visita encerrada após 60 minutos parado",
       "outro_dia": "Voltou = em outro dia",
       "sem_burn_in": "Sem descartar o início da base",
@@ -149,13 +149,13 @@
     "intro": "Comparamos a taxa daquela semana com a de uma semana de antes e separamos duas causas possíveis: mudou o público que chegou, ou mudou o comportamento de cada tipo de pessoa.",
     "escolha": "Semana analisada",
     "chip": "Semana de {data}",
-    "tituloGrafico": "A taxa foi de {base} antes e de {semana} nessa semana: {delta}. Por mudança do público: {mix}. Por mudança de comportamento: {taxa}.",
+    "tituloGrafico": "A taxa foi de {base} {ref} e de {semana} nessa semana: {delta}. Por mudança do público: {mix}. Por mudança de comportamento: {taxa}.",
     "eixo": "% que voltou",
     "degrauBase": "Antes",
     "degrauMix": "Mudou o público",
     "degrauTaxa": "Mudou o comportamento",
     "degrauSemana": "Nessa semana",
-    "legenda": "Barras cinza e violeta: taxa de retorno antes (cinza) e na semana analisada (violeta). Barras do meio: quanto cada causa soma (violeta claro) ou tira (laranja), em pontos.",
+    "legenda": "Barras cinza e violeta: taxa de retorno na base de comparação (cinza) e na semana analisada (violeta). Barras do meio: quanto cada causa soma (violeta claro) ou tira (laranja), em pontos.",
     "base": "Comparada com: {descricao}",
     "n": "{nBase} pessoas antes e {nSemana} na semana analisada",
     "semResumo": "Esta semana ainda não foi analisada.",
@@ -164,12 +164,14 @@
     "detalheP": "Chance de o acaso sozinho explicar uma diferença assim: {p}",
     "porGrupo": "Ver por grupo",
     "colGrupo": "Grupo",
-    "colPesoBase": "Peso antes",
+    "colPesoBase": "Peso na comparação",
     "colPesoSemana": "Peso na semana",
-    "colTaxaBase": "Taxa antes",
+    "colTaxaBase": "Taxa na comparação",
     "colTaxaSemana": "Taxa na semana",
     "colMix": "Efeito do público (pontos)",
-    "colTaxa": "Efeito do comportamento (pontos)"
+    "colTaxa": "Efeito do comportamento (pontos)",
+    "refAntes": "antes",
+    "refSeguintes": "nas 4 semanas seguintes"
   },
   "fatores": {
     "pergunta": "O que, na primeira experiência, mais pesa para a pessoa voltar? E quanto disso é do assistente?",
@@ -400,7 +402,8 @@
       "graficoTituloMes": "Quantos voltam, mês a mês",
       "rotuloMarca": "explicada",
       "fonte": "Base: {n} pessoas novas · {fonte} · {periodo}",
-      "legTaxaSimples": "Quantos voltaram"
+      "legTaxaSimples": "Quantos voltaram",
+      "diferencaLegendaSeguintes": "de cada 100 voltaram: semanas seguintes → nessa semana"
     },
     "semana": {
       "caiu": "As pessoas voltaram menos; o público não mudou.",
@@ -454,7 +457,7 @@
       "cartaoConfSub": "o painel bate com os dados originais",
       "cartaoLidas": "Conversas lidas",
       "cartaoLidasSub": "{n} descartadas",
-      "cartaoRecusa": "Quando a IA diz que foi recusa, acerta cerca de",
+      "cartaoRecusa": "Quando a IA aponta recusa, acerta",
       "cartaoTema": "A IA acerta o assunto",
       "cartaoAcertoSub": "em {n} conversas conferidas à mão",
       "seloTema": "por isso o assunto é só ilustrativo",
@@ -515,7 +518,7 @@
       "fonte": "Base: {n} conversas · {fonte}",
       "cartaoRecusaGeral": "A IA acerta o que é recusa",
       "cartaoRecusaValor": "{n} em cada 10",
-      "cartaoRecusaSub": "e encontra cerca de {c} de cada 100 recusas · estimado a partir de {n} conversas conferidas à mão",
+      "cartaoRecusaSub": "encontra {c} de cada 100 · {n} conversas conferidas à mão",
       "filhoEndereco": "dos quais, um único endereço",
       "semanasNota": "À parte: {n} semanas com queda forte de volume ({pct} das semanas)",
       "naoTemos": "O que não temos: as conversas ofensivas foram retiradas pelos autores da base.",
@@ -527,7 +530,9 @@
         "cru": "Sem o peso (sobre as {n} como estão): quando aponta recusa, acerta {p}; das recusas de verdade, encontra {c} ({a} de {r}).",
         "geral": "Acerto geral (recusa e não recusa juntas): {pct}; concordância com a conferência manual: {kappa}.",
         "amostra": "A amostra foi montada com mais casos suspeitos de recusa (estratificada pela previsão das palavras-chave), por isso os números com peso são os que valem para a base."
-      }
+      },
+      "fraseRobo": "{k} endereços de rede fizeram {n} conversas ({pct}).",
+      "fraseUnico": "Um único endereço fez {n} conversas ({pct})."
     },
     "margemErro": "margem de erro: {inf} a {sup}",
     "pistaClique": "Clique para ver detalhes",
@@ -591,6 +596,7 @@
       "semDiferenca": "sem diferença clara: a margem de erro inclui o zero",
       "pequena": "pouca gente: pequeno demais para concluir",
       "descritivo": "só descreve: mostra o que acontece, não a causa"
-    }
+    },
+    "semanaComparadaSeguintes": "Comparada com as 4 semanas seguintes ({nBase} pessoas); {nSemana} pessoas nessa semana."
   }
 }

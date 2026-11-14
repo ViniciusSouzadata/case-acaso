@@ -111,7 +111,7 @@ export function GraficoRetencao({
         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-700" aria-label={t("retencao.legendaTitulo")}>
           <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-0.5 w-4 bg-violeta" />{t("detalhe.legTaxa")}</li>
           <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block h-3 w-4 rounded-sm bg-violeta/20" />{t("detalhe.legFaixa")}</li>
-          <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block w-4 border-t-2 border-dashed border-laranja" />{t("detalhe.legMedia")}</li>
+          {linhas.some((l) => l.mm4 !== null) ? <li className="flex items-center gap-1.5"><span aria-hidden className="inline-block w-4 border-t-2 border-dashed border-laranja" />{t("detalhe.legMedia")}</li> : null}
           {faixas.map((f) => (
             <li key={f.era} className="flex items-center gap-1.5">
               <span aria-hidden className="inline-block h-3 w-3 rounded-sm border border-slate-300" style={{ background: f.cor, opacity: 0.5 }} />
