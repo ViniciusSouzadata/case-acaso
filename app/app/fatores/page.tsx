@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BlocoBlur, BlurTexto } from "@/components/movimento/BlurTexto";
 import { CartoesAchados } from "@/components/CartoesAchados";
 import { DestacaNumeros } from "@/components/DestacaNumeros";
 import { Estado } from "@/components/Estado";
@@ -22,10 +23,10 @@ export default function PaginaFatores() {
   return (
     <div className="space-y-3">
       <header>
-        <h1 className="titulo-painel">{t("painel.tela2.titulo")}</h1>
-        <p className="mt-1 max-w-3xl text-base text-slate-700" data-testid="frase-resposta">
+        <BlurTexto className="titulo-painel" texto={t("painel.tela2.titulo")} />
+        <BlocoBlur className="mt-1 max-w-3xl text-base text-slate-700" data-testid="frase-resposta">
           {r.estado === "ok" ? <DestacaNumeros texto={conclusaoFatores(sustentam, validos.length)} /> : ""}
-        </p>
+        </BlocoBlur>
       </header>
 
       {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}

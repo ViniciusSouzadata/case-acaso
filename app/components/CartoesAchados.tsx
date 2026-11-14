@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { variantesHeroi } from "@/components/CartaoKpi";
+import { ConteudoEntrada, GrupoEntrada, variantesItem } from "@/components/movimento/Entrada";
+import { MOV } from "@/lib/movimento";
 import { Estado } from "@/components/Estado";
 import { PainelLateral } from "@/components/PainelLateral";
 import { frases } from "@/lib/achados";
@@ -25,6 +29,7 @@ export function CartoesAchados({ onRealcar }: { onRealcar?: (alvo: { fator: stri
   const r = useApi<Achado[]>("/api/achados");
   const [aberto, setAberto] = useState<Achado | null>(null);
   const achados = r.estado === "ok" ? r.corpo.dados : [];
+  const reduzido = useReducedMotion() ?? false;
 
   return (
     <section aria-labelledby="achados-titulo">
@@ -32,38 +37,42 @@ export function CartoesAchados({ onRealcar }: { onRealcar?: (alvo: { fator: stri
       {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
       {r.estado === "erro" ? <Estado tipo="erro" mensagem={r.mensagem} requestId={r.requestId} /> : null}
       {r.estado === "ok" && achados.length === 0 ? <Estado tipo="vazio" mensagem={t("fatores.achadosVazio")} /> : null}
-      <div className="grid gap-3 md:grid-cols-3">
+      <GrupoEntrada className="grid gap-3 md:grid-cols-3" atraso={0.55}>
         {achados.map((a) => {
           // número, rótulo e ação curta vêm de resultado.achado (migração 012); sem eles o cartão cai na 1ª frase da decisão
           const fazer = a.acao_curta ?? frases(a.decisao)[0] ?? a.decisao;
+          const heroi = a.ordem === 1; // um cartão-herói por tela
           return (
-            <article
+            <motion.article
               key={a.ordem}
               data-achado={a.ordem}
-              className="cartao entra flex flex-col p-3"
-              style={{ animationDelay: `${(a.ordem - 1) * 60}ms` }}
+              variants={heroi ? variantesHeroi(reduzido) : variantesItem(reduzido)}
+              whileHover={reduzido ? undefined : { y: -4, transition: MOV.mola }}
+              className={`${heroi ? "cartao-escuro" : "cartao"} flex flex-col p-3`}
               onMouseEnter={() => onRealcar?.(ALVO_ACHADO[a.ordem] ?? null)}
               onMouseLeave={() => onRealcar?.(null)}
               onFocus={() => onRealcar?.(ALVO_ACHADO[a.ordem] ?? null)}
               onBlur={() => onRealcar?.(null)}
             >
-              {a.numero_destaque ? (
-                <div className="flex items-baseline gap-2">
-                  <span className="shrink-0 whitespace-nowrap font-display text-3xl font-semibold leading-none text-tinta">{a.numero_destaque}</span>
-                  {a.rotulo_destaque ? <span className="text-xs text-slate-600">{a.rotulo_destaque}</span> : null}
-                </div>
-              ) : null}
-              <h3 className="mt-1.5 text-[13px] font-semibold leading-snug text-tinta">{a.titulo}</h3>
-              <p className="mt-1 text-xs text-slate-700">
-                <span className="font-medium text-violeta-escuro">{t("painel.tela2.oQueFazer")}:</span> {fazer}
-              </p>
-              <button type="button" onClick={() => setAberto(a)} className="alvo mt-auto self-start pt-1.5 text-sm font-medium text-violeta hover:underline">
-                {t("painel.verDetalhes")}
-              </button>
-            </article>
+              <ConteudoEntrada className="flex h-full flex-col">
+                {a.numero_destaque ? (
+                  <div className="flex items-baseline gap-2">
+                    <span className={`shrink-0 whitespace-nowrap font-display text-3xl font-semibold leading-none ${heroi ? "text-papel" : "text-tinta"}`}>{a.numero_destaque}</span>
+                    {a.rotulo_destaque ? <span className={`text-xs ${heroi ? "text-white" : "text-slate-600"}`}>{a.rotulo_destaque}</span> : null}
+                  </div>
+                ) : null}
+                <h3 className={`mt-1.5 text-[13px] font-semibold leading-snug ${heroi ? "text-papel" : "text-tinta"}`}>{a.titulo}</h3>
+                <p className={`mt-1 text-xs ${heroi ? "text-white" : "text-slate-700"}`}>
+                  <span className={`font-medium ${heroi ? "text-papel" : "text-violeta-escuro"}`}>{t("painel.tela2.oQueFazer")}:</span> {fazer}
+                </p>
+                <button type="button" onClick={() => setAberto(a)} className={`alvo mt-auto self-start pt-1.5 text-sm font-medium hover:underline ${heroi ? "text-papel underline" : "text-violeta"}`}>
+                  {t("painel.verDetalhes")}
+                </button>
+              </ConteudoEntrada>
+            </motion.article>
           );
         })}
-      </div>
+      </GrupoEntrada>
       {aberto ? (
         <PainelLateral titulo={aberto.titulo} onFechar={() => setAberto(null)}>
           <div className="cartao space-y-3 p-4 text-sm text-slate-800">

@@ -14,9 +14,9 @@ export function Estado({
 }) {
   if (tipo === "carregando") {
     return (
-      <p role="status" className="py-6 text-sm text-slate-600">
-        {t("estado.carregando")}
-      </p>
+      <div role="status" className="esqueleto my-2 min-h-24 w-full">
+        <span className="sr-only">{t("estado.carregando")}</span>
+      </div>
     );
   }
   if (tipo === "vazio") {

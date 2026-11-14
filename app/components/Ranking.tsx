@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { ItemEntrada } from "@/components/movimento/Entrada";
+import { MOV } from "@/lib/movimento";
 import { LinhaDaFloresta } from "@/components/graficos/Floresta";
 import { PainelLateral } from "@/components/PainelLateral";
 import { DetalheBalanco } from "@/components/DetalheBalanco";
@@ -22,7 +25,8 @@ const ESTILO_SELO: Record<Selo, string> = {
   descritivo: "bg-slate-100 text-slate-700",
 };
 
-function Trilha({ l }: { l: LinhaFloresta }) {
+function Trilha({ l, indice = 0 }: { l: LinhaFloresta; indice?: number }) {
+  const reduzido = useReducedMotion() ?? false;
   const pos = l.ajustado ? l.pos.ajustado : l.pos.bruto;
   const destaque = seloDaLinha(l) === "sustenta";
   return (
@@ -31,7 +35,14 @@ function Trilha({ l }: { l: LinhaFloresta }) {
       <div className="absolute top-0 h-5 w-px bg-slate-500" style={{ left: `${l.pos.zero}%` }} />
       {pos ? (
         <>
-          <div className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded" style={{ left: `${pos[0]}%`, width: `${Math.max(0.5, pos[2] - pos[0])}%`, background: destaque ? LARANJA : CINZA_CLARO, opacity: destaque ? 0.55 : 1 }} />
+          {/* a margem de erro cresce a partir do zero (a linha vertical), para os dois lados */}
+          <motion.div
+            className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded"
+            style={{ left: `${pos[0]}%`, width: `${Math.max(0.5, pos[2] - pos[0])}%`, background: destaque ? LARANJA : CINZA_CLARO, opacity: destaque ? 0.55 : 1, transformOrigin: `${((l.pos.zero - pos[0]) / Math.max(0.5, pos[2] - pos[0])) * 100}% 50%` }}
+            initial={reduzido ? false : { scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: MOV.barra.duracao, delay: MOV.barra.atraso + indice * MOV.barra.intervalo, ease: MOV.curva.entrada }}
+          />
           <div
             className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2"
             style={{ left: `${pos[1]}%`, background: l.pequena ? "#fff" : destaque ? LARANJA : CINZA, borderColor: destaque ? LARANJA : CINZA }}
@@ -42,20 +53,20 @@ function Trilha({ l }: { l: LinhaFloresta }) {
   );
 }
 
-function LinhaRanking({ l, onAbrir, realcada }: { l: LinhaFloresta; onAbrir: () => void; realcada: boolean }) {
+function LinhaRanking({ l, onAbrir, realcada, indice }: { l: LinhaFloresta; onAbrir: () => void; realcada: boolean; indice: number }) {
   const selo = seloDaLinha(l);
   const efeito = efeitoDaLinha(l);
   const numero = efeito === null ? t("painel.tela2.selo.pequena") : aCadaCem(efeito);
   const destaque = selo === "sustenta";
   const classeNumero = `whitespace-nowrap font-display text-sm font-semibold ${destaque ? "text-[#8a3a00]" : "text-slate-800"}`;
   return (
-    <li className="entra" data-fator={l.fator} data-nivel={l.nivel} data-realce={realcada ? "sim" : undefined}>
+    <li data-fator={l.fator} data-nivel={l.nivel} data-realce={realcada ? "sim" : undefined}>
       <button type="button" onClick={onAbrir} className={`grid w-full grid-cols-1 items-center gap-x-3 gap-y-1 rounded-lg px-2 py-1 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta sm:grid-cols-[15rem_minmax(0,1fr)_13.5rem_7.75rem] ${realcada ? "bg-[#e6e0fb] ring-2 ring-violeta" : ""}`}>
         <div className="flex items-baseline justify-between gap-2 sm:block">
           <span className="text-sm font-medium text-tinta">{nomeCurto(l.fator, l.nivel)}</span>
           <span className={`${classeNumero} sm:hidden`}>{numero}</span>
         </div>
-        <Trilha l={l} />
+        <Trilha l={l} indice={indice} />
         <span className={`${classeNumero} hidden text-right sm:block`}>{numero}</span>
         <span className={`w-fit whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium sm:justify-self-start ${ESTILO_SELO[selo]}`}>{t(`painel.tela2.selo.${selo}`)}</span>
       </button>
@@ -86,7 +97,7 @@ export function Ranking({ efeitos, realce = null }: { efeitos: EfeitoApi[]; real
   }, [realce?.fator, realce?.nivel]);
 
   return (
-    <section className="cartao p-4" aria-labelledby="rank-titulo">
+    <ItemEntrada atraso={0.3} tag="section" className="cartao p-4" aria-labelledby="rank-titulo">
       <h2 id="rank-titulo" className="sr-only">{t("painel.tela2.titulo")}</h2>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div role="tablist" aria-label="Grupos de fatores" className="flex flex-wrap gap-1">
@@ -107,8 +118,8 @@ export function Ranking({ efeitos, realce = null }: { efeitos: EfeitoApi[]; real
       </div>
 
       <ul className={`mt-2 divide-y divide-[#efedf8] ${todos ? "max-h-[17.5rem] overflow-y-auto pr-1" : ""}`} role="tabpanel">
-        {visiveis.map((l) => (
-          <LinhaRanking key={l.chave} l={l} onAbrir={() => setAberta(l)} realcada={realce !== null && l.fator === realce.fator && l.nivel === realce.nivel} />
+        {visiveis.map((l, i) => (
+          <LinhaRanking key={l.chave} indice={i} l={l} onAbrir={() => setAberta(l)} realcada={realce !== null && l.fator === realce.fator && l.nivel === realce.nivel} />
         ))}
       </ul>
       <div className="mt-1 flex items-center justify-between gap-2 px-2 text-xs text-slate-600">
@@ -138,6 +149,6 @@ export function Ranking({ efeitos, realce = null }: { efeitos: EfeitoApi[]; real
           <DetalheBalanco />
         </PainelLateral>
       ) : null}
-    </section>
+    </ItemEntrada>
   );
 }

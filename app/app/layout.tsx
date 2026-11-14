@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import localFont from "next/font/local";
 import { Navegacao } from "@/components/Navegacao";
+import { TransicaoPagina } from "@/components/movimento/TransicaoPagina";
 import { Rodape } from "@/components/Rodape";
 import { t } from "@/lib/mensagens";
 import "./globals.css";
@@ -16,13 +17,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className={`${sora.variable} ${instrument.variable} ${plex.variable}`}>
       <body className="min-h-screen pb-8">
-        <div className="cabecalho bg-tinta">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 px-4">
-            <p className="py-3 font-display text-base font-semibold tracking-tight text-papel">{t("app.titulo")}</p>
-            <Navegacao />
-          </div>
-        </div>
-        <main className="mx-auto max-w-6xl px-4 py-4">{children}</main>
+        <TransicaoPagina
+          cabecalho={
+            <header className="cabecalho flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+              <p className="font-display text-base font-semibold tracking-tight text-tinta">{t("app.titulo")}</p>
+              <Navegacao />
+            </header>
+          }
+        >
+          {children}
+        </TransicaoPagina>
         <Rodape />
       </body>
     </html>

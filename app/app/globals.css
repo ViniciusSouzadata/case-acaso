@@ -45,9 +45,7 @@ code, pre {
   outline-offset: 2px;
   border-radius: 4px;
 }
-.cabecalho :focus-visible {
-  outline-color: var(--color-violeta-claro);
-}
+
 
 /* Movimento com função, curto e sem laço. Desligado por completo com prefers-reduced-motion. */
 @keyframes entra {
@@ -59,6 +57,7 @@ code, pre {
 }
 @media (prefers-reduced-motion: reduce) {
   .entra { animation: none; }
+  button:active:not(:disabled) { transform: none; }
   * { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }
 
@@ -66,14 +65,16 @@ code, pre {
 .cartao {
   background: var(--color-papel);
   border: 1px solid #e3e0f3;
-  border-radius: 14px;
-  box-shadow: 0 1px 2px rgb(18 18 18 / 0.04);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgb(18 18 18 / 0.04), 0 8px 24px -12px rgb(40 30 90 / 0.14);
 }
+/* Cartão-herói: um por tela, em degradê violeta com texto branco (contraste mínimo 4,5:1 no extremo mais claro). */
 .cartao-escuro {
-  background: var(--color-tinta);
-  border: 1px solid #2a2a33;
-  border-radius: 14px;
+  background: linear-gradient(135deg, #583ecb 0%, #6a48eb 55%, #7b5cf0 100%);
+  border: 0;
+  border-radius: 18px;
   color: var(--color-papel);
+  box-shadow: 0 10px 28px -12px rgb(106 72 235 / 0.55);
 }
 .titulo-tela {
   font-family: var(--font-display);
@@ -106,11 +107,19 @@ code, pre {
 /* Cartão que abre um detalhe: sobe um pouco ao passar o mouse e mostra foco por teclado. */
 .clicavel {
   cursor: pointer;
-  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+  transition: box-shadow 160ms ease-out;
 }
 .clicavel:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgb(106 72 235 / 0.16);
+  box-shadow: 0 10px 26px -10px rgb(106 72 235 / 0.35);
+}
+/* o levantar do hover é feito com mola no componente (motion); aqui só o toque nos botões */
+button:active:not(:disabled) { transform: scale(0.97); }
+button { transition: transform 120ms ease-out; }
+
+/* Esqueleto de carregamento: blocos claros e vazios, sem pulsar (sem animação em laço). */
+.esqueleto {
+  background: #ecebf4;
+  border-radius: 18px;
 }
 .clicavel:focus-visible {
   outline: 3px solid var(--color-violeta);

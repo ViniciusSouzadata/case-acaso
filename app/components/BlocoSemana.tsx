@@ -65,7 +65,7 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
             })}
           </h3>
           <Cascata degraus={cascata.degraus} />
-          {!cascata.fecha ? <p role="note" className="text-xs text-slate-700">{t("semana.naoFecha", { dif: formatarPP(cascata.diferenca).replace(" p.p.", "") })}</p> : null}
+          {!cascata.fecha ? <p role="note" className="text-xs text-slate-700">{t("semana.naoFecha", { dif: formatarPP(cascata.diferenca).replace(" pontos", "") })}</p> : null}
           <p className="mt-2 text-xs text-slate-600">{t("semana.legenda")}</p>
           {resumo.conclusao ? <p className="mt-3 rounded bg-slate-50 p-3 text-sm text-slate-900" data-testid="conclusao">{resumo.conclusao}</p> : null}
           <p className="mt-2 text-xs text-slate-600">

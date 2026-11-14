@@ -8,6 +8,8 @@ import { DetalheTaxa } from "@/components/DetalheTaxa";
 import { Estado } from "@/components/Estado";
 import { DestacaNumeros } from "@/components/DestacaNumeros";
 import { DetalheIndicador } from "@/components/DetalheIndicador";
+import { BlocoBlur, BlurTexto } from "@/components/movimento/BlurTexto";
+import { GrupoEntrada, ItemEntrada } from "@/components/movimento/Entrada";
 import { Cascata } from "@/components/graficos/Cascata";
 import { GraficoTaxa } from "@/components/graficos/GraficoTaxa";
 import { PainelLateral } from "@/components/PainelLateral";
@@ -59,11 +61,11 @@ export default function PaginaRetencao() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="titulo-painel">{t("painel.tela1.titulo")}</h1>
-        <p className="mt-1 max-w-3xl text-base text-slate-700" data-testid="frase-resposta"><DestacaNumeros texto={frase} /></p>
+        <BlurTexto className="titulo-painel" texto={t("painel.tela1.titulo")} />
+        <BlocoBlur className="mt-1 max-w-3xl text-base text-slate-700" data-testid="frase-resposta"><DestacaNumeros texto={frase} /></BlocoBlur>
       </header>
 
-      <section aria-label="Números principais" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <GrupoEntrada tag="section" aria-label="Números principais" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {resumo.estado === "carregando" ? <Estado tipo="carregando" /> : null}
         {resumo.estado === "erro" ? <Estado tipo="erro" mensagem={resumo.mensagem} requestId={resumo.requestId} /> : null}
         {r ? (
@@ -78,21 +80,21 @@ export default function PaginaRetencao() {
               onAbrir={() => setDetalhe("taxa")}
               extra={<span aria-hidden className="flex h-5 w-5 items-center justify-center rounded-full border border-violeta-claro text-xs font-semibold text-violeta-claro">i</span>}
             />
-            <CartaoKpi rotulo={t("painel.tela1.cartaoPessoas")} valor={formatarInt(r.usuarios)} animar={{ valor: r.usuarios, formato: (n) => formatarInt(Math.round(n)) }} apoio={t("painel.tela1.cartaoPessoasSub")} atrasoMs={60} onAbrir={() => setDetalhe("pessoas")} />
-            <CartaoKpi rotulo={t("painel.tela1.cartaoVoltaram")} valor={formatarInt(r.voltaram_7d)} animar={{ valor: r.voltaram_7d, formato: (n) => formatarInt(Math.round(n)) }} apoio={t("painel.tela1.cartaoVoltaramSub")} atrasoMs={120} onAbrir={() => setDetalhe("voltaram")} />
+            <CartaoKpi rotulo={t("painel.tela1.cartaoPessoas")} valor={formatarInt(r.usuarios)} animar={{ valor: r.usuarios, formato: (n) => formatarInt(Math.round(n)) }} apoio={t("painel.tela1.cartaoPessoasSub")} onAbrir={() => setDetalhe("pessoas")} />
+            <CartaoKpi rotulo={t("painel.tela1.cartaoVoltaram")} valor={formatarInt(r.voltaram_7d)} animar={{ valor: r.voltaram_7d, formato: (n) => formatarInt(Math.round(n)) }} apoio={t("painel.tela1.cartaoVoltaramSub")} onAbrir={() => setDetalhe("voltaram")} />
             <CartaoKpi
               rotulo={t("painel.tela1.cartaoDefinicao")}
               valor={faixa ? `${formatarPct(faixa.min, 0)}–${formatarPct(faixa.max, 0)}` : "—"}
               apoio={sens.estado === "ok" ? t("painel.tela1.cartaoDefinicaoSub", { n: sens.corpo.dados.length }) : undefined}
-              atrasoMs={180}
+             
               onAbrir={faixa ? () => setDetalhe("definicoes") : undefined}
             />
           </>
         ) : null}
-      </section>
+      </GrupoEntrada>
 
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
-        <section className="cartao p-4" aria-labelledby="g-titulo">
+        <ItemEntrada atraso={0.45} tag="section" className="cartao p-4" aria-labelledby="g-titulo">
           <div className="flex items-start justify-between gap-3">
             <h2 id="g-titulo" className="text-base font-semibold text-tinta">{t("painel.tela1.graficoTitulo")}</h2>
             <div className="flex shrink-0 items-center gap-3">
@@ -110,9 +112,9 @@ export default function PaginaRetencao() {
           {coortes.estado === "erro" ? <Estado tipo="erro" mensagem={coortes.mensagem} requestId={coortes.requestId} /> : null}
           {coortes.estado === "ok" && linhas.length === 0 ? <Estado tipo="vazio" /> : null}
           {linhas.length > 0 ? <GraficoTaxa linhas={linhas} altura="h-[19.5rem]" marcadas={gran === "semana" ? [...SEMANAS] : []} selecionada={semanaSel} onEscolher={setSemanaSel} /> : null}
-        </section>
+        </ItemEntrada>
 
-        <section className="cartao p-4" aria-labelledby="s-titulo">
+        <ItemEntrada atraso={0.52} tag="section" className="cartao p-4" aria-labelledby="s-titulo">
           <div className="flex items-start justify-between gap-3">
             <h2 id="s-titulo" className="text-base font-semibold text-tinta">{t("painel.tela1.semanaTitulo", { data: dataBr(semanaSel) })}</h2>
             <button type="button" onClick={() => setDetalhe("semana")} className="alvo shrink-0 text-sm font-medium text-violeta hover:underline">{t("painel.verDetalhes")}</button>
@@ -143,7 +145,7 @@ export default function PaginaRetencao() {
               ) : null}
             </>
           ) : null}
-        </section>
+        </ItemEntrada>
       </div>
 
       {detalhe ? (
