@@ -23,7 +23,7 @@ export default function PaginaFatores() {
   const sustentam = validos.filter((e) => e.significativo_fdr === true).map((e) => fraseFator(e.fator, e.nivel));
 
   return (
-    <div className="space-y-3">
+    <div className="pagina space-y-3">
       <header>
         <BlurTexto className="titulo-painel" texto={t("painel.tela2.titulo")} />
         <BlocoBlur className="mt-1 max-w-3xl text-base text-slate-700" data-testid="frase-resposta">

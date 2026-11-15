@@ -34,7 +34,7 @@ export function TransicaoPagina({ children, cabecalho }: { children: ReactNode; 
     <Contexto.Provider value={navegar}>
       <div className="mx-auto max-w-6xl px-4 pt-3">{cabecalho}</div>
       <motion.main
-        className="mx-auto max-w-6xl px-4 pb-4 pt-2"
+        className="area-pagina mx-auto max-w-6xl px-4 pb-4 pt-2"
         animate={saindo ? (reduzido ? { opacity: 0 } : { opacity: 0, filter: `blur(${MOV.pagina.blurSaida}px)` }) : { opacity: 1, filter: "blur(0px)" }}
         transition={{ duration: saindo ? MOV.pagina.saida : 0, ease: MOV.curva.entrada }}
       >

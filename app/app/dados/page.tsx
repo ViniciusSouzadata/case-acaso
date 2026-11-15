@@ -77,7 +77,7 @@ export default function PaginaDados() {
   const base = q?.lote?.linhas_lidas ?? null;
 
   return (
-    <div className="space-y-4">
+    <div className="pagina space-y-4">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <BlurTexto className="titulo-painel" texto={t("painel.tela3.titulo")} />

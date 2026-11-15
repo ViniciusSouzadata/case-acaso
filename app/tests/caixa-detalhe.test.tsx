@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
-import { afterEach, describe, expect, it } from "vitest";
+import { act } from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { CaixaDetalhe } from "@/components/CaixaDetalhe";
 import { DetalheFator } from "@/components/DetalheFator";
 import { prepararFloresta, type EfeitoApi } from "@/lib/floresta";
@@ -111,5 +112,26 @@ describe("pedido 20", () => {
     const b = render(<DetalheFator l={semDif} />);
     expect(b.container.querySelector(".bg-laranja")).toBeNull();
     expect(b.container.querySelector(".bg-violeta-claro")).not.toBeNull();
+  });
+});
+
+describe("pedido 21 — saída da caixa", () => {
+  it("durante a animação de saída o fundo e a caixa não pegam cliques; depois a caixa some", () => {
+    vi.useFakeTimers();
+    const antes = window.matchMedia;
+    window.matchMedia = ((q: string) => ({ matches: false, media: q, addEventListener: () => {}, removeEventListener: () => {} })) as unknown as typeof window.matchMedia;
+    try {
+      render(<Exemplo />);
+      fireEvent.click(screen.getByRole("button", { name: "Abrir detalhe" }));
+      act(() => { vi.advanceTimersByTime(50); });
+      fireEvent.keyDown(window, { key: "Escape" });
+      expect(screen.getByTestId("caixa-fundo").style.pointerEvents).toBe("none");
+      expect(screen.getByRole("dialog").style.pointerEvents).toBe("none");
+      act(() => { vi.advanceTimersByTime(250); });
+      expect(screen.queryByRole("dialog")).toBeNull();
+    } finally {
+      window.matchMedia = antes;
+      vi.useRealTimers();
+    }
   });
 });

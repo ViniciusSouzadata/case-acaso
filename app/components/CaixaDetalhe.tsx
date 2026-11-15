@@ -96,14 +96,14 @@ export function CaixaDetalhe({ titulo, onFechar, largo = false, children }: { ti
   };
 
   const transicao = reduzido ? `opacity ${MS}ms linear` : `opacity ${MS}ms cubic-bezier(${c1},${c2},${c3},${c4}), transform ${MS}ms cubic-bezier(${c1},${c2},${c3},${c4})`;
-  const estiloCaixa: CSSProperties = { transformOrigin: ponto, opacity: visivel ? 1 : 0, transform: reduzido || visivel ? "none" : "scale(0.9)", transition: transicao };
+  const estiloCaixa: CSSProperties = { pointerEvents: fechando.current ? "none" : undefined, transformOrigin: ponto, opacity: visivel ? 1 : 0, transform: reduzido || visivel ? "none" : "scale(0.9)", transition: transicao };
 
   // fora da árvore da página: um ancestral com transform ou filtro prenderia o "fixed" ao miolo e deixaria cabeçalho e rodapé sem escurecer
   const tela = (
     <div
       data-testid="caixa-fundo"
       className="fixed inset-0 z-[100] flex items-center justify-center bg-tinta/40 p-3"
-      style={{ opacity: visivel ? 1 : 0, transition: `opacity ${MS}ms linear` }}
+      style={{ opacity: visivel ? 1 : 0, transition: `opacity ${MS}ms linear`, pointerEvents: fechando.current ? "none" : undefined }}
       onClick={(e) => {
         if (e.target === e.currentTarget) fechar();
       }}
