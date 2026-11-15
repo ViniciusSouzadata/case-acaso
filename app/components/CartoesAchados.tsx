@@ -7,7 +7,7 @@ import { ConteudoEntrada, GrupoEntrada, variantesItem } from "@/components/movim
 import { MOV } from "@/lib/movimento";
 import { CampoTecnico, Destaque, Tecnico } from "@/components/painel/Blocos";
 import { Estado } from "@/components/Estado";
-import { PainelLateral } from "@/components/PainelLateral";
+import { CaixaDetalhe } from "@/components/CaixaDetalhe";
 import { frases } from "@/lib/achados";
 import { ALVO_ACHADO } from "@/lib/painel";
 import { t } from "@/lib/mensagens";
@@ -77,7 +77,7 @@ export function CartoesAchados({ onRealcar }: { onRealcar?: (alvo: { fator: stri
         })}
       </GrupoEntrada>
       {aberto ? (
-        <PainelLateral titulo={aberto.titulo} onFechar={() => setAberto(null)}>
+        <CaixaDetalhe titulo={aberto.titulo} onFechar={() => setAberto(null)}>
           <div className="cartao space-y-3 p-4">
             {aberto.numero_destaque ? <Destaque valor={aberto.numero_destaque} rotulo={aberto.rotulo_destaque ?? undefined} /> : null}
             <div className="space-y-2 text-sm text-slate-800">
@@ -96,7 +96,7 @@ export function CartoesAchados({ onRealcar }: { onRealcar?: (alvo: { fator: stri
               </Tecnico>
             ) : null}
           </div>
-        </PainelLateral>
+        </CaixaDetalhe>
       ) : null}
     </section>
   );

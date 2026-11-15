@@ -8,7 +8,7 @@ import { GrupoEntrada, ItemEntrada } from "@/components/movimento/Entrada";
 import { DestacaNumeros } from "@/components/DestacaNumeros";
 import { DetalheQualidade, type SecaoQualidade } from "@/components/DetalheQualidade";
 import { Estado } from "@/components/Estado";
-import { PainelLateral } from "@/components/PainelLateral";
+import { CaixaDetalhe } from "@/components/CaixaDetalhe";
 import type { LoteQualidade, Problema, Reconciliacao, Validacao } from "@/lib/consultas/qualidade";
 import { t, todasAsMensagens } from "@/lib/mensagens";
 import { PROBLEMA_FILHO, acertoIA, desempenhoRecusa, fraseConfianca, fraseProblemaEndereco, quadroProblema, tituloProblema, nomeProblema, unidadeProblema } from "@/lib/painel";
@@ -180,7 +180,7 @@ export default function PaginaDados() {
       ) : null}
 
       {problema ? (
-        <PainelLateral titulo={tituloProblema(problema.problema)} onFechar={() => setProblema(null)}>
+        <CaixaDetalhe titulo={tituloProblema(problema.problema)} onFechar={() => setProblema(null)}>
           {(() => {
             const prob = traduzirTermos(problema.problema, TERMOS);
             const trat = traduzirTermos(problema.tratamento ?? "", TERMOS);
@@ -205,13 +205,13 @@ export default function PaginaDados() {
               </div>
             );
           })()}
-        </PainelLateral>
+        </CaixaDetalhe>
       ) : null}
 
       {detalhe && q ? (
-        <PainelLateral titulo={TITULOS[detalhe]} onFechar={() => setDetalhe(null)}>
+        <CaixaDetalhe largo={detalhe === "conf" || detalhe === "dicionario"} titulo={TITULOS[detalhe]} onFechar={() => setDetalhe(null)}>
           <DetalheQualidade lote={q.lote} reconciliacao={q.reconciliacao} validacao={q.validacao} secao={detalhe} />
-        </PainelLateral>
+        </CaixaDetalhe>
       ) : null}
     </div>
   );

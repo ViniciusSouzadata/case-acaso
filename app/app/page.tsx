@@ -12,7 +12,7 @@ import { BlocoBlur, BlurTexto } from "@/components/movimento/BlurTexto";
 import { GrupoEntrada, ItemEntrada } from "@/components/movimento/Entrada";
 import { DiferencaSemana } from "@/components/graficos/DiferencaSemana";
 import { GraficoTaxa } from "@/components/graficos/GraficoTaxa";
-import { PainelLateral } from "@/components/PainelLateral";
+import { CaixaDetalhe } from "@/components/CaixaDetalhe";
 import { montarCascata, prepararCoortes, resumoSensibilidade, type CoorteApi, type Granularidade, type ResumoSemanaApi, type SensibilidadeApi } from "@/lib/graficos";
 import { t } from "@/lib/mensagens";
 import { conclusaoSemana, deCadaCem, periodoBase } from "@/lib/painel";
@@ -150,7 +150,8 @@ export default function PaginaRetencao() {
       </div>
 
       {detalhe ? (
-        <PainelLateral
+        <CaixaDetalhe
+          largo={detalhe === "grafico" || detalhe === "semana" || detalhe === "definicoes"}
           titulo={
             detalhe === "taxa" ? t("painel.tela1.cartaoTaxa")
             : detalhe === "pessoas" ? t("painel.tela1.cartaoPessoas")
@@ -168,7 +169,7 @@ export default function PaginaRetencao() {
           {detalhe === "grafico" ? <DetalheTaxa /> : null}
           {detalhe === "semana" ? <BlocoSemana inicial={semanaSel} /> : null}
           {detalhe === "definicoes" ? <BlocoSensibilidade /> : null}
-        </PainelLateral>
+        </CaixaDetalhe>
       ) : null}
     </div>
   );

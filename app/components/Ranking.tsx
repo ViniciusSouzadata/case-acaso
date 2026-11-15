@@ -6,7 +6,7 @@ import { ItemEntrada } from "@/components/movimento/Entrada";
 import { MOV } from "@/lib/movimento";
 import { DetalheFator } from "@/components/DetalheFator";
 import { CampoTecnico, Frases, Tecnico, frasesDe } from "@/components/painel/Blocos";
-import { PainelLateral } from "@/components/PainelLateral";
+import { CaixaDetalhe } from "@/components/CaixaDetalhe";
 import { DetalheBalanco } from "@/components/DetalheBalanco";
 import { grupoEfetivo, prepararFloresta, type EfeitoApi, type GrupoFator, type LinhaFloresta } from "@/lib/floresta";
 import { t } from "@/lib/mensagens";
@@ -158,12 +158,12 @@ export function Ranking({ efeitos, realce = null, base = null }: { efeitos: Efei
 
 
       {aberta ? (
-        <PainelLateral titulo={nomeCurto(aberta.fator, aberta.nivel)} onFechar={() => setAberta(null)}>
+        <CaixaDetalhe titulo={nomeCurto(aberta.fator, aberta.nivel)} onFechar={() => setAberta(null)}>
           <DetalheFator l={aberta} />
-        </PainelLateral>
+        </CaixaDetalhe>
       ) : null}
       {ajuda ? (
-        <PainelLateral titulo={t("painel.tela2.ajudaTitulo")} onFechar={() => setAjuda(false)}>
+        <CaixaDetalhe titulo={t("painel.tela2.ajudaTitulo")} onFechar={() => setAjuda(false)}>
           <section className="cartao space-y-3 p-4">
             <Frases itens={frasesDe("detalhe.comoLerTela2")} />
             <ul className="space-y-1 text-sm text-slate-800">
@@ -179,7 +179,7 @@ export function Ranking({ efeitos, realce = null, base = null }: { efeitos: Efei
               <DetalheBalanco />
             </Tecnico>
           </section>
-        </PainelLateral>
+        </CaixaDetalhe>
       ) : null}
     </ItemEntrada>
   );
