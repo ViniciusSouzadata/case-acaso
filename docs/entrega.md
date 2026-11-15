@@ -154,7 +154,7 @@ Usei o Claude, pelo Claude Code, para planejar, escrever código e testes, e um 
 
 O que corrigi ou descartei: a primeira versão do cálculo de efeito estimava 7,0 pontos onde o certo era 10,1, e o teste pegou. O classificador por palavras-chave foi descartado depois da validação. Um segundo LLM foi descartado por deixar 40% dos itens sem resposta. Reprovei duas versões do painel por estarem técnicas demais para o cliente e mandei refazer em linguagem leiga. A consulta principal levava 12 segundos e passou a 0,33. Mais casos em `docs/conferi_da_ia.md`.
 
-Foram cerca de **18 horas** minhas, acima das 12 sugeridas, porque rotulei a validação à mão e entreguei o painel completo.
+Foram cerca de **22 horas** minhas, acima das 12 sugeridas, porque rotulei a validação à mão, entreguei o painel completo e refiz as telas até ficarem claras para quem não é técnico.
 
 ## Onde está cada item do enunciado
 
