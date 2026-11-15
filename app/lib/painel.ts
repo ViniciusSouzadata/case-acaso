@@ -162,6 +162,7 @@ const ID_PROBLEMA: [string, string][] = [
   ["Idioma divergente em pergunta curta", "idioma"],
   ["Endereço de rede muda no meio da conversa", "endereco"],
   ["Conteúdo repetido", "repetido"],
+  ["Conversas com dado pessoal ocultado", "pessoal"],
   ["Conversa sem nenhuma mensagem do usuário", "semMensagem"],
   ["Pergunta vazia", "vazia"],
   ["Conversas do endereço de rede mais ativo", "unico"],

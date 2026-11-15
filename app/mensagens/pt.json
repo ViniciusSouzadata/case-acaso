@@ -81,7 +81,6 @@
     "legTaxa": "Linha violeta: taxa do período",
     "legFaixa": "Faixa clara: margem de erro (onde a taxa de verdade provavelmente está)",
     "legMedia": "Linha violeta grossa: média das últimas 4 semanas",
-    "legPequena": "Ponto cinza vazado: pouca gente no período",
     "legImatura": "Área hachurada: ainda dentro dos 7 dias",
     "legEras": "Faixas de fundo: o que o produto oferecia em cada época",
     "tabelaResumo": "Ver os mesmos números em tabela",
@@ -94,7 +93,6 @@
     "notaPequena": "{k} dos {total} períodos têm pouca gente e aparecem em cinza, sem número em destaque.",
     "tituloGraficoCarregando": "Taxa de retorno em 7 dias, período a período",
     "inicioColeta": "Início da coleta: pode incluir pessoas antigas, então a taxa tende a sair mais alta.",
-    "legInicioColeta": "Ponto cinza vazado também nas semanas do início da coleta: podem incluir pessoas antigas, então a taxa tende a sair mais alta",
     "notaImaturaMes1": "{k} dos {total} meses ainda está dentro dos 7 dias. Não é uma queda.",
     "notaImaturaMesN": "{k} dos {total} meses ainda estão dentro dos 7 dias. Não são uma queda.",
     "notaImaturaSemana1": "{k} das {total} semanas ainda está dentro dos 7 dias. Não é uma queda.",
@@ -102,7 +100,9 @@
     "notaPequena1": "{k} dos {total} períodos tem pouca gente e aparece em cinza, sem número em destaque.",
     "legTaxaMes": "Linha violeta: taxa de cada mês",
     "legTaxaSemana": "Pontos cinza: taxa de cada semana (vazado = pouca gente)",
-    "notaInicioColeta": "* Início da coleta: pode incluir pessoas antigas, então a taxa tende a sair mais alta."
+    "notaInicioColeta": "* Início da coleta: pode incluir pessoas antigas, então a taxa tende a sair mais alta.",
+    "legVazadoMes": "Ponto vazado: pouca gente no mês ou início da coleta (pode incluir pessoas antigas, então a taxa tende a sair mais alta)",
+    "legVazadoSemana": "Ponto vazado: pouca gente na semana ou início da coleta (pode incluir pessoas antigas, então a taxa tende a sair mais alta)"
   },
   "sens": {
     "titulo": "E se mudarmos a forma de contar uma pessoa, uma visita ou o voltar?",
@@ -575,6 +575,10 @@
         "semanas": {
           "frase": "Em {n} semanas ({pct}) o número de conversas caiu muito.",
           "fez": "pode ter sido o serviço fora do ar. Mantivemos as semanas."
+        },
+        "pessoal": {
+          "frase": "Em {n} conversas ({pct}) os autores da base esconderam dados pessoais.",
+          "fez": "mantivemos; o texto já veio sem os dados pessoais."
         }
       },
       "tituloSemMensagem": "Conversa sem mensagem da pessoa",

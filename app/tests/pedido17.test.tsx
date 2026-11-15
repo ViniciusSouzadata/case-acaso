@@ -62,6 +62,23 @@ describe("pedido 17 — concordância e legenda do detalhe do gráfico", () => {
   });
 });
 
+describe("pedido 18 — retoques de texto", () => {
+  it("legenda do ponto vazado fala de mês na visão por mês, sem 'também'", () => {
+    const l = { ...coorte(0), inicio_coleta: true };
+    mock.coortes = [l, ...Array.from({ length: 4 }, (_, i) => coorte(i + 1))];
+    render(<DetalheTaxa />);
+    const leg = screen.getAllByRole("list", { name: "Como ler o gráfico" })[0]!.textContent!;
+    expect(leg).toContain("Ponto vazado: pouca gente no mês ou início da coleta");
+    expect(leg).not.toContain("também");
+    expect(leg).not.toContain("semanas do início");
+  });
+  it("dado pessoal escondido tem moldura própria", () => {
+    const q = quadroProblema({ problema: "Conversas com dado pessoal ocultado pelos autores (redacted)", contagem: 56, percentual: 0.0048 }, (n) => String(n), (x) => `${((x ?? 0) * 100).toFixed(1).replace(".", ",")}%`)!;
+    expect(q.frase).toBe("Em 56 conversas (0,5%) os autores da base esconderam dados pessoais.");
+    expect(q.fez).toBe("mantivemos; o texto já veio sem os dados pessoais.");
+  });
+});
+
 describe("pedido 17 — eixo do gráfico", () => {
   it("mês: marca a cada 2 meses, sem pular fev/24, com a última marca no último mês", () => {
     const meses = ["2023-04-01", "2023-05-01", "2023-06-01", "2023-07-01", "2023-08-01", "2023-09-01", "2023-10-01", "2023-11-01", "2023-12-01", "2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01"];

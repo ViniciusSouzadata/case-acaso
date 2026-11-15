@@ -139,8 +139,7 @@ export function GraficoRetencao({
             <li>{t(granularidade === "mes" ? "retencao.legTaxaMes" : "retencao.legTaxaSemana")}</li>
             <li>{t("retencao.legFaixa")}</li>
             {linhas.some((l) => l.mm4 !== null) ? <li>{t("retencao.legMedia")}</li> : null}
-            {linhas.some((l) => l.taxa !== null && !l.amostraOk) ? <li>{t("retencao.legPequena")}</li> : null}
-            {linhas.some((l) => l.inicioColeta) ? <li>{t("retencao.legInicioColeta")}</li> : null}
+            {linhas.some((l) => l.taxa !== null && (!l.amostraOk || l.inicioColeta)) ? <li>{t(granularidade === "mes" ? "retencao.legVazadoMes" : "retencao.legVazadoSemana")}</li> : null}
             {linhas.some((l) => !l.madura) ? <li>{t("retencao.legImatura")}</li> : null}
             {faixas.length > 0 ? <li>{t("retencao.legEras")}:</li> : null}
             {faixas.map((f) => (
