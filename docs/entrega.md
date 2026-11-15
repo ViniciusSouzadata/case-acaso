@@ -87,13 +87,17 @@ Nas duas, quase toda a diferença é de comportamento, não de público. E nenhu
 
 ## 5. O painel
 
+Três telas, cada uma com uma pergunta no título e a resposta em uma frase logo abaixo. Cada tela cabe sem rolar, inclusive em notebook.
+
 | Tela | Pergunta que responde | Gráfico e por quê |
 |---|---|---|
-| Retenção | De cada 100 pessoas, quantas voltam em 7 dias, e isso está mudando? | Linha por semana com faixa de incerteza, para ninguém ler ponto solto como tendência. Cascata para separar público de comportamento |
-| O que faz voltar | Quais fatores pesam, e quanto é efeito do assistente? | Um ponto por fator com o intervalo. O que cruza o zero se vê de relance |
-| Confiança nos dados | Posso confiar nestes números? | Tabelas: última carga, conferência com a origem, problemas de qualidade, validação da classificação e o que o painel nunca mostra |
+| Quantos voltam | De cada 100 pessoas, quantas voltam em 7 dias, e isso está mudando? | Linha por mês com faixa de margem de erro, para ninguém ler ponto solto como tendência. Na visão por semana, a linha é a média de 4 semanas e cada semana vira um ponto, porque semana tem pouca gente. Ao lado, a semana que caiu: "26 → 22" e duas barras que separam o que veio do público e o que veio do comportamento |
+| O que faz voltar | Quais fatores pesam, e quanto é efeito do assistente? | Uma linha por fator: o ponto é a diferença, a barra é a margem de erro. O que cruza o zero se vê de relance. Abaixo, os três achados, cada um com a decisão que sustenta |
+| Dá para confiar? | Posso confiar nestes números? | Cartões com a conferência contra a origem e a validação da IA; barras com cada problema de qualidade e o que fiz com ele; e a lista do que o painel mostra e do que nunca mostra |
 
-Todo número tem um ícone que abre a definição, o denominador e o período; a fórmula e a consulta SQL ficam logo abaixo, para quem quiser conferir. Quando a amostra é pequena, o painel escreve "amostra pequena" no lugar do número. Semanas que ainda não completaram 7 dias aparecem hachuradas, nunca como queda. O painel mostra só agregados. Texto de conversa, IP e navegador não aparecem em nenhuma tela nem na API, e o texto de conversa nem entra no banco.
+O texto das telas é para quem não é técnico: fala de pessoas ("16 a menos voltam, a cada 100"), não de pontos percentuais. Todo cartão, linha e barra é clicável e abre uma caixa curta com o número, a explicação e o cuidado na leitura. A definição, a fórmula, o denominador, o período e a consulta SQL ficam nessa caixa, num bloco recolhido "Para conferir (técnico)", e no dicionário da terceira tela. Laranja aparece só onde a diferença é real.
+
+Quando há pouca gente, o painel escreve "pouca gente" e não tira conclusão. Períodos que ainda não completaram 7 dias aparecem hachurados, nunca como queda. O painel mostra só agregados. Texto de conversa, IP e navegador não aparecem em nenhuma tela nem na API, e o texto de conversa nem entra no banco.
 
 ## 6. Arquitetura e custo
 
@@ -146,7 +150,7 @@ Com ID de login, refaria tudo com a identidade real; o código recalcula com um 
 
 ## 12. Uso de IA e horas
 
-Usei o Claude, pelo Claude Code, para planejar, escrever código e testes, e um LLM para classificar tema e recusa. As definições, a escolha dos métodos e as conclusões são minhas. Conferi o trabalho da IA de três formas: 200 conversas rotuladas por mim, uma base inventada de resposta conhecida e a conferência do bruto com a base.
+Usei o Claude, pelo Claude Code, para planejar, escrever código e testes, e um LLM para classificar tema e recusa. A IA propôs opções de definição e de método; eu escolhi, revisei e aprovei cada uma, e respondo pelas conclusões. Conferi o trabalho da IA de três formas: 200 conversas rotuladas por mim, uma base inventada de resposta conhecida e a conferência do bruto com a base.
 
 O que corrigi ou descartei: a primeira versão do cálculo de efeito estimava 7,0 pontos onde o certo era 10,1, e o teste pegou. O classificador por palavras-chave foi descartado depois da validação. Um segundo LLM foi descartado por deixar 40% dos itens sem resposta. A consulta principal levava 12 segundos e passou a 0,33. Mais casos em `docs/conferi_da_ia.md`.
 
@@ -163,7 +167,7 @@ Foram cerca de **18 horas** minhas, acima das 12 sugeridas, porque rotulei a val
 | 3. Um comando, telas com dados reais, ADRs e BDRs | `README.md` · `docs/decisoes/` |
 | 3.1 Definições, variáveis, validação da IA, qualidade, EDA, sugestões | seções 1, 2 e 10 · `docs/figuras/` |
 | 3.2 Efeitos com intervalo, confusão, a semana, três achados | página 1, seções 3 e 4 |
-| 3.3 Telas, indicadores com SQL, arquitetura, endpoints, outros países, desempenho | seções 5 e 6 · `arquitetura.md` · `docs/desempenho.md` · tela Confiança nos dados |
+| 3.3 Telas, indicadores com SQL, arquitetura, endpoints, outros países, desempenho | seções 5 e 6 · `arquitetura.md` · `docs/desempenho.md` · tela "Dá para confiar?" |
 | 4.1 Registros por camada, divergência, testes, caminho até produção | seção 7 · `arquitetura.md` |
 | 4.2 Incidente, as cinco perguntas | seção 8 · `docs/incidente/` |
 | 4.3 Riscos e decisões | seção 9 |
