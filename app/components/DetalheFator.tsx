@@ -43,6 +43,7 @@ export function DetalheFator({ l }: { l: LinhaFloresta }) {
       <Tecnico>
         {l.bruto ? <CampoTecnico rotulo={t("fatores.bruto")}>{faixaTecnica(l.bruto)}</CampoTecnico> : null}
         {l.ajustado ? <CampoTecnico rotulo={t("fatores.ajustado")}>{faixaTecnica(l.ajustado)}</CampoTecnico> : null}
+        {l.entreParecidas ? <CampoTecnico rotulo={t("detalhe.tecnicoParecidas")}>{faixaTecnica(l.entreParecidas)} {t("detalhe.parecidasAviso")}</CampoTecnico> : null}
         {l.segundo ? (
           <CampoTecnico rotulo={t("detalhe.tecnicoOutraForma")}>
             {l.segundo.ajustado

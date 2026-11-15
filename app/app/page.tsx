@@ -112,7 +112,7 @@ export default function PaginaRetencao() {
           {coortes.estado === "carregando" ? <Estado tipo="carregando" /> : null}
           {coortes.estado === "erro" ? <Estado tipo="erro" mensagem={coortes.mensagem} requestId={coortes.requestId} /> : null}
           {coortes.estado === "ok" && linhas.length === 0 ? <Estado tipo="vazio" /> : null}
-          {linhas.length > 0 ? <GraficoTaxa linhas={linhas} altura="h-[17.25rem]" marcadas={gran === "semana" ? [...SEMANAS] : []} selecionada={semanaSel} onEscolher={setSemanaSel} /> : null}
+          {linhas.length > 0 ? <GraficoTaxa linhas={linhas} altura="h-[17.25rem]" granularidade={gran} marcadas={gran === "semana" ? [...SEMANAS] : []} selecionada={semanaSel} onEscolher={setSemanaSel} /> : null}
           {r && r.periodo_inicio && r.periodo_fim ? <p className="mt-1 text-[11px] text-slate-500" data-testid="fonte-grafico">{t("painel.tela1.fonte", { n: formatarInt(r.usuarios), fonte: t("painel.fonteNome"), periodo: periodoBase(r.periodo_inicio, r.periodo_fim) })}</p> : null}
         </ItemEntrada>
 

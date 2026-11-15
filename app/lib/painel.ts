@@ -120,8 +120,10 @@ export function conclusaoFatores(sustentam: string[], total: number): string {
 export function conclusaoSemana(r: ResumoSemanaApi): { frase: string; normal: boolean | null } | null {
   if (r.delta_pp === null || r.mix_pp === null || r.taxa_pp === null) return null;
   const publico = Math.abs(r.taxa_pp) < Math.abs(r.mix_pp);
-  const frase = t(`painel.semana.${r.delta_pp < 0 ? "caiu" : "subiu"}${publico ? "Publico" : ""}`);
-  return { frase, normal: r.p_valor === null ? null : r.p_valor >= 0.05 };
+  const normal = r.p_valor === null ? null : r.p_valor >= 0.05;
+  // dentro da oscilação normal (o mesmo dado que decide o selo): não se afirma queda nem subida
+  const frase = t(`painel.semana.${r.delta_pp < 0 ? "caiu" : "subiu"}${publico ? "Publico" : ""}${normal ? "Normal" : ""}`);
+  return { frase, normal };
 }
 
 /** Taxa em fração → "24" (inteiro, para a frase "24 de cada 100"). */
@@ -136,10 +138,10 @@ const NOMES_PROBLEMA: [string, string][] = [
   ["Conversas de endereços com uso com cara de robô", "Uso com cara de robô"],
   ["Conversas do endereço de rede mais ativo", "Um endereço com uso exagerado"],
   ["Idioma divergente em pergunta curta", "Idioma mal detectado"],
-  ["Endereço de rede muda no meio da conversa", "Endereço muda no meio da conversa"],
+  ["Endereço de rede muda no meio da conversa", "Endereço muda na conversa"],
   ["Pergunta vazia", "Pergunta vazia"],
   ["Conteúdo repetido", "Conteúdo repetido"],
-  ["Conversa sem nenhuma mensagem do usuário", "Sem mensagem do usuário"],
+  ["Conversa sem nenhuma mensagem do usuário", "Sem mensagem da pessoa"],
   ["Conversas com dado pessoal ocultado", "Dado pessoal escondido"],
   ["Semanas com queda forte", "Semanas com queda de volume"],
   ["Conversas tóxicas", "Conversas tóxicas"],
@@ -153,6 +155,28 @@ export function fraseProblemaEndereco(p: { problema: string; contagem: number | 
   }
   if (p.problema.startsWith(PROBLEMA_FILHO.filho)) return t("painel.tela3.fraseUnico", { n: fmt(p.contagem), pct: pct(p.percentual) });
   return null;
+}
+
+/** Moldura em linguagem comum de cada problema (os números continuam vindo da API); null para os que não têm moldura própria. */
+const ID_PROBLEMA: [string, string][] = [
+  ["Idioma divergente em pergunta curta", "idioma"],
+  ["Endereço de rede muda no meio da conversa", "endereco"],
+  ["Conteúdo repetido", "repetido"],
+  ["Conversa sem nenhuma mensagem do usuário", "semMensagem"],
+  ["Pergunta vazia", "vazia"],
+  ["Conversas do endereço de rede mais ativo", "unico"],
+  ["Semanas com queda forte", "semanas"],
+];
+export function quadroProblema(p: { problema: string; contagem: number | null; percentual: number | null }, fmt: (n: number | null) => string, pct: (x: number | null) => string): { frase: string; fez: string } | null {
+  const id = ID_PROBLEMA.find(([prefixo]) => p.problema.startsWith(prefixo))?.[1];
+  if (!id) return null;
+  const vars = { n: fmt(p.contagem), pct: pct(p.percentual) };
+  return { frase: t(`painel.tela3.problemas.${id}.frase`, vars), fez: t(`painel.tela3.problemas.${id}.fez`) };
+}
+
+/** Título do painel do problema: igual ao nome da barra, salvo onde a barra precisa ser mais curta. */
+export function tituloProblema(texto: string): string {
+  return texto.startsWith("Conversa sem nenhuma mensagem do usuário") ? t("painel.tela3.tituloSemMensagem") : nomeProblema(texto);
 }
 
 export function nomeProblema(texto: string): string {

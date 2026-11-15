@@ -11,7 +11,7 @@ import { Estado } from "@/components/Estado";
 import { PainelLateral } from "@/components/PainelLateral";
 import type { LoteQualidade, Problema, Reconciliacao, Validacao } from "@/lib/consultas/qualidade";
 import { t, todasAsMensagens } from "@/lib/mensagens";
-import { PROBLEMA_FILHO, acertoIA, desempenhoRecusa, fraseConfianca, fraseProblemaEndereco, nomeProblema, unidadeProblema } from "@/lib/painel";
+import { PROBLEMA_FILHO, acertoIA, desempenhoRecusa, fraseConfianca, fraseProblemaEndereco, quadroProblema, tituloProblema, nomeProblema, unidadeProblema } from "@/lib/painel";
 import { traduzirTermos, veredicto } from "@/lib/qualidade";
 import { formatarInt, formatarPct } from "@/lib/regras";
 import { useApi } from "@/lib/useApi";
@@ -38,8 +38,8 @@ const TITULOS: Record<SecaoQualidade, string> = {
 function LinhaBarra({ p, i, maximo, recuada, onAbrir }: { p: Problema; i: number; maximo: number; recuada?: boolean; onAbrir: () => void }) {
   return (
     <li data-problema={nomeProblema(p.problema)} className={recuada ? "ml-4" : undefined}>
-      <button type="button" onClick={onAbrir} className={`group grid ${recuada ? "min-h-[1.75rem] py-0.5" : "min-h-[2.25rem] py-1.5"} w-full grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3.5rem] items-center gap-x-3 rounded-lg px-2 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta ${recuada ? "sm:grid-cols-[12.5rem_minmax(0,1fr)_3.5rem]" : "sm:grid-cols-[11rem_minmax(0,1fr)_3.5rem]"}`}>
-        <span className={`text-sm ${recuada ? "text-[13px] leading-tight text-slate-700" : "truncate font-medium text-tinta"}`}>{recuada ? t("painel.tela3.filhoEndereco") : nomeProblema(p.problema)}</span>
+      <button type="button" onClick={onAbrir} className={`group grid ${recuada ? "min-h-[1.75rem] py-0.5" : "min-h-[2.25rem] py-1.5"} w-full grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3.5rem] items-center gap-x-3 rounded-lg px-2 text-left transition-colors hover:bg-[#ece8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violeta ${recuada ? "sm:grid-cols-[12.5rem_minmax(0,1fr)_3.5rem]" : "sm:grid-cols-[12.5rem_minmax(0,1fr)_3.5rem]"}`}>
+        <span className={`text-sm leading-tight ${recuada ? "text-[13px] text-slate-700" : "font-medium text-tinta"}`}>{recuada ? t("painel.tela3.filhoEndereco") : nomeProblema(p.problema)}</span>
         <span className="relative block h-4 rounded bg-[#f1effc]" aria-hidden>
           <BarraCrescente indice={i} className={`absolute inset-y-0 left-0 rounded ${recuada ? "bg-violeta-claro" : "bg-violeta"} transition-colors group-hover:bg-violeta-escuro`} style={{ width: `${Math.max((p.percentual ?? 0) > 0 ? 1.5 : 0, ((p.percentual ?? 0) / maximo) * 100)}%` }} />
         </span>
@@ -180,22 +180,25 @@ export default function PaginaDados() {
       ) : null}
 
       {problema ? (
-        <PainelLateral titulo={nomeProblema(problema.problema)} onFechar={() => setProblema(null)}>
+        <PainelLateral titulo={tituloProblema(problema.problema)} onFechar={() => setProblema(null)}>
           {(() => {
             const prob = traduzirTermos(problema.problema, TERMOS);
             const trat = traduzirTermos(problema.tratamento ?? "", TERMOS);
             const tecnicos = [...prob.tecnicos, ...trat.tecnicos];
-            const frase = fraseProblemaEndereco(problema, formatarInt, formatarPct);
+            const quadro = quadroProblema(problema, formatarInt, formatarPct);
+            const frase = fraseProblemaEndereco(problema, formatarInt, formatarPct) ?? quadro?.frase ?? null;
+            const fez = quadro?.fez ?? trat.texto;
             return (
               <div className="cartao space-y-2 p-4 text-sm text-slate-800">
                 <p className="font-medium text-tinta">{frase ?? prob.texto}</p>
                 {frase ? null : <p>{t(unidadeProblema(problema.problema) === "semanas" ? "painel.tela3.semanasContagem" : "painel.tela3.problemaContagem", { n: formatarInt(problema.contagem), pct: formatarPct(problema.percentual) })}</p>}
-                {problema.tratamento ? <p><span className="font-medium">{t("painel.tela3.oQueFizemos")}:</span> {trat.texto}</p> : null}
-                {tecnicos.length > 0 ? (
+                {problema.tratamento ? <p><span className="font-medium">{t("painel.tela3.oQueFizemos")}:</span> {fez}</p> : null}
+                {tecnicos.length > 0 || quadro ? (
                   <details>
                     <summary className="cursor-pointer text-xs text-slate-700">{t("dados.nomesTecnicosTitulo")}</summary>
                     <ul className="mt-1 list-disc pl-5 text-xs text-slate-700">
-                      {tecnicos.map((x) => <li key={x.termo}><code>{x.termo}</code>: {x.nota}</li>)}
+                      {quadro ? <li>{problema.problema}{problema.tratamento ? `. ${problema.tratamento}` : ""}</li> : null}
+                      {tecnicos.map((x) => <li key={x.termo}>{x.termo.startsWith("(") ? x.nota : <><code>{x.termo}</code>: {x.nota}</>}</li>)}
                     </ul>
                   </details>
                 ) : null}

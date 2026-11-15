@@ -136,12 +136,12 @@ export function GraficoRetencao({
 
           <ul className="mt-3 space-y-1 text-xs text-slate-700" aria-label={t("retencao.legendaTitulo")}>
             <li className="font-medium">{t("retencao.legendaTitulo")}</li>
-            <li>{t("retencao.legTaxa")}</li>
+            <li>{t(granularidade === "mes" ? "retencao.legTaxaMes" : "retencao.legTaxaSemana")}</li>
             <li>{t("retencao.legFaixa")}</li>
-            <li>{t("retencao.legMedia")}</li>
-            <li>{t("retencao.legPequena")}</li>
+            {linhas.some((l) => l.mm4 !== null) ? <li>{t("retencao.legMedia")}</li> : null}
+            {linhas.some((l) => l.taxa !== null && !l.amostraOk) ? <li>{t("retencao.legPequena")}</li> : null}
             {linhas.some((l) => l.inicioColeta) ? <li>{t("retencao.legInicioColeta")}</li> : null}
-            <li>{t("retencao.legImatura")}</li>
+            {linhas.some((l) => !l.madura) ? <li>{t("retencao.legImatura")}</li> : null}
             {faixas.length > 0 ? <li>{t("retencao.legEras")}:</li> : null}
             {faixas.map((f) => (
               <li key={f.era} className="flex items-center gap-2 pl-3">

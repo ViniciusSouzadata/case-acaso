@@ -19,11 +19,11 @@ describe("legenda do gráfico principal mostra só o que está desenhado", () =>
     expect(leg.textContent).toContain("Margem de erro");
     expect(leg.textContent).not.toContain("Média de 4 semanas");
     expect(leg.textContent).not.toContain("pouca gente");
-    expect(screen.queryByText("em andamento")).toBeNull(); // um único período em andamento não tem área para o rótulo
+    expect(screen.queryByText("ainda dentro dos 7 dias")).toBeNull(); // um único período em andamento não tem área para o rótulo
   });
 
   it("visão Semana: média de 4 semanas e '○ = pouca gente' aparecem quando existem", () => {
-    render(<GraficoTaxa linhas={[linha("2023-04-03", { mm4: 23 }), linha("2023-04-10", { mm4: 24, amostraOk: false })]} />);
+    render(<GraficoTaxa granularidade="semana" linhas={[linha("2023-04-03", { mm4: 23 }), linha("2023-04-10", { mm4: 24, amostraOk: false })]} />);
     const leg = screen.getByRole("list", { name: "Legenda" });
     expect(leg.textContent).toContain("Média de 4 semanas");
     expect(leg.textContent).toContain("○ = pouca gente");

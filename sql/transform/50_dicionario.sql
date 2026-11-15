@@ -162,7 +162,7 @@ d AS (
 
     ('tema',
      'Assunto da pergunta',
-     'Assunto da primeira pergunta (por exemplo, programação, estudo, texto). Sem classificação, fica "não classificado".',
+     'Assunto da primeira pergunta (por exemplo, programação, estudo, texto). Sem classificação, fica "Sem assunto definido".',
      'rótulo vindo de um arquivo de classificação versionado (seed), por conversa',
      'As pessoas novas do grupo.', 'Primeira experiência.',
      'mart.fct_primeira_experiencia.tema; mart.agg_retencao_segmento',
@@ -225,8 +225,8 @@ d AS (
 
     ('n_conversas_sessao',
      'Conversas na primeira visita',
-     'Quantas conversas separadas a pessoa abriu na primeira visita: 1 ou 2 ou mais.',
-     'contagem de conversas da sessão 1, agrupada em 1 e 2+',
+     'Quantas conversas separadas a pessoa abriu na primeira visita: 1, 2 ou 3 ou mais.',
+     'contagem de conversas da sessão 1, agrupada em 1, 2 e 3 ou mais (a tabela de segmentos junta 2 e 3 ou mais em 2+)',
      'As pessoas novas do grupo.', 'Primeira experiência.',
      'mart.fct_primeira_experiencia.n_conversas_sessao; mart.agg_retencao_segmento',
      $q$SELECT valor, novos, taxa FROM mart.agg_retencao_segmento WHERE variavel = 'n_conversas_sessao'$q$,

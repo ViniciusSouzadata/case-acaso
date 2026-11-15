@@ -116,10 +116,12 @@ describe("início da coleta", () => {
   it("tabela mostra a taxa com o aviso de início da coleta; semanas comuns não têm o aviso", () => {
     render(<TabelaCoortes linhas={prepararCoortes([...inicio, ...coortes], "semana")} unidade="x" />);
     const linha = document.querySelector('[data-periodo="2023-04-17"]') as HTMLElement;
-    expect(within(linha).getByText("31,0%")).toBeTruthy();
-    expect(within(linha).getByText(/Início da coleta: pode incluir pessoas antigas, então a taxa tende a sair mais alta/)).toBeTruthy();
+    // a taxa leva um asterisco e a nota vira rodapé da tabela (não fica dentro da célula)
+    expect(linha.textContent).toContain("31,0%*");
+    expect(within(linha).queryByText(/Início da coleta/)).toBeNull();
+    expect(screen.getByText(/^\* Início da coleta: pode incluir pessoas antigas, então a taxa tende a sair mais alta/)).toBeTruthy();
     const comum = document.querySelector('[data-periodo="2023-05-01"]') as HTMLElement;
-    expect(within(comum).queryByText(/Início da coleta/)).toBeNull();
+    expect(comum.textContent).not.toContain("*");
   });
 
   it("a dica do ponto traz o aviso", () => {

@@ -77,7 +77,6 @@ export function BlocoSemana({ inicial = SEMANAS[0] }: { inicial?: string }) {
                 taxa: formatarPP(resumo.taxa_pp),
               })}
             </p>
-            <p className="text-xs text-slate-700">{t("semana.legenda")}</p>
             {resumo.base_descricao ? <p className="text-xs text-slate-700">{t("semana.base", { descricao: resumo.base_descricao })}</p> : null}
             {resumo.conclusao ? <p className="text-xs text-slate-700">{resumo.conclusao}</p> : null}
             {resumo.p_valor !== null ? <p className="text-xs text-slate-700">{t("semana.detalheP", { p: formatarPct(resumo.p_valor, 1) })}</p> : null}

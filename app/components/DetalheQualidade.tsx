@@ -29,17 +29,19 @@ export function nomeConferencia(metrica: string): string {
   return r === chave ? nomeLegivel(metrica) : r;
 }
 
+/** Os 7 termos que a pessoa mais encontra nas telas vêm primeiro, nesta ordem; os demais seguem em ordem alfabética. */
+export const TERMOS_PRINCIPAIS = ["usuario", "novos_usuarios", "sessao", "taxa_retorno_7d", "ic_95", "amostra_suficiente", "trafego_anomalo"];
+export function ordenarDicionario<T extends { indicador: string; nome_exibicao: string }>(itens: T[]): { principais: T[]; outros: T[] } {
+  const principais = TERMOS_PRINCIPAIS.flatMap((k) => itens.filter((i) => i.indicador === k));
+  const outros = itens.filter((i) => !TERMOS_PRINCIPAIS.includes(i.indicador)).sort((a, b) => a.nome_exibicao.localeCompare(b.nome_exibicao, "pt-BR"));
+  return { principais, outros };
+}
+
 /** Dicionário dos números: uma lista em que só um termo fica aberto por vez; cada um mostra a definição e, recolhido, o técnico. */
 export function Dicionario() {
   const r = useApi<Indicador[]>("/api/dicionario");
   const [aberto, setAberto] = useState<string | null>(null);
-  const itens = r.estado === "ok" ? r.corpo.dados : [];
-  return (
-    <section className="cartao p-4" data-testid="dicionario">
-      {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
-      {r.estado === "erro" ? <Estado tipo="erro" mensagem={r.mensagem} requestId={r.requestId} /> : null}
-      <ul className="divide-y divide-[#efedf8]">
-        {itens.map((i) => {
+  const linha = (i: Indicador) => {
           const aqui = aberto === i.indicador;
           return (
             <li key={i.indicador}>
@@ -64,7 +66,16 @@ export function Dicionario() {
               ) : null}
             </li>
           );
-        })}
+        };
+  const { principais, outros } = ordenarDicionario(r.estado === "ok" ? r.corpo.dados : []);
+  return (
+    <section className="cartao p-4" data-testid="dicionario">
+      {r.estado === "carregando" ? <Estado tipo="carregando" /> : null}
+      {r.estado === "erro" ? <Estado tipo="erro" mensagem={r.mensagem} requestId={r.requestId} /> : null}
+      <ul className="divide-y divide-[#efedf8]">
+        {principais.map(linha)}
+        {outros.length > 0 ? <li className="pb-1 pt-3 text-xs font-semibold uppercase tracking-wide text-slate-600" data-testid="outros-termos">{t("glossario.outrosTermos")}</li> : null}
+        {outros.map(linha)}
       </ul>
     </section>
   );

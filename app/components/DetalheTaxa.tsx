@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Estado } from "@/components/Estado";
 import { GraficoRetencao } from "@/components/graficos/GraficoRetencao";
+import { GraficoTaxa } from "@/components/graficos/GraficoTaxa";
 import { TabelaCoortes } from "@/components/graficos/TabelaCoortes";
 import { Tecnico } from "@/components/painel/Blocos";
 import { prepararCoortes, resumoVariacao, type CoorteApi, type EraApi, type Granularidade } from "@/lib/graficos";
@@ -40,15 +41,15 @@ export function DetalheTaxa() {
       {coortes.estado === "ok" && linhas.length === 0 ? <Estado tipo="vazio" /> : null}
       {coortes.estado === "ok" && linhas.length > 0 ? (
         <>
-          <GraficoRetencao linhas={linhas} eras={epocas ? eras : []} granularidade={gran} simples />
+          <GraficoTaxa linhas={linhas} altura="h-72" granularidade={gran} eras={epocas ? eras : []} />
           {eras.length > 0 ? (
             <button type="button" aria-pressed={epocas} onClick={() => setEpocas(!epocas)} className="alvo text-sm font-medium text-violeta hover:underline">
               {t(epocas ? "detalhe.esconderEpocas" : "detalhe.mostrarEpocas")}
             </button>
           ) : null}
           <Tecnico titulo={t("detalhe.comoLer")}>
-            {pequenas > 0 ? <p role="note" className="text-xs text-slate-700">{t("retencao.notaPequena", { k: pequenas, total: linhas.length })}</p> : null}
-            {imaturas > 0 ? <p role="note" className="text-xs text-slate-700">{t("retencao.notaImatura", { k: imaturas, total: linhas.length })}</p> : null}
+            {pequenas > 0 ? <p role="note" className="text-xs text-slate-700">{t(pequenas === 1 ? "retencao.notaPequena1" : "retencao.notaPequena", { k: pequenas, total: linhas.length })}</p> : null}
+            {imaturas > 0 ? <p role="note" className="text-xs text-slate-700">{t(`retencao.notaImatura${gran === "mes" ? "Mes" : "Semana"}${imaturas === 1 ? "1" : "N"}`, { k: imaturas, total: linhas.length })}</p> : null}
             <GraficoRetencao linhas={linhas} eras={eras} granularidade={gran} soApoio />
           </Tecnico>
           <Tecnico titulo={t("retencao.tabelaResumo")}>

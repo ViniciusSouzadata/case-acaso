@@ -10,6 +10,7 @@ import { PainelLateral } from "@/components/PainelLateral";
 import { DetalheBalanco } from "@/components/DetalheBalanco";
 import { grupoEfetivo, prepararFloresta, type EfeitoApi, type GrupoFator, type LinhaFloresta } from "@/lib/floresta";
 import { t } from "@/lib/mensagens";
+import { formatarInt } from "@/lib/regras";
 import { efeitoComMargem, emVezDe, nomeCurto, seloDaLinha, type Selo } from "@/lib/painel";
 
 const GRUPOS: GrupoFator[] = ["assistente", "perfil", "engajamento", "descritivo"];
@@ -87,12 +88,14 @@ function LinhaRanking({ l, onAbrir, realcada, indice }: { l: LinhaFloresta; onAb
 }
 
 /** Um ranking só: nome curto, barra com a margem de erro, número "a cada 100" e selo. Clicar na linha abre o detalhe. */
-export function Ranking({ efeitos, realce = null, rodape }: { efeitos: EfeitoApi[]; realce?: { fator: string; nivel: string } | null; /** linha de fonte no pé do cartão (base, método, origem) */ rodape?: string }) {
+export function Ranking({ efeitos, realce = null, base = null }: { efeitos: EfeitoApi[]; realce?: { fator: string; nivel: string } | null; /** pessoas novas da base: entra na linha de fonte no pé do cartão */ base?: number | null }) {
   const [grupo, setGrupo] = useState<GrupoFator>("assistente");
   const [todos, setTodos] = useState(false);
   const [aberta, setAberta] = useState<LinhaFloresta | null>(null);
   const [ajuda, setAjuda] = useState(false);
   const { linhas, limite } = prepararFloresta(efeitos, grupo);
+  // quem compara pessoas parecidas diz isso na fonte; "Quanto usou" e "Assunto" só descrevem, sem igualar os grupos
+  const rodape = base === null ? undefined : t(grupo === "engajamento" || grupo === "descritivo" ? "painel.tela2.fonteDireta" : "painel.tela2.fonte", { n: formatarInt(base), fonte: t("painel.fonteNome") });
   const visiveis = todos ? linhas : linhas.slice(0, LINHAS_INICIAIS);
 
   // cartão do achado realça a linha; se ela está em outro grupo (ou além das linhas iniciais), troca de aba / abre a lista

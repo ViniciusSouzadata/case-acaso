@@ -80,6 +80,8 @@ export interface LinhaFloresta {
   /** a linha principal é o ajuste pelo perfil (entra na contagem da frase-resposta) */
   principalLogit: boolean;
   /** posições em % da trilha: [inf, efeito, sup] */
+  /** só nas linhas de assunto: o mesmo assunto entre pessoas parecidas (vai para o bloco técnico, não para a aba) */
+  entreParecidas: Estimativa | null;
   pos: { zero: number; bruto: [number, number, number] | null; ajustado: [number, number, number] | null };
 }
 
@@ -89,7 +91,13 @@ function estimativa(e: number | null, i: number | null, s: number | null): Estim
 
 /** Linhas de um grupo, ordenadas pelo tamanho do efeito (ajustado se houver, senão bruto), em escala simétrica em torno do zero. */
 export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { linhas: LinhaFloresta[]; limite: number } {
-  const doGrupo = efeitos.filter((e) => grupoEfetivo(e) === grupo);
+  // Os assuntos têm uma aba própria (comparação direta): na aba do perfil não repetem, para o mesmo assunto não aparecer com dois números.
+  const doGrupo = efeitos.filter((e) => grupoEfetivo(e) === grupo && !(grupo === "perfil" && e.fator === "tema"));
+  const parecidas = (e: EfeitoApi): Estimativa | null => {
+    if (e.fator !== "tema_descritivo") return null;
+    const x = efeitos.find((o) => o.fator === "tema" && o.nivel === e.nivel && o.metodo === "logit_ame");
+    return x ? estimativa(x.efeito_ajustado_pp, x.ajustado_ic_inf, x.ajustado_ic_sup) : null;
+  };
   // Uma linha por fator: o ajuste pelo perfil é a principal; o outro método (grupos parecidos) vira a frase "segundo método".
   const porFator = new Map<string, EfeitoApi[]>();
   for (const e of doGrupo) porFator.set(`${e.fator}|${e.nivel}`, [...(porFator.get(`${e.fator}|${e.nivel}`) ?? []), e]);
@@ -145,6 +153,7 @@ export function prepararFloresta(efeitos: EfeitoApi[], grupo: GrupoFator): { lin
           }
         : null,
       principalLogit: e.metodo === "logit_ame",
+      entreParecidas: parecidas(e),
       pos: { zero: pos(0), bruto: tri(bruto), ajustado: tri(ajustado) },
     };
   });

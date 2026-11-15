@@ -169,7 +169,7 @@ export function pontosSensibilidade(linhas: SensibilidadeApi[]): { pontos: Ponto
   return {
     min,
     max,
-    pontos: linhas.map((l) => ({
+    pontos: [...linhas].sort((a, b) => Number(b.definicao === oficial.definicao) - Number(a.definicao === oficial.definicao) || a.taxa - b.taxa).map((l) => ({
       ...l,
       posTaxa: pos(l.taxa),
       posInf: pos(l.ic_inf),

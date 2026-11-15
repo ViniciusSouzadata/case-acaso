@@ -64,12 +64,12 @@ describe("Tela 1 — interações", () => {
   it("clicar na semana marcada (ou na pílula) troca a semana explicada", () => {
     render(<PaginaRetencao />);
     fireEvent.click(screen.getByRole("button", { name: "Semana" }));
-    expect(screen.getByRole("heading", { name: /Duas semanas de queda, explicadas/ })).toBeTruthy();
-    expect(screen.getByRole("button", { name: /20\/11\/2023 · entrou um modelo novo/ }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("heading", { name: /Duas semanas de queda: foi real?/ })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /20\/11\/2023 · semana do modelo novo/ }).getAttribute("aria-pressed")).toBe("true");
     fireEvent.click(screen.getByText("ponto 2023-05-01"));
     expect(screen.getByRole("button", { name: /01\/05\/2023 · maior queda da série/ }).getAttribute("aria-pressed")).toBe("true");
     expect(mock.pedidos).toContain("/api/semana/decomposicao?semana=2023-05-01");
-    expect(screen.getByTestId("conclusao-semana").textContent).toContain("voltaram menos");
+    expect(screen.getByTestId("conclusao-semana").textContent).toContain("Não dá para dizer que caiu");
   });
 
   it("o gráfico abre por mês (nenhuma semana marcada); o controle Semana | Mês existe", () => {
@@ -114,7 +114,7 @@ describe("Tela 2 — cartão do achado realça a linha do ranking", () => {
     render(<PaginaFatores />);
     expect(document.querySelector("[data-fator='modelo_familia']")).toBeNull(); // a aba Assistente não o mostra
     fireEvent.mouseEnter(document.querySelector("[data-achado='2']")!);
-    expect(screen.getByRole("tab", { name: /Quem é a pessoa/ }).getAttribute("aria-selected")).toBe("true");
+    expect(screen.getByRole("tab", { name: /A pessoa e a pergunta/ }).getAttribute("aria-selected")).toBe("true");
     expect(realcadas()).toEqual(["modelo_familia|gpt-4"]);
   });
 

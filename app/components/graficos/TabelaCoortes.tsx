@@ -33,7 +33,7 @@ export function TabelaCoortes({ linhas, unidade }: { linhas: LinhaGrafico[]; uni
                   : pequena
                     ? t("numero.amostraPequena", { n: formatarInt(l.novos) })
                     : formatarPct(l.taxaFracao)}
-                {l.inicioColeta ? <span className="block text-slate-700">{t("retencao.inicioColeta")}</span> : null}
+                {l.inicioColeta && !ainda ? "*" : null}
               </td>
               <td className="py-1">
                 {ainda || pequena ? "—" : `${formatarPct(l.icInf)} a ${formatarPct(l.icSup)}`}
@@ -43,6 +43,7 @@ export function TabelaCoortes({ linhas, unidade }: { linhas: LinhaGrafico[]; uni
         })}
       </tbody>
     </table>
+    {linhas.some((l) => l.inicioColeta && l.madura) ? <p className="mt-1 text-slate-700">{t("retencao.notaInicioColeta")}</p> : null}
     </div>
   );
 }

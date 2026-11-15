@@ -51,7 +51,8 @@
     "limitacoes": "O que ele não mostra",
     "naoEncontrado": "Este número ainda não tem explicação.",
     "formulaTitulo": "Como se calcula",
-    "tecnicoTitulo": "Para conferir (técnico)"
+    "tecnicoTitulo": "Para conferir (técnico)",
+    "outrosTermos": "Outros termos"
   },
   "demo": {
     "titulo": "Demonstração dos componentes de confiança",
@@ -79,7 +80,7 @@
     "legendaTitulo": "Como ler o gráfico",
     "legTaxa": "Linha violeta: taxa do período",
     "legFaixa": "Faixa clara: margem de erro (onde a taxa de verdade provavelmente está)",
-    "legMedia": "Linha tracejada laranja: média das últimas 4 semanas",
+    "legMedia": "Linha violeta grossa: média das últimas 4 semanas",
     "legPequena": "Ponto cinza vazado: pouca gente no período",
     "legImatura": "Área hachurada: ainda dentro dos 7 dias",
     "legEras": "Faixas de fundo: o que o produto oferecia em cada época",
@@ -91,10 +92,17 @@
     "colTaxa": "Taxa",
     "colIc": "Margem de erro",
     "notaPequena": "{k} dos {total} períodos têm pouca gente e aparecem em cinza, sem número em destaque.",
-    "notaImatura": "{k} dos {total} períodos ainda estão dentro dos 7 dias. Não são uma queda.",
     "tituloGraficoCarregando": "Taxa de retorno em 7 dias, período a período",
     "inicioColeta": "Início da coleta: pode incluir pessoas antigas, então a taxa tende a sair mais alta.",
-    "legInicioColeta": "Ponto cinza vazado também nas semanas do início da coleta: podem incluir pessoas antigas, então a taxa tende a sair mais alta"
+    "legInicioColeta": "Ponto cinza vazado também nas semanas do início da coleta: podem incluir pessoas antigas, então a taxa tende a sair mais alta",
+    "notaImaturaMes1": "{k} dos {total} meses ainda está dentro dos 7 dias. Não é uma queda.",
+    "notaImaturaMesN": "{k} dos {total} meses ainda estão dentro dos 7 dias. Não são uma queda.",
+    "notaImaturaSemana1": "{k} das {total} semanas ainda está dentro dos 7 dias. Não é uma queda.",
+    "notaImaturaSemanaN": "{k} das {total} semanas ainda estão dentro dos 7 dias. Não são uma queda.",
+    "notaPequena1": "{k} dos {total} períodos tem pouca gente e aparece em cinza, sem número em destaque.",
+    "legTaxaMes": "Linha violeta: taxa de cada mês",
+    "legTaxaSemana": "Pontos cinza: taxa de cada semana (vazado = pouca gente)",
+    "notaInicioColeta": "* Início da coleta: pode incluir pessoas antigas, então a taxa tende a sair mais alta."
   },
   "sens": {
     "titulo": "E se mudarmos a forma de contar uma pessoa, uma visita ou o voltar?",
@@ -155,7 +163,6 @@
     "degrauMix": "Mudou o público",
     "degrauTaxa": "Mudou o comportamento",
     "degrauSemana": "Nessa semana",
-    "legenda": "Barras cinza e violeta: taxa de retorno na base de comparação (cinza) e na semana analisada (violeta). Barras do meio: quanto cada causa soma (violeta claro) ou tira (laranja), em pontos.",
     "base": "Comparada com: {descricao}",
     "n": "{nBase} pessoas antes e {nSemana} na semana analisada",
     "semResumo": "Esta semana ainda não foi analisada.",
@@ -187,13 +194,13 @@
     "respostaSemDados": "Ainda não há comparações para mostrar.",
     "abas": {
       "assistente": "O que o assistente fez",
-      "perfil": "Quem é a pessoa",
+      "perfil": "A pessoa e a pergunta",
       "engajamento": "Quanto usou",
       "descritivo": "Assunto"
     },
     "abasAjuda": {
       "assistente": "O que o assistente fez na primeira resposta: recusar, mudar de idioma, o tamanho da resposta e o modelo.",
-      "perfil": "Quem chegou e quando: assunto, idioma, aparelho, horário, região e época.",
+      "perfil": "Quem chegou e o que perguntou: idioma, tamanho da pergunta, aparelho, horário, região e época.",
       "engajamento": "O que aconteceu durante a primeira visita (quantas mensagens e conversas). É consequência da experiência, não causa. Por isso aparece só a diferença direta, sem comparar pessoas parecidas.",
       "descritivo": "Como o assunto da primeira pergunta se relaciona com voltar. É só descrição: não comparamos pessoas parecidas, então não dá para dizer que o assunto faz a pessoa voltar."
     },
@@ -351,7 +358,7 @@
       },
       " (ver figura 06)": {
         "inline": "",
-        "nota": "figura 06 da análise exploratória (docs/figuras)"
+        "nota": "Figura 06 da análise exploratória (docs/figuras)"
       },
       "Registrado como limite (dado que falta).": {
         "inline": "Fica como limite: é um dado que não temos.",
@@ -374,7 +381,7 @@
       "granSemana": "Semana",
       "granMes": "Mês",
       "semanaEscolha": "Semana explicada",
-      "legMarcada": "Semana explicada (clique)",
+      "legMarcada": "Semana analisada (clique)",
       "cliqueSemana": "Clique para ver o que houve nesta semana",
       "cartaoPessoas": "Pessoas novas",
       "cartaoPessoasSub": "usaram pela primeira vez",
@@ -386,7 +393,7 @@
       "legTaxa": "Quantos voltaram (○ = pouca gente)",
       "legFaixa": "Margem de erro",
       "legMedia": "Média de 4 semanas",
-      "emAndamento": "em andamento",
+      "emAndamento": "ainda dentro dos 7 dias",
       "semanaTitulo": "O que houve em {data}",
       "semanaSub": "Voltaram {semana} de cada 100; antes eram {base}.",
       "detalheGrafico": "Detalhes do gráfico",
@@ -394,16 +401,18 @@
       "detalheDefinicoes": "As formas de contar “voltar”",
       "diferencaLegenda": "de cada 100 voltaram: antes → nessa semana",
       "deOndeVeio": "De onde veio a diferença",
-      "semanasTitulo": "Duas semanas de queda, explicadas",
+      "semanasTitulo": "Duas semanas de queda: foi real?",
       "semanaMotivo": {
-        "2023-11-20": "entrou um modelo novo",
+        "2023-11-20": "semana do modelo novo",
         "2023-05-01": "maior queda da série"
       },
       "graficoTituloMes": "Quantos voltam, mês a mês",
       "rotuloMarca": "explicada",
       "fonte": "Base: {n} pessoas novas · {fonte} · {periodo}",
       "legTaxaSimples": "Quantos voltaram",
-      "diferencaLegendaSeguintes": "de cada 100 voltaram: semanas seguintes → nessa semana"
+      "diferencaLegendaSeguintes": "de cada 100 voltaram: semanas seguintes → nessa semana",
+      "legSemana": "Cada semana (○ = pouca gente)",
+      "legSemanaSimples": "Cada semana"
     },
     "semana": {
       "caiu": "As pessoas voltaram menos; o público não mudou.",
@@ -413,7 +422,11 @@
       "normal": "oscilação normal",
       "foraNormal": "queda fora do normal",
       "caiuPublico": "A queda veio de quem chegou, não de as pessoas voltarem menos.",
-      "subiuPublico": "A subida veio de quem chegou, não de as pessoas voltarem mais."
+      "subiuPublico": "A subida veio de quem chegou, não de as pessoas voltarem mais.",
+      "caiuNormal": "Não dá para dizer que caiu: a diferença cabe na oscilação normal. O público não mudou.",
+      "subiuNormal": "Não dá para dizer que subiu: a diferença cabe na oscilação normal. O público não mudou.",
+      "caiuPublicoNormal": "Não dá para dizer que caiu: a diferença cabe na oscilação normal. Quem chegou foi diferente.",
+      "subiuPublicoNormal": "Não dá para dizer que subiu: a diferença cabe na oscilação normal. Quem chegou foi diferente."
     },
     "tela2": {
       "titulo": "O que faz as pessoas voltarem?",
@@ -439,7 +452,8 @@
       "explicacaoCompleta": "Explicação completa",
       "eixoLado": "← menos · mais →",
       "eixoUnidade": "a cada 100 pessoas",
-      "fonte": "Base: {n} pessoas novas · comparação entre pessoas parecidas · {fonte}"
+      "fonte": "Base: {n} pessoas novas · comparação entre pessoas parecidas · {fonte}",
+      "fonteDireta": "Base: {n} pessoas novas · comparação direta, sem igualar os grupos · {fonte}"
     },
     "fatores": {
       "semDados": "Não há comparações disponíveis.",
@@ -532,7 +546,39 @@
         "amostra": "A amostra foi montada com mais casos suspeitos de recusa (estratificada pela previsão das palavras-chave), por isso os números com peso são os que valem para a base."
       },
       "fraseRobo": "{k} endereços de rede fizeram {n} conversas ({pct}).",
-      "fraseUnico": "Um único endereço fez {n} conversas ({pct})."
+      "fraseUnico": "Um único endereço fez {n} conversas ({pct}).",
+      "problemas": {
+        "idioma": {
+          "frase": "Em perguntas muito curtas (até 30 letras), o idioma detectado costuma estar errado. {n} conversas ({pct}).",
+          "fez": "a comparação de “resposta em outro idioma” só usa perguntas com mais de 30 letras."
+        },
+        "endereco": {
+          "frase": "Em {n} conversas ({pct}) o endereço de rede mudou no meio.",
+          "fez": "usamos o endereço que mais aparece na conversa. O efeito é pequeno."
+        },
+        "repetido": {
+          "frase": "{n} conversas ({pct}) têm o mesmo conteúdo de outra.",
+          "fez": "mantivemos; cada uma conta separadamente."
+        },
+        "semMensagem": {
+          "frase": "{n} conversas ({pct}) não têm nenhuma mensagem da pessoa.",
+          "fez": "não contam como uso. Também testamos contando tudo."
+        },
+        "vazia": {
+          "frase": "Em {n} conversas ({pct}) a primeira pergunta veio vazia.",
+          "fez": "mantivemos na base; a conversa só conta como uso se a pessoa escreveu alguma mensagem."
+        },
+        "unico": {
+          "frase": "Um único endereço fez {n} conversas ({pct}).",
+          "fez": "fica fora da conta principal; testamos também incluindo."
+        },
+        "semanas": {
+          "frase": "Em {n} semanas ({pct}) o número de conversas caiu muito.",
+          "fez": "pode ter sido o serviço fora do ar. Mantivemos as semanas."
+        }
+      },
+      "tituloSemMensagem": "Conversa sem mensagem da pessoa",
+      "outrosTermos": "Outros termos"
     },
     "margemErro": "margem de erro: {inf} a {sup}",
     "pistaClique": "Clique para ver detalhes",
@@ -597,6 +643,8 @@
       "pequena": "pouca gente: pequeno demais para concluir",
       "descritivo": "só descreve: mostra o que acontece, não a causa"
     },
-    "semanaComparadaSeguintes": "Comparada com as 4 semanas seguintes ({nBase} pessoas); {nSemana} pessoas nessa semana."
+    "semanaComparadaSeguintes": "Comparada com as 4 semanas seguintes ({nBase} pessoas); {nSemana} pessoas nessa semana.",
+    "tecnicoParecidas": "Entre pessoas parecidas",
+    "parecidasAviso": "(o assunto não é comparado entre pessoas parecidas na aba; este valor é só de apoio)"
   }
 }
