@@ -19,7 +19,7 @@ De cada 100 pessoas que experimentam o assistente, 24 voltam em até 7 dias. Se 
 
 **Achado 2. Trocar de modelo não mostrou ganho de retorno.** GPT-4 contra GPT-3.5 dá 2,9 pontos a menos, com intervalo de −8,0 a +2,2. Os dados descartam um ganho acima de 2 pontos. A decisão: não justificar um modelo mais caro por retenção. Se a troca vier por qualidade, medir com teste controlado.
 
-**Achado 3. Queda semanal isolada engana.** A maior queda da série, na semana de 01/05/2023, era efeito do início da coleta: parecia 17,1 pontos e caiu para 7,7 quando tratei o começo da base com folga. A semana de 20/11/2023, quando entrou um modelo novo, caiu 4,9 pontos, dentro da variação normal. De 33 semanas testadas, 1 passou do limite; o acaso sozinho produz cerca de 2. A decisão: o alerta do painel só dispara acima da variação normal.
+**Achado 3. Queda semanal isolada engana.** A maior queda da série, na semana de 01/05/2023, era efeito do início da coleta: parecia 17,1 pontos e caiu para 7,7 quando tratei o começo da base com folga. A semana de 20/11/2023, no mês em que o GPT-4 voltou a ser oferecido, caiu 4,9 pontos, dentro da variação normal. De 33 semanas testadas, 1 passou do limite; o acaso sozinho produz cerca de 2. A decisão: o alerta do painel só dispara acima da variação normal.
 
 O que os dados não permitem: provar causa, enxergar efeito menor que 5 pontos e reconhecer a mesma pessoa em outra rede ou outro aparelho.
 
@@ -49,9 +49,9 @@ O retorno por semana varia muito. Nas semanas com amostra suficiente, a faixa de
 
 **Variáveis da primeira experiência.** Modelo, tema, tamanho da pergunta e da resposta, recusa, idioma, dispositivo, período do dia, fim de semana e região. Todas são derivadas na carga (`loader/derivar.py`) e descritas no dicionário do painel.
 
-**Como conferi a classificação por IA.** Rotulei 200 conversas à mão, sem ver a resposta da máquina. As regras de palavras-chave acertavam 81% das recusas e só 37% dos temas. O LLM (Claude Haiku) acertou 92% das recusas e 56% dos temas. Por isso a recusa entra na análise com o rótulo do LLM e o tema fica só como descrição. Essa troca mudou o resultado: com as regras, o efeito da recusa parecia 3,3 pontos e não se distinguia de zero. Detalhe em `docs/validacao_llm.md`.
+**Como conferi a classificação por IA.** Rotulei 200 conversas à mão, sem ver a resposta da máquina. Na marcação de recusa, as regras de palavras-chave acertavam 81% das 200 conversas; o LLM (Claude Haiku) acertou 92%. No tema, 37% e 56%. Como a amostra foi montada com mais casos suspeitos de recusa, o número que vale para a base é o ponderado: de cada 10 recusas que o LLM aponta, cerca de 8 são recusas de fato, e ele encontra cerca de 86 de cada 100. Com só 20 recusas reais na amostra, essa margem é larga. Por isso a recusa entra na análise com o rótulo do LLM e o tema fica só como descrição. Essa troca mudou o resultado: com as regras, o efeito da recusa parecia 3,3 pontos e não se distinguia de zero. Detalhe em `docs/validacao_llm.md`.
 
-**Problemas de qualidade.** 141 perguntas vazias, 93 conversas com texto repetido, 175 IPs que mudam, 56 conversas com dado removido pelos autores e detecção de idioma que erra em pergunta curta. O painel lista cada um com o tratamento. As conversas tóxicas foram removidas na origem, e é nelas que as recusas são mais comuns.
+**Problemas de qualidade.** 141 perguntas vazias, 93 conversas com texto repetido, 175 conversas em que o IP muda no meio, 56 conversas com dado removido pelos autores e detecção de idioma que erra em pergunta curta. O painel lista cada um com o tratamento. As conversas tóxicas foram removidas na origem, e é nelas que as recusas são mais comuns.
 
 **Dados que faltam.** ID de login, versão do produto por data, satisfação declarada e o motivo de a pessoa ter parado.
 
@@ -152,7 +152,7 @@ Com ID de login, refaria tudo com a identidade real; o código recalcula com um 
 
 Usei o Claude, pelo Claude Code, para planejar, escrever código e testes, e um LLM para classificar tema e recusa. A IA propôs opções de definição e de método; eu escolhi, revisei e aprovei cada uma, e respondo pelas conclusões. Conferi o trabalho da IA de três formas: 200 conversas rotuladas por mim, uma base inventada de resposta conhecida e a conferência do bruto com a base.
 
-O que corrigi ou descartei: a primeira versão do cálculo de efeito estimava 7,0 pontos onde o certo era 10,1, e o teste pegou. O classificador por palavras-chave foi descartado depois da validação. Um segundo LLM foi descartado por deixar 40% dos itens sem resposta. A consulta principal levava 12 segundos e passou a 0,33. Mais casos em `docs/conferi_da_ia.md`.
+O que corrigi ou descartei: a primeira versão do cálculo de efeito estimava 7,0 pontos onde o certo era 10,1, e o teste pegou. O classificador por palavras-chave foi descartado depois da validação. Um segundo LLM foi descartado por deixar 40% dos itens sem resposta. Reprovei duas versões do painel por estarem técnicas demais para o cliente e mandei refazer em linguagem leiga. A consulta principal levava 12 segundos e passou a 0,33. Mais casos em `docs/conferi_da_ia.md`.
 
 Foram cerca de **18 horas** minhas, acima das 12 sugeridas, porque rotulei a validação à mão e entreguei o painel completo.
 
