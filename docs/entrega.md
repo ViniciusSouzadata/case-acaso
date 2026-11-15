@@ -41,7 +41,7 @@ A única escolha que move o número de verdade é o que se chama de voltar. As o
 
 ## 2. O que os dados mostram
 
-O uso é muito concentrado. Dos 2.385 IPs, os 24 mais ativos respondem por 41% das conversas, e um só responde por 13,4%. Sem tirar esse tráfego, qualquer média descreveria meia dúzia de robôs.
+O uso é muito concentrado. Dos 2.385 IPs, os 24 mais ativos respondem por 42% das conversas, e um só responde por 13,4%. Sem tirar esse tráfego, qualquer média descreveria meia dúzia de robôs.
 
 As conversas são curtas: 56% têm um único turno. Quem tem 4 ou mais turnos na primeira sessão volta mais: 32,9%, contra 17,2% de quem teve um turno só. Mas isso acontece depois da resposta do assistente. Trato como sinal de interesse, não como fator do assistente.
 
@@ -68,6 +68,8 @@ Diferença na taxa de retorno, em pontos percentuais. O ajustado compara pessoas
 | Resposta com mais de 2.500 caracteres | +7,9 | +0,5 (−6,0 a +7,0) | o bruto enganava |
 | Idioma diferente do da pergunta | +3,0 | +0,1 (−7,7 a +7,9) | não se distingue de zero |
 
+No painel, o tema aparece como comparação direta contra todos os outros temas (−9,2 para conversa pessoal); a base de comparação é outra, por isso o número difere do bruto da tabela.
+
 O efeito da recusa quase não muda quando troco a definição de usuário, a de sessão ou o corte do início da base: fica entre −14,4 e −16,4. As 132 recusas vêm de 131 IPs, então não é um usuário puxando o resultado. Os testes estão em `docs/robustez_recusa.md`.
 
 **Causa ou seleção.** O tamanho da resposta mostra bem o problema: no bruto, resposta mais longa parecia trazer 8 pontos de retorno; comparando pessoas parecidas, sobra quase nada. Era o perfil de quem pergunta, não a resposta. Para modelo e para a troca de modelo padrão em dezembro de 2023, usei um segundo método, que pondera os grupos até ficarem comparáveis, e a leitura foi a mesma. Para a recusa esse segundo método não fecha: com 132 casos não consegui montar um grupo de comparação equilibrado, e digo isso no painel.
@@ -76,7 +78,7 @@ O efeito da recusa quase não muda quando troco a definição de usuário, a de 
 
 ## 4. A semana que caiu
 
-O enunciado pede uma semana e a explicação. Comparei cada semana com 4 semanas de base e separei a diferença em duas partes: mudou quem chegou, ou mudou o comportamento de cada tipo de pessoa.
+O enunciado pede uma semana e a explicação. Comparei cada semana com 4 semanas de base (as 4 anteriores; na de 01/05, as 4 seguintes, porque as anteriores eram o começo da coleta) e separei a diferença em duas partes: mudou quem chegou, ou mudou o comportamento de cada tipo de pessoa.
 
 | Semana | Retorno | Base | Diferença | Quem chegou / comportamento | p |
 |---|---|---|---:|---|---:|
