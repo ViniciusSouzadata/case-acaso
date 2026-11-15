@@ -38,3 +38,9 @@ Regras: `inicio`/`fim` opcionais (padrão = período todo); `fim` exclusivo; int
 
 ## Multi-país (desenho)
 `pais` já é parâmetro e entra na chave de cache; os marts ganham coluna `pais`; fuso por país em `ops.parametros`; a comparação entre países usa taxa padronizada pela composição (mesmo mix) — descrito no documento, não implementado.
+
+
+## Atualização final (painel aprovado em 15/11/2026)
+- `GET /api/achados` devolve também, quando existem: `numero_destaque`, `rotulo_destaque`, `acao_curta`, `vimos_curto`, `limite_curto` e `tecnico` (colunas opcionais de `resultado.achado`, migrações 012 a 014). O texto longo (`evidencia`, `decisao`, `limite`) não mudou.
+- `GET /api/qualidade`: `validacao[].detalhe_json.ponderadas` traz precisão e cobertura da recusa e acurácia do assunto ponderadas pelo estrato da amostra conferida à mão.
+- Telas: "Quantos voltam" (`/`), "O que faz voltar" (`/fatores`) e "Dá para confiar?" (`/dados`); detalhes numa caixa central (`CaixaDetalhe`).

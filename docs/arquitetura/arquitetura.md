@@ -15,7 +15,7 @@ flowchart LR
   B --> H["ops.* (lotes, rejeitados,<br/>reconciliação, parâmetros)"]
   E --> I["API (Next.js)<br/>papel app_ro, só leitura"]
   G --> I
-  I --> J["Telas: Retenção ·<br/>O que faz voltar · Confiança"]
+  I --> J["Telas: Quantos voltam ·<br/>O que faz voltar · Dá para confiar?"]
 ```
 
 Regras que o desenho garante: texto de conversa não entra no Postgres; a aplicação lê só `mart.*` e `resultado.*` com o papel `app_ro`; limiares vêm de `ops.parametros`; toda taxa sai com intervalo e n.
@@ -88,7 +88,7 @@ Imagem: `docs/arquitetura/implantacao-aws.png`.
 O desenho já separa o país como parâmetro (`pais` na API e nas tabelas), então outro país entra como **nova carga no mesmo banco**, não como novo sistema:
 - 1 arquivo bruto por país no S3; o loader recebe o país e grava com a coluna `pais`.
 - Os mesmos `mart.*` e `resultado.*` servem a todos; a API filtra por `pais`.
-- A análise roda por país, com limiares de amostra iguais (vêm de `ops.parametros`), porque amostras menores aparecem como "amostra pequena" em vez de número firme.
+- A análise roda por país, com limiares de amostra iguais (vêm de `ops.parametros`), porque amostras menores aparecem como "pouca gente" em vez de número firme.
 - Cuidados: idioma e fuso horário mudam a definição de "dia"; a taxonomia de temas e as regras de recusa precisam de validação manual por idioma.
 - **Idioma da interface:** os textos das telas já ficam fora do código, em `app/mensagens/pt.json` (lidos por `app/lib/mensagens.ts`); outro idioma é outro arquivo, escolhido pelo país, com números no formato local.
 - **Fuso de cada país:** `fuso_pais` em `ops.parametros` define a semana da coorte, o "dia" e o período do dia; país com mais de um fuso usa o da capital, com a premissa registrada.
@@ -118,9 +118,25 @@ Quatro esquemas no Postgres, cada um com um papel de acesso (`sql/migrations/`, 
 | `resultado` | `decomposicao_resumo`, `decomposicao_semana` | semana / segmento | mix × taxa |
 | `resultado` | `achado`, `problema_qualidade`, `validacao_classificador`, `meta` | achado / problema / classificador | textos e conferências exibidos nas telas |
 
+Colunas do `resultado.achado` além do texto longo (evidência, decisão, limite): `numero_destaque` e `rotulo_destaque` (número grande do cartão), `acao_curta` ("O que fazer" em uma frase), `vimos_curto` e `limite_curto` ("O que vimos" e "Cuidado" em uma frase) e `tecnico` (bloco recolhido "Para conferir (técnico)"). Vêm das migrações 012 (destaque e ação curta), 013 (técnico) e 014 (frases curtas); todas opcionais, então o texto longo aprovado não muda.
+
+O `resultado.validacao_classificador.detalhe_json` guarda, ao lado da matriz de confusão e dos valores por classe, as **métricas ponderadas** (`ponderadas`: precisão e cobertura da recusa e acurácia do assunto). A amostra conferida à mão (200 conversas) foi estratificada por recusa e assunto previstos pelas regras; cada conversa pesa `N do estrato ÷ n do estrato`, e o cartão "Quando a IA aponta recusa, acerta" mostra as ponderadas (as cruas ficam no detalhe técnico).
+
 A aplicação (papel `app_ro`) só tem `SELECT` em `mart.*`, `resultado.*` e, para o rodapé e a tela de confiança, em `ops.lote_carga` e `ops.reconciliacao` (migrações 002 e 020); nada de `stg`.
 
-## 6. Endpoints
+## 6. Telas
+
+Três telas em Next.js (`app/app/`), todas em formato de painel (cabem numa dobra a 1280×720, 1536×647 e 1366×650):
+
+| Rota | Nome | O que mostra |
+|---|---|---|
+| `/` | **Quantos voltam** | a taxa de retorno em 7 dias por mês ou por semana, com margem de erro, e as duas semanas de queda |
+| `/fatores` | **O que faz voltar** | ranking de comparações entre pessoas parecidas, em quatro abas, e três achados para o produto |
+| `/dados` | **Dá para confiar?** | carga, conferências, problemas encontrados nos dados e acerto da IA |
+
+Tudo o que é explicação, definição e método abre numa caixa central (`app/components/CaixaDetalhe.tsx`): cresce do ponto do clique, fecha com Esc ou clique fora, devolve o foco a quem a abriu e respeita "reduzir movimento" do sistema. Os textos das telas ficam em `app/mensagens/pt.json`.
+
+## 7. Endpoints
 
 Todos são `GET`, devolvem `{dados, meta}` (o `meta` traz versão da definição, versão da análise e último lote) e erro padronizado com `request_id`. Código em `app/app/api/`.
 

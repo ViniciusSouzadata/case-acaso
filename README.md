@@ -10,6 +10,8 @@ Não precisa de credencial AWS nem de internet depois do `build`. Copie `.env.ex
 O Docker é só o Docker Engine com o plugin Compose (Docker Desktop **ou** Engine dentro do WSL2). `make` é atalho opcional.
 
 ### Subir do zero (um comando)
+Com 4 GB de memória (ou menos) o comando único pode ser morto no `build` do app: nesse caso use **Subindo em etapas**, logo abaixo. Medido em 15/11/2026, banco vazio, WSL2 com ~2,4 GB: `db` 3 s, `loader` 101 s, `app` 245 s (build incluído), cerca de 6 min no total.
+
 ```
 docker compose up -d --build
 docker compose ps -a
@@ -51,9 +53,9 @@ Depois que o loader termina, o serviço `app` sobe sozinho:
 
 | Endereço | O que é |
 |---|---|
-| <http://localhost:3000/> | Tela 1, Retenção: a taxa de retorno em 7 dias por semana ou mês, com faixa de incerteza |
-| <http://localhost:3000/fatores> | Tela 2, O que faz voltar: comparações entre grupos parecidos, com intervalo e n |
-| <http://localhost:3000/dados> | Tela 3, Confiança nos dados: última carga, conferências e limites |
+| <http://localhost:3000/> | Tela 1, "Quantos voltam": a taxa de retorno em 7 dias por semana ou mês, com margem de erro |
+| <http://localhost:3000/fatores> | Tela 2, "O que faz voltar": comparações entre pessoas parecidas, com margem de erro e n |
+| <http://localhost:3000/dados> | Tela 3, "Dá para confiar?": última carga, conferências e limites |
 | <http://localhost:3000/api/saude> | Verificação de saúde (última carga, versão da definição) |
 
 A API (`/api/retencao/*`, `/api/fatores/*`, `/api/semana/decomposicao`, `/api/achados`, `/api/dicionario`, `/api/qualidade`) devolve `{dados, meta}` e lê só `mart.*` e `resultado.*` com o papel `app_ro`. Nenhum texto de conversa, IP ou user-agent sai pela API nem pela tela. Tempos medidos: `docs/desempenho.md`.
@@ -109,7 +111,9 @@ Remove containers, rede e o volume do banco. A porta do Postgres no host é `POS
 - **Recomeçar do zero:** `docker compose down -v` apaga o volume do banco.
 
 ## Estado
-M1 (base analítica) e M3/M4 (API e três telas) prontos. A subida do zero foi provada em 12/11/2026 num clone limpo do repositório, sem `.env`: `docker compose down -v` e um único `docker compose up -d --build`; o loader terminou com código 0, as três telas e `/api/saude` responderam 200 e o resumo bateu com o da seção "O que aparece no fim". Conferência de layout em 390 px e 1280 px: `docs/capturas_m4/`; checklist do gate: `docs/gate_m4.md`.
+As animações do painel respeitam a opção "reduzir movimento" do sistema.
+
+M1 (base analítica) e M3/M4 (API e três telas) prontos. A subida do zero foi provada em 12/11/2026 num clone limpo do repositório, sem `.env`: `docker compose down -v` e um único `docker compose up -d --build`; o loader terminou com código 0, as três telas e `/api/saude` responderam 200 e o resumo bateu com o da seção "O que aparece no fim". Capturas das três telas do painel final (1280×720): `docs/capturas_m4/`; medida de altura e rolagem em 1280×720, 1536×647, 1366×650 e 390 px: `node scripts/formato_telas.mjs` (app no ar); checklist do gate: `docs/gate_m4.md`.
 
 ## Dados brutos (`data/bruto/`)
 - `wildchat_brasil.parquet`: snapshot do extrato Brasil (`country = 'Brazil'`, 11.621 conversas, ~22 MB) do dataset [allenai/WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M), versão com toxicidade e PII removidas pelos autores. Snapshot gerado em **10/11/2026**. Integridade em `wildchat_brasil.sha256`.
