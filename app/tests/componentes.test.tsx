@@ -22,8 +22,8 @@ describe("regras de confiança (lib/regras)", () => {
   });
   it("formatação em pt-BR", () => {
     expect(formatarPct(0.2386)).toBe("23,9%");
-    expect(formatarPP(4.9)).toBe("+4,9 p.p.");
-    expect(formatarPP(-2.25)).toBe("-2,3 p.p.");
+    expect(formatarPP(4.9)).toBe("+4,9 pontos");
+    expect(formatarPP(-2.25)).toBe("-2,3 pontos");
   });
 });
 
@@ -31,17 +31,17 @@ describe("Numero", () => {
   it("normal: valor, intervalo, n e o ícone i", () => {
     render(<Numero rotulo="Taxa de retorno" valor={0.2386} formato="pct" icInf={0.2219} icSup={0.2562} n={2372} indicador="taxa_retorno_7d" />);
     expect(screen.getByTestId("valor").textContent).toBe("23,9%");
-    expect(screen.getByText(/intervalo de 95%: 22,2% a 25,6%/)).toBeTruthy();
-    expect(screen.getByText("n = 2.372")).toBeTruthy();
+    expect(screen.getByText(/margem de erro: 22,2% a 25,6%/)).toBeTruthy();
+    expect(screen.getByText("2.372 pessoas")).toBeTruthy();
     expect(screen.getByRole("button", { name: /O que é este número/ })).toBeTruthy();
     expect(screen.queryByRole("note")).toBeNull();
   });
 
-  it("amostra pequena: o destaque vira 'amostra pequena (n = X)', sem mostrar a taxa, e o aviso aparece", () => {
+  it("amostra pequena: o destaque vira 'pouca gente (X pessoas)', sem mostrar a taxa, e o aviso aparece", () => {
     render(<Numero rotulo="Taxa" valor={0.1667} formato="pct" icInf={0.06} icSup={0.4} n={12} amostraSuficiente={false} />);
-    expect(screen.getByTestId("valor").textContent).toBe("amostra pequena (n = 12)");
+    expect(screen.getByTestId("valor").textContent).toBe("pouca gente (12 pessoas)");
     expect(screen.queryByText(/16,7%/)).toBeNull();
-    expect(screen.getByRole("note").textContent).toMatch(/poucas pessoas/);
+    expect(screen.getByRole("note").textContent).toMatch(/pouca gente/);
   });
 
   it("coorte imatura: rótulo 'ainda dentro dos 7 dias', nunca um valor", () => {
@@ -52,19 +52,19 @@ describe("Numero", () => {
 
   it("efeito com intervalo cruzando o zero recebe o rótulo", () => {
     render(<Numero rotulo="Efeito" valor={1.2} formato="pp" icInf={-2} icSup={4} n={300} />);
-    expect(screen.getByText(/não dá para distinguir de zero/)).toBeTruthy();
+    expect(screen.getByText(/sem diferença clara/)).toBeTruthy();
   });
 
   it("efeito com intervalo acima de zero não recebe o rótulo", () => {
     render(<Numero rotulo="Efeito" valor={5} formato="pp" icInf={2} icSup={8} n={300} />);
-    expect(screen.queryByText(/não dá para distinguir de zero/)).toBeNull();
+    expect(screen.queryByText(/sem diferença clara/)).toBeNull();
   });
 });
 
 describe("AvisoAmostra e Estado", () => {
   it("o aviso traz o n", () => {
     render(<AvisoAmostra n={7} />);
-    expect(screen.getByRole("note").textContent).toContain("n = 7");
+    expect(screen.getByRole("note").textContent).toContain("7 pessoas");
   });
   it("erro mostra o request_id", () => {
     render(<Estado tipo="erro" mensagem="país ainda não carregado" requestId="req_ab12cd" />);

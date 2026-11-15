@@ -18,6 +18,8 @@ COLUNAS_STG = {
     "tema_origem", "recusa_origem", "lote_id",   # recusa_origem: migração 009 (origem do rótulo de recusa)
 }
 
+pytestmark = pytest.mark.usefixtures("banco_geral")  # nunca no banco da stack no ar
+
 
 @pytest.fixture(autouse=True)
 def banco_limpo():

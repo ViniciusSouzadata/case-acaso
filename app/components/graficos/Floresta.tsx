@@ -21,13 +21,13 @@ export function tituloLinha(fator: string, nivel: string, referencia: string): s
 const faixa = (e: Estimativa) => `${formatarPP(e.efeito)} (${t("numero.ic", { inf: formatarPP(e.inf), sup: formatarPP(e.sup) })})`;
 
 /** Uma linha do gráfico de floresta: ponto + barra de intervalo, linha do zero, frase de leitura e rótulos. */
-export function LinhaDaFloresta({ l }: { l: LinhaFloresta }) {
-  const cor = l.pequena ? "#8a8f98" : "#0072b2";
+export function LinhaDaFloresta({ l, indice = 0 }: { l: LinhaFloresta; indice?: number }) {
+  const cor = l.pequena ? "#8a8f98" : "#6a48eb";
   return (
-    <li className="py-3" data-fator={l.fator} data-nivel={l.nivel}>
+    <li className="entra py-3" style={{ animationDelay: `${Math.min(indice, 14) * 45}ms` }} data-fator={l.fator} data-nivel={l.nivel}>
       <div className="grid gap-1 sm:grid-cols-[15rem_1fr] sm:gap-3">
         <div>
-          <div className="text-sm font-medium text-slate-900">
+          <div className="text-sm font-semibold text-slate-900">
             {tituloLinha(l.fator, l.nivel, l.referencia)}
           </div>
           <div className="text-xs text-slate-600">
@@ -53,7 +53,7 @@ export function LinhaDaFloresta({ l }: { l: LinhaFloresta }) {
             ) : null}
           </div>
 
-          {l.leitura ? <p className="mt-1 text-xs text-slate-800">{l.leitura}</p> : null}
+          {l.leitura ? <p className="mt-1 text-xs text-slate-600">{l.leitura}</p> : null}
 
           {l.pequena ? (
             <p role="note" className="mt-1 text-xs font-medium text-slate-800">
@@ -97,8 +97,8 @@ export function Floresta({ linhas, limite }: { linhas: LinhaFloresta[]; limite: 
   return (
     <div>
       <ul className="divide-y divide-slate-100">
-        {linhas.map((l) => (
-          <LinhaDaFloresta key={l.chave} l={l} />
+        {linhas.map((l, i) => (
+          <LinhaDaFloresta key={l.chave} l={l} indice={i} />
         ))}
       </ul>
       <p className="mt-2 text-xs text-slate-600">

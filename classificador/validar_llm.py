@@ -21,7 +21,7 @@ from pathlib import Path
 
 from analise import validacao as V
 from classificador import openrouter as O
-from classificador.tema import primeira_pergunta
+from classificador.tema import ProvedorRegras, primeira_pergunta
 
 RAIZ = V.RAIZ
 SAIDA = RAIZ / "docs" / "validacao_llm.md"
@@ -59,14 +59,17 @@ def carregar_amostra(snapshot: Path = V.SNAPSHOT):
     humanos = V.ler_rotulos()
     _, padroes = V._padroes_recusa()
     temas = V._ler_seed()
+    regras_tema = ProvedorRegras()
     textos, regras, populacao = {}, {}, Counter()
     for cid, mensagens, resposta in V._conversas_do_bruto(snapshot):
         if cid not in temas:
             continue
-        est = (detectar_recusa(resposta, padroes), temas[cid][0])
+        pergunta = primeira_pergunta(mensagens) or ""
+        # o estrato é a previsão das REGRAS (como na amostragem); o seed de tema hoje mistura regras e LLM e não serve para isso
+        est = (detectar_recusa(resposta, padroes), regras_tema.classificar(pergunta))
         populacao[est] += 1
         if cid in humanos:
-            textos[cid] = ((primeira_pergunta(mensagens) or ""), (resposta or ""))
+            textos[cid] = (pergunta, (resposta or ""))
             regras[cid] = est[::-1]  # (tema, recusa)
     faltam = set(humanos) - set(textos)
     if faltam:

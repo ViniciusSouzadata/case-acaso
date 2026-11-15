@@ -115,13 +115,13 @@ def leitura_efeito(fator: str, nivel: str, referencia: str, efeito: float, inf: 
         return base + " (só descrição: isso acontece depois da primeira resposta, então não mostra o que fez a pessoa voltar)."
     comparacao = f"'{nivel}' contra '{referencia}', {controle}"
     if inf <= 0 <= sup:
-        return (f"{rot}: {comparacao}, não dá para afirmar diferença: com esta quantidade de usuários, "
+        return (f"{rot}: {comparacao}, não dá para afirmar diferença: com esta quantidade de pessoas, "
                 f"o que se vê ({faixa}) pode ser só acaso.")
     sentido = "a mais" if efeito > 0 else "a menos"
     texto = (f"{rot}: {comparacao}, voltaram cerca de {_por_100(efeito)} a cada 100 {sentido} "
              f"(o valor real deve estar {faixa}).")
     if sobrevive_fdr is False:
-        texto += " Como foram comparados muitos fatores ao mesmo tempo, uma diferença assim pode aparecer por acaso."
+        texto += " Como foram comparadas muitas coisas ao mesmo tempo, uma diferença assim pode aparecer por acaso."
     return texto
 
 
@@ -234,7 +234,7 @@ def combinar(brutos: list[dict], ajustados: list[dict]) -> list[dict]:
         elif b["grupo"] == ENGAJAMENTO or b["fator"] == "tema_descritivo":   # só diferença simples, fora do modelo
             l["leitura"] = leitura_efeito(b["fator"], b["nivel"], b["referencia"], b["efeito_bruto_pp"], b["bruto_ic_inf"], b["bruto_ic_sup"], ajustado=False)
         else:
-            l["leitura"] = (f"{ROTULOS.get(b['fator'], b['fator'])}: '{b['nivel']}' tem poucos usuários (n={b['n_nivel']}) e ficou fora do modelo; "
+            l["leitura"] = (f"{ROTULOS.get(b['fator'], b['fator'])}: '{b['nivel']}' tem pouca gente ({b['n_nivel']} pessoas) e ficou fora da comparação; "
                             f"só a diferença simples, sem levar em conta o perfil, é mostrada.")
         linhas.append(l)
     com_p = [l for l in linhas if l["p_valor"] is not None]

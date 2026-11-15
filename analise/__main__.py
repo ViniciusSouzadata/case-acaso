@@ -75,7 +75,7 @@ def main(argv: list[str]) -> int:
         return 0
     if comando == "validacao":
         with psycopg.connect(dsn(), autocommit=True) as conn:
-            for r in validacao.validar(conn):
+            for r in validacao.validar(conn, pesos=validacao.pesos_da_amostra()):
                 print(f"validação de {r['classificador']}: n={r['n']}, acurácia {r['acuracia']:.3f}, kappa {r['kappa']:.3f} ({r['modelo']})")
         return 0
     if comando == "achados":

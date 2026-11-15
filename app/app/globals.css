@@ -1,17 +1,164 @@
 @import "tailwindcss";
 
-/* Paleta de Okabe-Ito: distinguível por quem tem daltonismo (REQ-411). */
+/* Identidade visual (referência de estilo, sem marca): violeta como cor de marca, laranja só como contraste pontual.
+   Dados: violeta = série principal/ajustado, laranja = destaque/negativo, cinzas = base e amostra pequena (REQ-411).
+   Violeta #6a48eb e laranja #ff6c0e são distinguíveis por quem tem daltonismo; o significado nunca depende só da cor
+   (ponto vazado × cheio, hachurado e rótulos continuam). */
 @theme {
-  --color-azul: #0072b2;
-  --color-laranja: #e69f00;
+  --color-azul: #6a48eb;
+  --color-violeta: #6a48eb;
+  --color-violeta-claro: #978df8;
+  --color-violeta-escuro: #583ecb;
+  --color-laranja: #ff6c0e;
   --color-verde: #009e73;
   --color-vermelho: #d55e00;
   --color-roxo: #cc79a7;
   --color-cinza: #8a8f98;
-  --color-fundo: #f8fafc;
+  --color-fundo: #f6f7f9;
+  --color-papel: #fefefe;
+  --color-tinta: #121212;
+}
+
+@theme inline {
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex), ui-monospace, monospace;
 }
 
 body {
   background: var(--color-fundo);
-  color: #0f172a;
+  color: #14161a;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-violeta);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+
+/* Movimento com função, curto e sem laço. Desligado por completo com prefers-reduced-motion. */
+@keyframes entra {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.entra {
+  animation: entra 320ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .entra { animation: none; }
+  button:active:not(:disabled) { transform: none; }
+  * { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}
+
+/* Peças recorrentes das telas. */
+.cartao {
+  background: var(--color-papel);
+  border: 1px solid #e3e0f3;
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgb(18 18 18 / 0.04), 0 8px 24px -12px rgb(40 30 90 / 0.14);
+}
+/* Cartão-herói: um por tela, em degradê violeta com texto branco (contraste mínimo 4,5:1 no extremo mais claro). */
+.cartao-escuro {
+  background: linear-gradient(135deg, #583ecb 0%, #6a48eb 55%, #7b5cf0 100%);
+  border: 0;
+  border-radius: 18px;
+  color: var(--color-papel);
+  box-shadow: 0 10px 28px -12px rgb(106 72 235 / 0.55);
+}
+.titulo-tela {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.125rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-tinta);
+}
+.titulo-tela::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 4px;
+  margin-bottom: 0.9rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-violeta), var(--color-violeta-claro));
+}
+
+/* Formato painel: título curto, sem barra de acento (poupa altura para caber numa dobra). */
+.titulo-painel {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-tinta);
+}
+
+/* Cartão que abre um detalhe: sobe um pouco ao passar o mouse e mostra foco por teclado. */
+.clicavel {
+  cursor: pointer;
+  transition: box-shadow 160ms ease-out;
+}
+.clicavel:hover {
+  box-shadow: 0 10px 26px -10px rgb(106 72 235 / 0.35);
+}
+/* o levantar do hover é feito com mola no componente (motion); aqui só o toque nos botões */
+button:active:not(:disabled) { transform: scale(0.97); }
+button { transition: transform 120ms ease-out; }
+
+/* Esqueleto de carregamento: blocos claros e vazios, sem pulsar (sem animação em laço). */
+.esqueleto {
+  background: #ecebf4;
+  border-radius: 18px;
+}
+.clicavel:focus-visible {
+  outline: 3px solid var(--color-violeta);
+  outline-offset: 2px;
+}
+.cartao-escuro.clicavel:focus-visible {
+  outline-color: var(--color-violeta-claro);
+}
+
+/* Alvo de toque de pelo menos 40 px no celular. */
+@media (max-width: 639px) {
+  .alvo { min-height: 2.5rem; display: inline-flex; align-items: center; }
+}
+
+/* Dentro da caixa de detalhes o cartão não repete borda, sombra nem fundo: um nível só (o espaçamento fica) */
+[role="dialog"] .cartao {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Gráficos: contorno só com teclado, em violeta, 2 px; com o mouse, nenhum */
+.recharts-wrapper:focus:not(:focus-visible),
+.recharts-wrapper :focus:not(:focus-visible) {
+  outline: none;
+}
+.recharts-wrapper:focus-visible,
+.recharts-wrapper :focus-visible {
+  outline: 2px solid var(--color-violeta);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Janela baixa de computador (notebook: ~650 px úteis): tudo cabe numa dobra reduzindo respiros verticais, sem cortar nem encolher texto */
+@media (max-height: 700px) and (min-width: 1024px) {
+  .area-pagina { padding-bottom: 0.25rem; }
+  .pagina > :not(:last-child) { margin-block-end: 0.5rem; }
+  .pagina .cartao,
+  .pagina .cartao-escuro { padding: 0.75rem; }
+  .pagina [data-fator] > button { padding-block: 0.125rem; }
+  .pagina [data-problema] > button { min-height: 2rem; padding-block: 0.25rem; }
 }

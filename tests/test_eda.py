@@ -51,10 +51,10 @@ def test_eda_gera_figuras_com_conclusao_e_problemas_do_discovery(tmp_path, monke
     assert por_inicio("Pergunta vazia")[0] == 141
     assert por_inicio("Conversa sem nenhuma mensagem")[0] == 76
     assert por_inicio("Conteúdo repetido")[0] == 93
-    assert por_inicio("IP muda")[0] == 175
-    assert por_inicio("Conversas do IP mais ativo")[0] == 1557
+    assert por_inicio("Endereço de rede muda")[0] == 175
+    assert por_inicio("Conversas do endereço de rede mais ativo")[0] == 1557
     assert por_inicio("Conversas com dado pessoal")[0] == 56
     assert por_inicio("Conversas tóxicas")[0] == 0
     assert por_inicio("Semanas com queda")[0] >= 2  # 09/10/2023 e 05/02/2024 do discovery
     assert por_inicio("Idioma divergente em pergunta curta")[0] > 0
-    assert por_inicio("Conversas do IP mais ativo")[1] == pytest.approx(1557 / 11621, abs=1e-5)
+    assert por_inicio("Conversas do endereço de rede mais ativo")[1] == pytest.approx(1557 / 11621, abs=1e-5)

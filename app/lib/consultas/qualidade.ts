@@ -6,10 +6,16 @@ export interface Achado {
   evidencia: string;
   decisao: string;
   limite: string;
+  numero_destaque: string | null;
+  rotulo_destaque: string | null;
+  acao_curta: string | null;
+  tecnico: string | null;
+  vimos_curto: string | null;
+  limite_curto: string | null;
 }
 
 export async function achados() {
-  return consultar<Achado>(`SELECT ordem, titulo, evidencia, decisao, limite FROM resultado.achado ORDER BY ordem`);
+  return consultar<Achado>(`SELECT ordem, titulo, evidencia, decisao, limite, numero_destaque, rotulo_destaque, acao_curta, tecnico, vimos_curto, limite_curto FROM resultado.achado ORDER BY ordem`);
 }
 
 export interface LoteQualidade {

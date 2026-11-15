@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 
 import psycopg
+import pytest
 
 from loader import migrar
 
@@ -68,6 +69,7 @@ def test_verificar_pega_parametro_novo_ou_removido():
 
 
 # ------------------------------------------------------------------ o banco do compose
+@pytest.mark.usefixtures("banco_geral")  # banco descartável, não o da stack no ar
 def test_parametros_do_banco_batem_com_a_referencia():
     migrar.migrar()
     with psycopg.connect(migrar.dsn()) as c:

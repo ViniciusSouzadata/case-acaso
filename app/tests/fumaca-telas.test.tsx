@@ -40,12 +40,12 @@ describe.skipIf(!temBanco)("fumaça das telas contra o banco real", () => {
     // a frase vem de outra requisição que o cartão: espera por ela, em vez de supor que já chegou
     await waitFor(() => expect(screen.getByTestId("frase-resposta").textContent?.length).toBeGreaterThan(20), { timeout: 20000 });
 
-    const botoes = screen.getAllByRole("button", { name: /O que é este número/i });
+    const botoes = screen.getAllByRole("button", { name: /Voltam em até 7 dias/i });
     expect(botoes.length).toBeGreaterThan(0);
     fireEvent.click(botoes[0]!);
     const dialogo = await screen.findByRole("dialog");
-    await waitFor(() => expect(dialogo.textContent).toMatch(/Defini|Fórmula/i), { timeout: 20000 });
-    expect(dialogo.querySelector("pre")).not.toBeNull();
+    await waitFor(() => expect(dialogo.querySelector("details")).not.toBeNull(), { timeout: 20000 }); // fórmula e fonte ficam na parte técnica
+    expect(dialogo.textContent).toMatch(/A conta/i);
     semDadoSensivel();
   }, 60000);
 
@@ -53,15 +53,15 @@ describe.skipIf(!temBanco)("fumaça das telas contra o banco real", () => {
     const { default: Pagina } = await import("@/app/fatores/page");
     render(<Pagina />);
     await waitFor(() => expect(document.querySelectorAll("[data-fator]").length).toBeGreaterThan(0), { timeout: 20000 });
-    await waitFor(() => expect(screen.getByTestId("frase-resposta").textContent).toMatch(/comparações/), { timeout: 20000 });
+    await waitFor(() => expect(screen.getByTestId("frase-resposta").textContent).toMatch(/fator|pesa|recusa/i), { timeout: 20000 });
     semDadoSensivel();
   }, 60000);
 
   it("Tela 3 (Confiança nos dados): carga e problemas reais, quadro 'nunca mostra'", async () => {
     const { default: Pagina } = await import("@/app/dados/page");
     render(<Pagina />);
-    await waitFor(() => expect(document.body.textContent).toMatch(/linhas lidas/), { timeout: 20000 });
-    await waitFor(() => expect(document.body.textContent).toContain("O texto de nenhuma conversa"), { timeout: 20000 });
+    await waitFor(() => expect(document.body.textContent).toMatch(/Conversas lidas/), { timeout: 20000 });
+    await waitFor(() => expect(document.body.textContent).toContain("Texto de nenhuma conversa"), { timeout: 20000 });
     await waitFor(() => expect(screen.getByTestId("frase-confianca").textContent?.length).toBeGreaterThan(20), { timeout: 20000 });
     semDadoSensivel();
   }, 60000);

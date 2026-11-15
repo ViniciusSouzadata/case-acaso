@@ -166,7 +166,7 @@ def analisar(df: pd.DataFrame, grupos: np.ndarray, trat: Tratamento, n_min: int,
     if not comparavel:
         rot = ROTULOS.get(trat.nome, trat.nome)
         linha["leitura"] = (f"{rot}: comparando '{trat.nivel}' com '{trat.referencia}', mesmo ajustando, os dois grupos continuam diferentes "
-                            f"demais em perfil para uma comparação justa (um deles tem poucos usuários); por isso este resultado não é "
+                            f"demais em perfil para uma comparação justa (um deles tem pouca gente); por isso este resultado não é "
                             f"comparável e não é mostrado. O efeito depois de levar em conta o perfil, pelo outro método, continua na tabela.")
         return linha, balanco
 

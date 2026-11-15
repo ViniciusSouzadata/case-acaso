@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { PontosSensibilidade } from "@/components/graficos/PontosSensibilidade";
 import { montarCascata, pontosSensibilidade, resumoSensibilidade, type ResumoSemanaApi, type SensibilidadeApi } from "@/lib/graficos";
@@ -58,11 +58,13 @@ describe("sensibilidade", () => {
     expect(resumoSensibilidade(sens)).toEqual({ min: 0.1686, max: 0.2386 });
   });
 
-  it("mostra nome simples, intervalo e diferença em relação à oficial", () => {
+  it("mostra nome curto e a taxa em cada linha; a explicação só aparece ao clicar", () => {
     render(<PontosSensibilidade linhas={sens} />);
-    expect(screen.getByText("Voltou = em outro dia")).toBeTruthy();
-    expect(screen.getByText(/-7,0 p\.p\. em relação à oficial/)).toBeTruthy();
-    expect(screen.getByText(/é a definição oficial/)).toBeTruthy();
+    const linha = screen.getByText("Voltou = em outro dia").closest("button")!;
+    expect(linha.textContent).toContain("16,9%");
+    expect(screen.queryByText(/Só conta como voltar/)).toBeNull();
+    fireEvent.click(linha);
+    expect(screen.getByText(/Só conta como voltar/)).toBeTruthy();
   });
 });
 

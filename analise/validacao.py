@@ -209,7 +209,29 @@ def _versoes(caminho: Path = PREVISOES) -> dict[str, str]:
         return {l["classificador"]: l["versao"] for l in csv.DictReader(f)}
 
 
-def validar(conn, rotulos: Path = ROTULOS, previsoes: Path = PREVISOES) -> list[dict]:
+def pesos_da_amostra(snapshot: Path = SNAPSHOT) -> dict[int, float] | None:
+    """Peso de cada uma das 200 conversas = N_estrato / n_estrato (a amostra foi estratificada pela previsão das regras).
+    Lê só agregados do snapshot; devolve None se o snapshot não estiver disponível."""
+    if not Path(snapshot).is_file():
+        return None
+    sys.path.insert(0, str(RAIZ))
+    from classificador import validar_llm as VL
+
+    humanos, _, regras, populacao = VL.carregar_amostra(snapshot)
+    return VL.pesos_por_estrato({i: regras[i][::-1] for i in humanos}, populacao)  # estrato = (recusa prevista, tema previsto)
+
+
+def metricas_ponderadas(nome: str, humano: dict[int, str], maquina: dict[int, str], peso: dict[int, float]) -> dict:
+    """Estimativa para a população das métricas de um classificador (recusa: precisão e revocação da classe 'sim'; tema: acurácia)."""
+    from classificador import validar_llm as VL
+
+    if nome == "recusa":
+        p, r = VL.precisao_revocacao_ponderadas({i: v == "sim" for i, v in humano.items()}, {i: v == "sim" for i, v in maquina.items()}, peso)
+        return {"precisao_recusa": None if p is None else round(p, 4), "revocacao_recusa": None if r is None else round(r, 4)}
+    return {"acuracia": round(VL.acuracia_ponderada(humano, maquina, peso), 4)}
+
+
+def validar(conn, rotulos: Path = ROTULOS, previsoes: Path = PREVISOES, pesos: dict[int, float] | None = None) -> list[dict]:
     """Compara os rótulos do Vinícius com CADA classificador nas 200 completas e grava em resultado.validacao_classificador.
 
     Uma linha por (tipo, classificador): `classificador` = 'tema' ou 'recusa'; `modelo` = 'regras' ou 'openrouter:<modelo>'.
@@ -228,8 +250,11 @@ def validar(conn, rotulos: Path = ROTULOS, previsoes: Path = PREVISOES) -> list[
         v_tema, _, v_rec = versoes[origem].partition("|")
         for nome, pos, versao in (("tema", 0, v_tema), ("recusa", 1, v_rec or v_tema)):
             m = resumo_metricas([humanos[i][pos] for i in ids], [prev[origem][i][pos] for i in ids])
+            detalhe = {"matriz_confusao": m["matriz_confusao"], "por_classe": m["por_classe"]}
+            if pesos:
+                detalhe["ponderadas"] = metricas_ponderadas(nome, {i: humanos[i][pos] for i in ids}, {i: prev[origem][i][pos] for i in ids}, pesos)
             resultados.append({"classificador": nome, "n": m["n"], "acuracia": m["acuracia"], "kappa": m["kappa"],
-                               "detalhe_json": json.dumps({"matriz_confusao": m["matriz_confusao"], "por_classe": m["por_classe"]}, ensure_ascii=False),
+                               "detalhe_json": json.dumps(detalhe, ensure_ascii=False),
                                "versao_prompt": versao, "modelo": origem if origem != "regras" else f"regras:{v_tema}" if nome == "tema" else "regras"})
     cols = ["classificador", "n", "acuracia", "kappa", "detalhe_json", "versao_prompt", "modelo"]
     substituir(conn, "validacao_classificador", cols, [[r[c] for c in cols] for r in resultados])

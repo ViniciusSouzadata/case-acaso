@@ -5,6 +5,8 @@ import pytest
 
 from loader import migrar
 
+pytestmark = pytest.mark.usefixtures("banco_geral")  # nunca no banco da stack no ar
+
 
 def _dsn(usuario: str, senha: str) -> str:
     return (
@@ -14,7 +16,7 @@ def _dsn(usuario: str, senha: str) -> str:
 
 
 @pytest.fixture(scope="module", autouse=True)
-def banco_migrado():
+def banco_migrado(banco_geral):
     migrar.migrar()
 
 

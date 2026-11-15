@@ -159,6 +159,14 @@ export const achadoSaida = z.strictObject({
   evidencia: z.string(),
   decisao: z.string(),
   limite: z.string(),
+  // opcionais (migração 012): cartão curto da Tela 2
+  numero_destaque: z.string().nullable(),
+  rotulo_destaque: z.string().nullable(),
+  acao_curta: z.string().nullable(),
+  tecnico: z.string().nullable(),
+  // opcionais (migração 014): painel curto do achado
+  vimos_curto: z.string().nullable(),
+  limite_curto: z.string().nullable(),
 });
 
 export const qualidadeSaida = z.strictObject({

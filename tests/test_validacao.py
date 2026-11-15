@@ -1,5 +1,6 @@
 """T-205b: kappa contra valor de referência, métricas, amostra estratificada, anonimização e gravação da validação."""
 import csv
+import json
 from pathlib import Path
 
 import psycopg
@@ -128,3 +129,43 @@ def test_validar_exige_previsoes_para_todas_as_rotuladas(tmp_path):
     prev.write_text("conversa_id,classificador,versao,tema,recusa\n1,regras,1|1,programação/TI,false\n", encoding="utf-8")
     with pytest.raises(ValueError, match="não cobrem"):
         validacao.validar(None, rot, prev)
+
+
+@pytest.mark.usefixtures("usar_real")
+def test_validar_grava_as_metricas_ponderadas_no_detalhe(tmp_path):
+    """Com pesos, o detalhe_json traz as ponderadas ao lado das cruas (recusa: precisão/revocação; tema: acurácia)."""
+    ids = list(range(2000, 2008))
+    rot, prev = tmp_path / "rot.csv", tmp_path / "prev.csv"
+    humano_recusa = [True, True, False, False, False, False, False, False]
+    with rot.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(validacao.CABECALHO_ROTULOS)
+        for cid, h in zip(ids, humano_recusa):
+            w.writerow([cid, "programação/TI", "sim" if h else "não"])
+    maquina_recusa = [True, False, True, False, False, False, False, False]  # acerta 1 de 2 recusas; aponta 2, 1 certa
+    with prev.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["conversa_id", "classificador", "versao", "tema", "recusa"])
+        for cid, m in zip(ids, maquina_recusa):
+            w.writerow([cid, "openrouter:x/y", "or-1", "programação/TI", "true" if m else "false"])
+    peso = {cid: (1.0 if i < 4 else 3.0) for i, cid in enumerate(ids)}
+    with psycopg.connect(dsn(), autocommit=True) as c:
+        r = validacao.validar(c, rot, prev, pesos=peso)
+    rec = next(x for x in r if x["classificador"] == "recusa")
+    pond = json.loads(rec["detalhe_json"])["ponderadas"]
+    # verdadeiros positivos: id0 (peso 1); previstos: id0 e id2 (1 + 1); reais: id0 e id1 (1 + 1)
+    assert pond == {"precisao_recusa": pytest.approx(0.5), "revocacao_recusa": pytest.approx(0.5)}
+    assert "por_classe" in json.loads(rec["detalhe_json"])  # as cruas continuam lá
+    tema = next(x for x in r if x["classificador"] == "tema")
+    assert json.loads(tema["detalhe_json"])["ponderadas"] == {"acuracia": 1.0}
+
+
+@pytest.mark.skipif(not validacao.SNAPSHOT.is_file(), reason="snapshot do WildChat não está montado")
+def test_ponderadas_reproduzem_os_valores_do_documento():
+    """Com os rótulos versionados e o snapshot: a recusa do Haiku 5.5 dá precisão 0,811 e revocação 0,861 (docs/validacao_llm.md)."""
+    pesos = validacao.pesos_da_amostra()
+    humanos = validacao.ler_rotulos()
+    prev = validacao.ler_previsoes()["openrouter:anthropic/claude-haiku-5.5"]
+    m = validacao.metricas_ponderadas("recusa", {i: humanos[i][1] for i in humanos}, {i: prev[i][1] for i in humanos}, pesos)
+    assert m["precisao_recusa"] == pytest.approx(0.811, abs=0.001)
+    assert m["revocacao_recusa"] == pytest.approx(0.861, abs=0.001)
