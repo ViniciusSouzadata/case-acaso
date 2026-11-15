@@ -3,6 +3,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { afterEach, describe, expect, it } from "vitest";
 import { CaixaDetalhe } from "@/components/CaixaDetalhe";
+import { DetalheFator } from "@/components/DetalheFator";
+import { prepararFloresta, type EfeitoApi } from "@/lib/floresta";
 
 afterEach(cleanup);
 
@@ -84,5 +86,30 @@ describe("CaixaDetalhe — caixa central que abre ao clicar", () => {
     expect(screen.getByRole("dialog").className).toContain("max-w-[860px]");
     fireEvent.keyDown(window, { key: "Escape" });
     expect(document.body.style.overflow).not.toBe("hidden");
+  });
+});
+
+describe("pedido 20", () => {
+  it("o fundo escurecido é filho direto do body (cobre a tela inteira, acima de cabeçalho e rodapé)", () => {
+    render(<Exemplo />);
+    fireEvent.click(screen.getByRole("button", { name: "Abrir detalhe" }));
+    expect(screen.getByTestId("caixa-fundo").parentElement).toBe(document.body);
+    expect(screen.getByTestId("caixa-fundo").className).toContain("fixed inset-0");
+  });
+
+  const ef = (fator: string, nivel: string, aj: number, fdr: boolean): EfeitoApi => ({
+    fator, nivel, referencia: "y", grupo: "assistente", n_nivel: 300, n_referencia: 2000, taxa_nivel: 0.2, taxa_referencia: 0.25,
+    efeito_bruto_pp: aj, bruto_ic_inf: aj - 4, bruto_ic_sup: aj + 4, efeito_ajustado_pp: aj, ajustado_ic_inf: aj - 4, ajustado_ic_sup: aj + 4,
+    p_valor: 0.01, significativo_fdr: fdr, e_value: 1.2, metodo: "logit_ame", amostra_suficiente: true, leitura: null, ordem: null,
+  });
+  it("barra do primeiro grupo: laranja só quando o selo é 'diferença real'", () => {
+    const real = prepararFloresta([ef("recusa", "sim", -16, true)], "assistente").linhas[0]!;
+    const semDif = prepararFloresta([{ ...ef("modelo_familia", "gpt-4", 0.3, false), ajustado_ic_inf: -4, ajustado_ic_sup: 4 }], "assistente").linhas[0]!;
+    const a = render(<DetalheFator l={real} />);
+    expect(a.container.querySelector(".bg-laranja")).not.toBeNull();
+    a.unmount();
+    const b = render(<DetalheFator l={semDif} />);
+    expect(b.container.querySelector(".bg-laranja")).toBeNull();
+    expect(b.container.querySelector(".bg-violeta-claro")).not.toBeNull();
   });
 });

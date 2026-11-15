@@ -19,11 +19,13 @@
     "n": "{n} pessoas",
     "info": "O que é este número?",
     "amostraPequena": "pouca gente ({n} pessoas)",
-    "semValor": "sem valor"
+    "semValor": "sem valor",
+    "pessoasPouca": "{n} pessoas · pouca gente"
   },
   "amostra": {
     "titulo": "Pouca gente",
-    "explicacao": "Há pouca gente neste grupo ({n} pessoas). Com tão poucas, o resultado muda muito de um dia para o outro, por isso não mostramos como número firme."
+    "explicacao": "Há pouca gente neste grupo ({n} pessoas). Com tão poucas, o resultado muda muito de um dia para o outro, por isso não mostramos como número firme.",
+    "dica": "Com tão pouca gente o número varia muito."
   },
   "imatura": {
     "rotulo": "ainda dentro dos 7 dias",

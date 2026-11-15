@@ -9,13 +9,14 @@ export function DicaCoorte({ linha, clicavel = false }: { linha: LinhaGrafico; c
   return (
     <div className="max-w-[240px] rounded-lg border border-slate-200 bg-papel p-2 text-xs shadow-md">
       <div className="font-medium">{linha.rotulo}</div>
-      <div>{t("numero.n", { n: formatarInt(linha.novos) })}</div>
+      {pequena && !ainda ? null : <div>{t("numero.n", { n: formatarInt(linha.novos) })}</div>}
       {ainda ? (
         <div>{t("imatura.rotulo")}. {t("imatura.explicacao")}</div>
       ) : pequena ? (
-        <div>
-          {t("numero.amostraPequena", { n: formatarInt(linha.novos) })}. {t("amostra.explicacao", { n: formatarInt(linha.novos) })}
-        </div>
+        <>
+          <div>{t("numero.pessoasPouca", { n: formatarInt(linha.novos) })}</div>
+          <div>{t("amostra.dica")}</div>
+        </>
       ) : (
         <div>
           {formatarPct(linha.taxaFracao)} ({t("painel.margemErro", { inf: formatarPct(linha.icInf), sup: formatarPct(linha.icSup) })})

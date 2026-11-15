@@ -101,8 +101,10 @@ describe("dica do ponto", () => {
   const linhas = prepararCoortes(coortes, "semana");
   it("amostra pequena: a dica explica", () => {
     render(<DicaCoorte linha={linhas[2]!} />);
-    expect(screen.getByText(/pouca gente \(12 pessoas\)/)).toBeTruthy();
-    expect(screen.getByText(/pouca gente/)).toBeTruthy();
+    // três linhas curtas: período / "12 pessoas · pouca gente" / uma frase; nada repetido
+    expect(screen.getByText("12 pessoas · pouca gente")).toBeTruthy();
+    expect(screen.getByText("Com tão pouca gente o número varia muito.")).toBeTruthy();
+    expect(screen.queryByText(/Há pouca gente neste grupo/)).toBeNull();
   });
   it("imatura: a dica diz que ainda não é uma queda", () => {
     render(<DicaCoorte linha={linhas[3]!} />);

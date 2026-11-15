@@ -133,3 +133,22 @@ button { transition: transform 120ms ease-out; }
 @media (max-width: 639px) {
   .alvo { min-height: 2.5rem; display: inline-flex; align-items: center; }
 }
+
+/* Dentro da caixa de detalhes o cartão não repete borda, sombra nem fundo: um nível só (o espaçamento fica) */
+[role="dialog"] .cartao {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Gráficos: contorno só com teclado, em violeta, 2 px; com o mouse, nenhum */
+.recharts-wrapper:focus:not(:focus-visible),
+.recharts-wrapper :focus:not(:focus-visible) {
+  outline: none;
+}
+.recharts-wrapper:focus-visible,
+.recharts-wrapper :focus-visible {
+  outline: 2px solid var(--color-violeta);
+  outline-offset: 2px;
+  border-radius: 8px;
+}

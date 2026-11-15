@@ -3,7 +3,7 @@
 import { CampoTecnico, Frases, Tecnico } from "@/components/painel/Blocos";
 import type { Estimativa, LinhaFloresta } from "@/lib/floresta";
 import { t } from "@/lib/mensagens";
-import { fraseResultado, fraseVeredito, rotulosGrupos } from "@/lib/painel";
+import { seloDaLinha, fraseResultado, fraseVeredito, rotulosGrupos } from "@/lib/painel";
 import { formatarInt, formatarPP } from "@/lib/regras";
 
 const faixaTecnica = (e: Estimativa) => `${formatarPP(e.efeito)} (${t("numero.ic", { inf: formatarPP(e.inf), sup: formatarPP(e.sup) })})`;
@@ -11,12 +11,14 @@ const aCemInt = (x: number) => String(Math.round(x * 100));
 
 /** Duas barras: quantos de cada 100 voltaram em cada grupo, com o tamanho dos grupos embaixo. Monta dos números da rota, não de texto pronto. */
 function DuasBarras({ l }: { l: LinhaFloresta }) {
+  // laranja é só para "diferença real"; nos demais, o grupo é violeta forte e a comparação violeta clara
+  const real = seloDaLinha(l) === "sustenta";
   if (l.taxaNivel === null || l.taxaReferencia === null) return null;
   const [a, b] = rotulosGrupos(l);
   const maximo = Math.max(l.taxaNivel, l.taxaReferencia, 0.0001);
   const linhas = [
-    { nome: a, taxa: l.taxaNivel, n: l.nNivel, cor: "bg-laranja" },
-    { nome: b, taxa: l.taxaReferencia, n: l.nReferencia, cor: "bg-violeta" },
+    { nome: a, taxa: l.taxaNivel, n: l.nNivel, cor: real ? "bg-laranja" : "bg-violeta" },
+    { nome: b, taxa: l.taxaReferencia, n: l.nReferencia, cor: real ? "bg-violeta" : "bg-violeta-claro" },
   ];
   return (
     <div className="space-y-2" data-testid="duas-barras">
