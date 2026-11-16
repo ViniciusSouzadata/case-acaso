@@ -20,7 +20,12 @@ RAIZ = Path(__file__).resolve().parent.parent
 # Prefixos/segmentos que não podem aparecer no zip.
 PROIBIDOS_PREFIXO = ("data/raw/", "data/interim/", ".venv/", "dist/")
 PROIBIDOS_SEGMENTO = ("node_modules", ".next", "__pycache__", ".git")
-OBRIGATORIOS = ("README.md", "docker-compose.yml", "data/bruto/wildchat_brasil.parquet")
+# Notas internas de planejamento: ficam no git, mas não vão na entrega.
+INTERNOS = (
+    ".specs/project/STATE.md", ".specs/project/STATE-app.md",
+    ".specs/project/PLANEJADOR-NOTAS.md", ".specs/project/HANDOFF.md",
+)
+OBRIGATORIOS = ("README.md", "docker-compose.yml", "data/bruto/wildchat_brasil.parquet", "docs/entrega.pdf", ".env.example")
 
 
 def violacoes(nomes: list[str]) -> list[str]:
@@ -29,7 +34,7 @@ def violacoes(nomes: list[str]) -> list[str]:
     for n in nomes:
         partes = n.split("/")
         base = partes[-1]
-        if n.startswith(PROIBIDOS_PREFIXO) or any(p in PROIBIDOS_SEGMENTO for p in partes):
+        if n in INTERNOS or n.startswith(PROIBIDOS_PREFIXO) or any(p in PROIBIDOS_SEGMENTO for p in partes):
             ruins.append(n)
         elif base == ".env" or (base.startswith(".env.") and base != ".env.example"):
             ruins.append(n)
@@ -47,7 +52,7 @@ def main() -> int:
     saida = (RAIZ / a.saida).resolve()
     saida.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(
-        ["git", "archive", "--format=zip", "--prefix=case_acaso/", "-o", str(saida), a.ref],
+        ["git", "archive", "--format=zip", "--prefix=case_acaso/", "-o", str(saida), a.ref, "--", ".", *[f":(exclude){i}" for i in INTERNOS]],
         cwd=RAIZ, check=True,
     )
 
