@@ -13,6 +13,7 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
+import matplotlib.dates as mdates  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import psycopg  # noqa: E402
@@ -28,9 +29,39 @@ MAX_FIGURAS = 6
 # desta fração da mediana das semanas vizinhas (até 4 antes e 4 depois). A 1ª e a última semana da base são parciais e ficam fora.
 FRACAO_SEMANA_ANOMALA = 0.5
 
-COR = "#2b6cb0"
-COR_DESTAQUE = "#c05621"
-COR_CINZA = "#a0aec0"
+# Identidade do painel (app/app/globals.css): violeta = série principal, laranja = destaque, cinza = amostra pequena.
+COR = "#6a48eb"
+COR_CLARA = "#978df8"
+COR_DESTAQUE = "#ff6c0e"
+COR_CINZA = "#8a8f98"
+COR_TINTA = "#121212"
+COR_GRADE = "#e6e7ec"
+COR_FAIXAS = ["#f1eefe", "#f6f7f9", "#f1eefe", "#f6f7f9"]  # eras de modelo: tons bem claros, alternados
+TAMANHO = (5, 3.75)  # 4:3; impressa com ~55 mm de largura no PDF, por isso a letra é grande
+FONTE = 12
+
+NOMES_IDIOMA = {
+    "Portuguese": "Português", "English": "Inglês", "Spanish": "Espanhol", "French": "Francês", "German": "Alemão",
+    "Italian": "Italiano", "Russian": "Russo", "Chinese": "Chinês", "Japanese": "Japonês", "Korean": "Coreano",
+    "Arabic": "Árabe", "Finnish": "Finlandês", "Swedish": "Sueco", "Hindi": "Hindi", "Indonesian": "Indonésio", "Ukrainian": "Ucraniano", "Hebrew": "Hebraico", "Vietnamese": "Vietnamita", "Greek": "Grego", "Turkish": "Turco", "Dutch": "Holandês", "Polish": "Polonês", "Latin": "Latim",
+}
+
+
+def _estilo() -> None:
+    """Visual do painel: fundo branco, só eixo de baixo e da esquerda em cinza-claro, grade horizontal fina, letra grande."""
+    plt.rcParams.update({
+        "figure.facecolor": "white", "axes.facecolor": "white", "savefig.facecolor": "white",
+        "font.family": "sans-serif", "font.size": FONTE, "text.color": COR_TINTA,
+        "axes.edgecolor": COR_GRADE, "axes.linewidth": 1.0, "axes.spines.top": False, "axes.spines.right": False,
+        "axes.labelcolor": COR_CINZA, "axes.labelsize": FONTE, "axes.titlesize": FONTE, "axes.grid": True, "axes.grid.axis": "y",
+        "axes.axisbelow": True, "grid.color": COR_GRADE, "grid.linewidth": 0.8,
+        "xtick.color": COR_CINZA, "ytick.color": COR_CINZA, "xtick.labelsize": FONTE - 1, "ytick.labelsize": FONTE - 1,
+        "xtick.major.size": 0, "ytick.major.size": 0, "legend.fontsize": FONTE - 2, "legend.frameon": False,
+    })
+
+
+def _nome_idioma(x: str) -> str:
+    return NOMES_IDIOMA.get(x, x)
 
 
 def _pct(x: float, casas: int = 1) -> str:
@@ -76,8 +107,7 @@ def _eras(conn):
 # ----------------------------------------------------------------------------------------------- figuras
 def _salvar(fig, nome: str) -> str:
     PASTA_FIGURAS.mkdir(parents=True, exist_ok=True)
-    fig.tight_layout()
-    fig.savefig(PASTA_FIGURAS / nome, dpi=130)
+    fig.savefig(PASTA_FIGURAS / nome, dpi=240)
     plt.close(fig)
     return nome
 
@@ -87,19 +117,18 @@ def fig_volume(conn) -> tuple[str, str]:
     semanas = [d[0] for d in dados]
     vol = [int(d[1]) for d in dados]
     anom = semanas_anomalas(vol)
-    fig, ax = plt.subplots(figsize=(9, 4))
-    cores = ["#bee3f8", "#fefcbf", "#fed7d7", "#c6f6d5"]
+    fig, ax = plt.subplots(figsize=TAMANHO, layout="constrained")
     fim_base = semanas[-1]
-    for (era, ini, fim), cor in zip(_eras(conn), cores):
-        ax.axvspan(ini, fim or fim_base, color=cor, alpha=0.6, lw=0)
-        ax.text(ini, max(vol) * 1.02, era.split(" ")[0], fontsize=7, va="bottom")
-    ax.plot(semanas, vol, color=COR, lw=1.6)
-    ax.scatter([semanas[i] for i in anom], [vol[i] for i in anom], color=COR_DESTAQUE, zorder=3, label="semana com queda forte")
-    ax.set_ylim(0, max(vol) * 1.12)
+    for (_era, ini, fim), cor in zip(_eras(conn), COR_FAIXAS):
+        ax.axvspan(ini, fim or fim_base, color=cor, lw=0)
+    ax.plot(semanas, vol, color=COR, lw=2.2)
+    ax.scatter([semanas[i] for i in anom], [vol[i] for i in anom], color=COR_DESTAQUE, s=40, zorder=3, label="queda forte")
+    ax.set_ylim(0, max(vol) * 1.05)
     ax.set_ylabel("conversas por semana")
-    ax.set_title("Volume semanal de conversas (faixas = eras de oferta de modelo)", fontsize=10)
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=6))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%y"))
     if anom:
-        ax.legend(fontsize=8, loc="upper right")
+        ax.legend(loc="upper right")
     nome = _salvar(fig, "01_volume_semanal.png")
     med = float(np.median(vol[1:-1]))
     quedas = "; ".join(f"{semanas[i].strftime('%d/%m/%Y')} ({vol[i]} conversas)" for i in anom) or "nenhuma"
@@ -115,13 +144,12 @@ def fig_concentracao_ip(conn) -> tuple[str, str]:
     n_ips, total = len(cont), sum(cont)
     acum = np.cumsum(cont) / total
     x = np.arange(1, n_ips + 1) / n_ips
-    fig, ax = plt.subplots(figsize=(6.5, 4))
-    ax.plot(x * 100, acum * 100, color=COR, lw=2)
-    ax.plot([0, 100], [0, 100], color=COR_CINZA, ls="--", lw=1, label="se todos os IPs tivessem o mesmo volume")
-    ax.set_xlabel("% dos IPs (dos mais para os menos ativos)")
+    fig, ax = plt.subplots(figsize=TAMANHO, layout="constrained")
+    ax.plot(x * 100, acum * 100, color=COR, lw=2.6)
+    ax.plot([0, 100], [0, 100], color=COR_CINZA, ls="--", lw=1.2, label="todos iguais")
+    ax.set_xlabel("% dos IPs, dos mais ativos")
     ax.set_ylabel("% acumulado das conversas")
-    ax.set_title("Poucos IPs concentram boa parte das conversas", fontsize=10)
-    ax.legend(fontsize=8, loc="lower right")
+    ax.legend(loc="lower right")
     nome = _salvar(fig, "02_concentracao_ip.png")
     top1 = max(1, round(n_ips * 0.01))
     txt = (f"Há {_fmt(n_ips)} IPs distintos; o 1% mais ativo ({top1} IPs) responde por {_pct(participacao_topo(cont, top1), 0)} das "
@@ -140,15 +168,17 @@ def fig_retorno_semanal(conn) -> tuple[str, str]:
     sup = np.array([float(r[4]) for r in linhas])
     ok = np.array([bool(r[6]) for r in linhas])
     mm4 = [float(r[5]) if r[5] is not None else np.nan for r in linhas]
-    fig, ax = plt.subplots(figsize=(9, 4))
+    fig, ax = plt.subplots(figsize=TAMANHO, layout="constrained")
     ax.errorbar([p for p, o in zip(per, ok) if o], taxa[ok] * 100,
-                yerr=[(taxa - inf)[ok] * 100, (sup - taxa)[ok] * 100], fmt="o", ms=3, color=COR, ecolor="#bee3f8", label="semana (IC 95%)")
+                yerr=[(taxa - inf)[ok] * 100, (sup - taxa)[ok] * 100], fmt="o", ms=4, color=COR, ecolor=COR_CLARA,
+                elinewidth=1.2, alpha=0.9, label="semana")
     ax.errorbar([p for p, o in zip(per, ok) if not o], taxa[~ok] * 100, yerr=[(taxa - inf)[~ok] * 100, (sup - taxa)[~ok] * 100],
-                fmt="o", ms=3, color=COR_CINZA, ecolor="#e2e8f0", label="amostra pequena (n < mínimo)")
-    ax.plot(per, np.array(mm4) * 100, color=COR_DESTAQUE, lw=2, label="média móvel de 4 semanas")
+                fmt="o", ms=4, color=COR_CINZA, ecolor=COR_GRADE, elinewidth=1.2, label="pouca gente")
+    ax.plot(per, np.array(mm4) * 100, color=COR_DESTAQUE, lw=2.4, label="média de 4 semanas")
     ax.set_ylabel("% que voltou em 7 dias")
-    ax.set_title("Retorno em 7 dias por semana de chegada", fontsize=10)
-    ax.legend(fontsize=8)
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=6))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%y"))
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.16), ncol=3, columnspacing=0.8, handletextpad=0.3)
     nome = _salvar(fig, "03_retorno_semanal.png")
     larg = (sup - inf)[ok] * 100
     mm_validas = [m for m in mm4 if not np.isnan(m)]
@@ -164,11 +194,10 @@ def fig_turnos(conn) -> tuple[str, str]:
     ts = [int(d[0]) for d in dados]
     ns = [int(d[1]) for d in dados]
     total = sum(ns)
-    fig, ax = plt.subplots(figsize=(6.5, 4))
-    ax.bar([str(t) if t < 10 else "10+" for t in ts], [n / total * 100 for n in ns], color=COR)
-    ax.set_xlabel("número de turnos da conversa")
+    fig, ax = plt.subplots(figsize=TAMANHO, layout="constrained")
+    ax.bar([str(t) if t < 10 else "10+" for t in ts], [n / total * 100 for n in ns], color=COR, width=0.7)
+    ax.set_xlabel("turnos da conversa")
     ax.set_ylabel("% das conversas")
-    ax.set_title("A maioria das conversas tem poucos turnos", fontsize=10)
     nome = _salvar(fig, "04_turnos.png")
     um = ns[ts.index(1)] / total
     ate3 = sum(n for t, n in zip(ts, ns) if t <= 3) / total
@@ -187,14 +216,15 @@ def fig_tema(conn) -> tuple[str, str] | None:
     rot = [d[0] for d in ok]
     taxa = np.array([d[2] / d[1] for d in ok])
     ics = [wilson(int(d[2]), int(d[1])) for d in ok]
-    fig, ax = plt.subplots(figsize=(7.5, 4.2))
+    fig, ax = plt.subplots(figsize=TAMANHO, layout="constrained")
     y = np.arange(len(ok))
+    ax.grid(False)
+    ax.grid(True, axis="x")
     ax.barh(y, taxa * 100, xerr=[[(t - i[0]) * 100 for t, i in zip(taxa, ics)], [(i[1] - t) * 100 for t, i in zip(taxa, ics)]],
-            color=COR, ecolor=COR_CINZA)
-    ax.set_yticks(y, [f"{r} (n={d[1]})" for r, d in zip(rot, ok)], fontsize=8)
+            color=COR, ecolor=COR_CLARA, height=0.62, error_kw={"elinewidth": 1.4})
+    ax.set_yticks(y, [r for r in rot], fontsize=FONTE - 3)
     ax.invert_yaxis()
-    ax.set_xlabel("% que voltou em 7 dias (IC 95%)")
-    ax.set_title("Retorno por tema da primeira conversa", fontsize=10)
+    ax.set_xlabel("% que voltou em 7 dias")
     nome = _salvar(fig, "05_retorno_por_tema.png")
     i_max, i_min = int(np.argmax(taxa)), int(np.argmin(taxa))
     separados = ics[i_max][0] > ics[i_min][1]
@@ -212,15 +242,17 @@ def fig_idioma(conn) -> tuple[str, str]:
         FROM mart.fct_primeira_experiencia WHERE elegivel GROUP BY 1""")
     ordem = ["até 30", "31–100", "101–400", "mais de 400"]
     faixas = sorted(faixas, key=lambda r: ordem.index(r[0]))
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 4))
-    a1.barh([c[0] for c in cont][::-1], [c[1] / total * 100 for c in cont][::-1], color=COR)
-    a1.set_xlabel("% das conversas (idioma detectado na 1ª pergunta)")
-    a1.set_title("Idiomas mais usados", fontsize=10)
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=TAMANHO, layout="constrained")
+    a1.grid(False)
+    a1.grid(True, axis="x")
+    a1.barh([_nome_idioma(c[0]) for c in cont][::-1], [c[1] / total * 100 for c in cont][::-1], color=COR, height=0.65)
+    a1.set_xlabel("% das conversas, por idioma")
+    a1.tick_params(axis="y", labelsize=FONTE - 2)
     taxas = [f[2] / f[1] for f in faixas]
-    a2.bar([f[0] for f in faixas], [t * 100 for t in taxas], color=[COR_DESTAQUE if i == 0 else COR for i in range(len(faixas))])
-    a2.set_xlabel("tamanho da 1ª pergunta (caracteres)")
-    a2.set_ylabel("% com idioma da resposta ≠ idioma da pergunta")
-    a2.set_title("Idioma divergente por tamanho da pergunta", fontsize=10)
+    a2.bar([f[0] for f in faixas], [t * 100 for t in taxas], color=[COR_DESTAQUE if i == 0 else COR for i in range(len(faixas))], width=0.65)
+    a2.set_xlabel("caracteres da 1ª pergunta")
+    a2.set_ylabel("% de idioma trocado")
+    a2.tick_params(axis="x", labelsize=FONTE - 3)
     nome = _salvar(fig, "06_idioma.png")
     resto = faixas[1:]
     taxa_resto = sum(f[2] for f in resto) / sum(f[1] for f in resto)
@@ -289,6 +321,7 @@ def figuras_sem_conclusao(pasta: Path) -> list[str]:
 # ----------------------------------------------------------------------------------------------- orquestração
 def gerar(conn: psycopg.Connection) -> dict:
     """Gera as figuras, `conclusoes.md` e grava resultado.problema_qualidade. Devolve um resumo com contagens."""
+    _estilo()
     PASTA_FIGURAS.mkdir(parents=True, exist_ok=True)
     for antigo in PASTA_FIGURAS.glob("*.png"):
         antigo.unlink()  # figura de uma versão anterior sem conclusão não pode sobrar
