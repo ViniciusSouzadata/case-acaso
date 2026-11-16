@@ -138,7 +138,11 @@ Arquivo bruto -> Carga em Python -> Postgres -> Análise em Python -> Tabelas fi
 - Testes travam as definições numa base inventada de resposta conhecida: 6 dias e 23 horas conta, 7 dias e 1 minuto não.
 - Quebrei as regras de propósito para testar os testes. Um não pegava a troca de `<=` por `<`, e corrigi.
 - Até produção: a mesma imagem passa por local, homologação e produção. Mudança de banco é arquivo SQL numerado, com o passo inverso. Depois de implantar, rodam a verificação de saúde e a conferência com a origem.
-- Não fiz: o envio automático do alerta, a execução dos passos de reversão do banco e a primeira rodada da integração contínua.
+- Alerta: avisa quando a semana nova sai da variação normal (mais de 3 desvios da média das 8 semanas anteriores, nas pessoas novas e nos navegadores por endereço) ou quando uma das 9 conferências com a origem diverge. Os limiares moram em `ops.parametros`, não no código. O aviso traz só números e nome de métrica. Provas: `loader/alerta.py`, 14 testes em `tests/test_alerta.py` e `python -m loader.alerta --demo`, que roda sem credencial. No banco real hoje: nenhum alerta.
+- Reversão do banco: rodei de verdade os passos inversos, num banco descartável. Desfazer as últimas cinco mudanças e refazer, sem recarregar: 2.372 pessoas, 566 que voltaram, 23,86%. Desfazer as 16 e refazer, recarregando: os mesmos números. Prova: `scripts/reversao_banco.py`. Um achado: o último passo inverso (o dos esquemas) só apaga esquema vazio, de propósito; as tabelas que a transformação cria saem antes, e a carga as refaz.
+- Integração contínua: rodei localmente os mesmos comandos do arquivo `.github/workflows/ci.yml` (lint, pytest no container, `tsc` e vitest). Achou duas falhas, que corrigi: uma variável sem uso no gerador do PDF e a trava de definição, que não sabia dos parâmetros novos do alerta. Hoje: 324 testes de Python (1 pulado) e 248 de TypeScript (5 pulados).
+- Subida com um comando: funciona, com as imagens construídas uma de cada vez (`COMPOSE_PARALLEL_LIMIT=1`). Sem imagem nem cache, 13 min 19 s, ainda com 9 de 9 conferências.
+- O que continua só desenhado ou não feito: a AWS (só desenho e custo estimado, nada implantado) e a esteira no GitHub, que rodou só na minha máquina: o repositório é privado e não publiquei nada. O alerta escreve na tela e em arquivo; não há e-mail nem chat ligado, porque isso pede credencial.
 
 ## 8. O incidente: a retenção caiu de 31% para 18%
 

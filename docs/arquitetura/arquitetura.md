@@ -20,6 +20,8 @@ flowchart LR
 
 Regras que o desenho garante: texto de conversa não entra no Postgres; a aplicação lê só `mart.*` e `resultado.*` com o papel `app_ro`; limiares vêm de `ops.parametros`; toda taxa sai com intervalo e n.
 
+**Alerta (feito e testado, só local).** `python -m loader.alerta` lê as 9 conferências do último lote e duas séries semanais (pessoas novas e máximo de navegadores por endereço) e avisa quando passam de `alerta_desvios` desvios da média de `alerta_janela_semanas` semanas; os quatro limiares estão em `ops.parametros` (migração 021). O aviso traz só agregados. Não há canal externo (e-mail, chat) ligado. As migrações têm passo inverso (`sql/migrations_down/`), executado de verdade em banco descartável por `scripts/reversao_banco.py`.
+
 Imagem: `docs/arquitetura/fluxo-bruto-tela.png` (gerada por `scripts/gerar_diagrama_fluxo.py`, com os nomes das telas lidos de `app/mensagens/pt.json`).
 
 ## 2. Implantação na AWS (desenho)
