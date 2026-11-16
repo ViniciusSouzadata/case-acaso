@@ -1,0 +1,105 @@
+/* Estilo do PDF de entrega. Cores e fontes ficam só neste bloco de variáveis:
+   para trocar a identidade, mude aqui (e os arquivos em scripts/pdf/fonts/). */
+:root {
+  --cor-tinta: #121212;
+  --cor-papel: #fefefe;
+  --cor-marca: #6a48eb;
+  --cor-marca-clara: #978df8;
+  --cor-marca-escura: #583ecb;
+  --cor-destaque: #ff6c0e;
+  --cor-texto: #1b1b22;
+  --cor-texto-suave: #4b4b57;
+  --cor-linha: #e3e0f3;
+  --cor-zebra: #f6f4fd;
+  --fonte-titulo: "Sora", "Instrument Sans", sans-serif;
+  --fonte-texto: "Instrument Sans", sans-serif;
+  --fonte-codigo: "IBM Plex Mono", monospace;
+}
+
+@font-face { font-family: "Sora"; src: url("fonts/sora-latin-wght-normal.woff2") format("woff2"); font-weight: 100 800; }
+@font-face { font-family: "Instrument Sans"; src: url("fonts/instrument-sans-latin-wght-normal.woff2") format("woff2"); font-weight: 400 700; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+
+@page {
+  size: A4;
+  margin: 16mm 16mm 18mm 16mm;
+  @bottom-left { content: "O que faz uma pessoa voltar ao assistente em até 7 dias"; font: 7.5pt var(--fonte-texto); color: var(--cor-texto-suave); }
+  @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt var(--fonte-texto); color: var(--cor-texto-suave); }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0;
+  font-family: var(--fonte-texto);
+  font-size: 9.6pt;
+  line-height: 1.45;
+  color: var(--cor-texto);
+  background: var(--cor-papel);
+}
+
+h1, h2 { font-family: var(--fonte-titulo); letter-spacing: -0.01em; }
+
+/* Capa compacta: faixa escura com o título, na página 1 */
+.capa {
+  background: var(--cor-tinta);
+  color: var(--cor-papel);
+  border-radius: 10px;
+  padding: 14px 18px 14px;
+  margin-bottom: 14px;
+  border-top: 4px solid var(--cor-marca);
+}
+.capa h1 { margin: 0; font-size: 17pt; line-height: 1.15; font-weight: 600; color: var(--cor-papel); }
+.capa .autoria { margin: 6px 0 0; font-size: 8.5pt; color: #c9c6e6; }
+
+h2 {
+  font-size: 12.5pt;
+  font-weight: 600;
+  color: var(--cor-tinta);
+  margin: 18px 0 6px;
+  padding-bottom: 3px;
+  border-bottom: 2px solid var(--cor-marca);
+  break-after: avoid;
+}
+/* a primeira seção depois da página 1 começa em página nova */
+.nova-pagina { break-before: page; margin-top: 0; }
+
+p { margin: 0 0 7px; }
+strong { font-weight: 700; color: var(--cor-tinta); }
+code {
+  font-family: var(--fonte-codigo);
+  font-size: 8.2pt;
+  background: var(--cor-zebra);
+  color: var(--cor-marca-escura);
+  padding: 0 3px;
+  border-radius: 3px;
+  overflow-wrap: anywhere;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 6px 0 10px;
+  font-size: 8.6pt;
+  line-height: 1.35;
+  break-inside: avoid; /* tabelas são curtas: não partir entre páginas */
+}
+p:has(+ table) { break-after: avoid; }
+thead { display: table-header-group; }
+th {
+  background: var(--cor-tinta);
+  color: var(--cor-papel);
+  font-weight: 600;
+  text-align: left;
+  padding: 5px 7px;
+}
+td { padding: 5px 7px; vertical-align: top; border-bottom: 1px solid var(--cor-linha); overflow-wrap: anywhere; }
+tr { break-inside: avoid; }
+tbody tr:nth-child(even) td { background: var(--cor-zebra); }
+td.dir, th.dir { text-align: right; }
+td.cen, th.cen { text-align: center; }
+td:first-child { font-weight: 500; }
+
+/* Página 1: tabela-mapa com a primeira coluna em destaque */
+.mapa td:first-child { color: var(--cor-marca-escura); width: 15%; }
+.mapa td:last-child { width: 24%; }
