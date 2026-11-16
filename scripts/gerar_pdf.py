@@ -99,13 +99,32 @@ def imagem_dados(caminho: str) -> str:
     return "data:image/png;base64," + base64.b64encode(arq.read_bytes()).decode()
 
 
+def legenda(alt: str, telas: bool) -> str:
+    if telas and ": " in alt:
+        antes, depois = alt.split(": ", 1)
+        return f'<strong class="cap">{inline(antes)}:</strong> {inline(depois)}'
+    return inline(alt)
+
+
 def grade(imgs: list[tuple[str, str]]) -> str:
+    telas = "capturas" in imgs[0][1]
     cartoes_img = "".join(
-        f'<figure class="cartao-img"><img src="{imagem_dados(c)}" alt="{html.escape(a)}"><figcaption>{inline(a)}</figcaption></figure>'
+        f'<figure class="cartao-img"><div class="moldura"><img src="{imagem_dados(c)}" alt="{html.escape(a)}"></div>'
+        f'<figcaption>{legenda(a, telas)}</figcaption></figure>'
         for a, c in imgs
     )
-    classe = "telas-img" if "capturas" in imgs[0][1] else "figuras-img"
+    classe = "telas-img" if telas else "figuras-img"
     return f'<div class="grade {classe}">{cartoes_img}</div>'
+
+
+def codigo(bloco: list[str]) -> str:
+    """Bloco de código; comentário final '# antes' / '# depois' vai alinhado à direita, sem quebrar a linha."""
+    linhas = []
+    for l in bloco:
+        m = re.match(r"^(.*?)\s+(#\s*\S.*)$", l)
+        cod, com = (m.group(1), m.group(2)) if m else (l, "")
+        linhas.append(f'<div class="lin"><span class="cod">{html.escape(cod)}</span><span class="com">{html.escape(com)}</span></div>')
+    return f'<div class="codigo">{"".join(linhas)}</div>'
 
 
 def fluxo(texto: str) -> str:
@@ -142,7 +161,7 @@ def converter(md: str) -> str:
             if tipo == "fluxo":
                 out.append(fluxo(" ".join(bloco)))
             else:
-                out.append(f'<pre class="codigo">{html.escape(chr(10).join(bloco))}</pre>')
+                out.append(codigo(bloco))
         elif l.startswith("# "):
             titulo = inline(l[2:])
             autoria = ""
@@ -158,7 +177,7 @@ def converter(md: str) -> str:
             t = l[3:]
             secao = t
             m = re.match(r"(\d+)\.\s+(.*)", t)
-            nova = ' class="nova-pagina"' if t.startswith("1.") else ""
+            nova = ""
             if m:
                 out.append(f'<h2{nova}><span class="selo">{m.group(1)}</span>{inline(m.group(2))}</h2>')
             else:
