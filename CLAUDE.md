@@ -42,4 +42,4 @@ Case técnico do Vinícius para a vaga de Data Analyst Pleno na Acaso. Entrega: 
 - Identificadores de banco e API em português, como no design. Código e comentários em português.
 - Python: funções puras para regras, tipagem, pytest. TypeScript: modo estrito, zod, vitest.
 - Commits pequenos por task, mensagem `tipo(milestone): descrição [T-nnn]`.
-- O repositório é **privado**: não publicar nada.
+- O repositório é **público** em github.com/ViniciusSouzadata/case-acaso desde 16/11/2026; só o histórico limpo vai para lá, e nada mais é publicado sem pedido do Vinícius.

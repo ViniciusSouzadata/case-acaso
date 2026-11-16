@@ -13,7 +13,7 @@ Segunda opção. O snapshot tem 11.621 conversas do Brasil, é verificado por ch
 
 ## Consequências
 - Sobe em cerca de 2 minutos na primeira vez e 30 segundos nas seguintes.
-- O repositório é privado (convite) por causa do case da Acaso; o zip da entrega leva o snapshot, mas não `data/raw`.
+- O repositório é público no GitHub (github.com/ViniciusSouzadata/case-acaso) desde 16/11/2026, por decisão do Vinícius para a entrega; o zip da entrega leva o snapshot, mas não `data/raw`.
 - Número novo só aparece se o snapshot ou a definição mudarem, e a reconciliação mostra a diferença.
 
 ## Como defender

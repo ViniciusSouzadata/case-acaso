@@ -138,8 +138,8 @@ Arquivo bruto -> Carga em Python -> Postgres -> Análise em Python -> Tabelas fi
 - Testes travam as definições numa base inventada de resposta conhecida: 6 dias e 23 horas conta, 7 dias e 1 minuto não.
 - Quebrei as regras de propósito para testar os testes. Um não pegava a troca de `<=` por `<`, e corrigi.
 - Até produção: a mesma imagem passa por local, homologação e produção. Mudança de banco é arquivo SQL numerado, com o passo inverso. Depois de implantar, rodam a verificação de saúde e a conferência com a origem.
-- Feito e testado: o alerta (avisa quando a semana sai de 3 desvios da média das 8 anteriores ou uma das 9 conferências diverge; limiares em `ops.parametros`; `loader/alerta.py`, 14 testes, `--demo` sem credencial); os passos inversos do banco, rodados num banco descartável com 2.372 pessoas, 566 e 23,86% de novo no fim (`scripts/reversao_banco.py`); os comandos do `ci.yml`, rodados aqui (2 falhas corrigidas; 325 testes de Python e 248 de TypeScript passam); e a subida com um comando, em 13 min sem cache, com 9 de 9.
-- Não feito: AWS (só desenho e custo), a esteira no GitHub (repositório privado) e o alerta por e-mail ou chat (só tela e arquivo).
+- Feito e testado: o alerta (avisa quando a semana sai de 3 desvios da média das 8 anteriores ou uma das 9 conferências diverge; limiares em `ops.parametros`; `loader/alerta.py`, 14 testes, `--demo` sem credencial); os passos inversos do banco, rodados num banco descartável com 2.372 pessoas, 566 e 23,86% de novo no fim (`scripts/reversao_banco.py`); a esteira do `ci.yml`, rodada aqui e no GitHub (3 falhas corrigidas; a terceira só apareceu no GitHub: o teste do painel rodava com o banco vazio; 325 testes de Python e 248 de TypeScript passam); e a subida com um comando, em 13 min sem cache, com 9 de 9.
+- Não feito: AWS (só desenho e custo) e o alerta por e-mail ou chat (só tela e arquivo).
 
 ## 8. O incidente: a retenção caiu de 31% para 18%
 

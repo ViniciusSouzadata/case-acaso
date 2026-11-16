@@ -1,6 +1,6 @@
 # Case Acaso: retenção de um assistente de IA
 
-O zip de entrega é o próprio repositório, com o histórico completo (`git log`); só as anotações internas de planejamento ficaram de fora.
+O zip de entrega é o próprio repositório, com o histórico completo (`git log`); só as anotações internas de planejamento ficaram de fora. O mesmo repositório está em https://github.com/ViniciusSouzadata/case-acaso.
 
 Base analítica (Postgres 16) + carga e análise (Python) + painel e API (Next.js) que respondem: de cada 100 pessoas que experimentam o assistente, quantas voltam em até 7 dias, e o que muda essa chance.
 
