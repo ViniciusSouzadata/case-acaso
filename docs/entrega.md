@@ -178,7 +178,7 @@ chave = "|".join([hashed_ip, familia_so(user_agent), familia_navegador(user_agen
 
 ## 11. Uso de IA e horas
 
-Usei o Claude Code para planejar e escrever código e testes, e um LLM para classificar tema e recusa. A IA propôs opções; eu escolhi e respondo pelas conclusões. Conferi com 200 rótulos feitos à mão, uma base inventada de resposta conhecida e a conferência com o arquivo bruto. O que corrigi ou descartei:
+Usei o Claude Code para planejar e escrever código e testes, e o Claude Haiku para classificar tema e recusa. Ele rodou pela OpenRouter, com autorização da Acaso, porque o Bedrock não liberou na minha conta; no desenho da AWS ele roda no Bedrock (ADR-09). A IA propôs opções; eu escolhi e respondo pelas conclusões. Conferi com 200 rótulos feitos à mão, uma base inventada de resposta conhecida e a conferência com o arquivo bruto. O que corrigi ou descartei:
 
 - O primeiro cálculo de efeito dava 7,0 pontos onde o certo era 10,1. O teste pegou.
 - Descartei o classificador por palavras-chave e um segundo LLM que deixava 40% sem resposta.
