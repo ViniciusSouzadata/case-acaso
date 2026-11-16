@@ -143,7 +143,8 @@ def fluxo(texto: str) -> str:
 RE_IMG = re.compile(r"^!\[(.*)\]\((.+)\)\s*$")
 
 
-def converter(md: str) -> str:
+def converter(md: str, topos: frozenset[str] = frozenset()) -> str:
+    """`topos`: títulos de seção que abrem uma página (ficam sem o filete de separação)."""
     linhas = md.splitlines()
     out: list[str] = []
     i = 0
@@ -179,7 +180,7 @@ def converter(md: str) -> str:
             t = l[3:]
             secao = t
             m = re.match(r"(\d+)\.\s+(.*)", t)
-            nova = ""
+            nova = ' class="topo"' if t in topos else ""
             if m:
                 out.append(f'<h2{nova}><span class="selo">{m.group(1)}</span>{inline(m.group(2))}</h2>')
             else:
@@ -235,15 +236,8 @@ def contar_paginas(pdf: Path) -> int:
     return len(re.findall(rb"/Type\s*/Page(?!s)", pdf.read_bytes()))
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--saida", default=str(RAIZ / "dist" / "entrega.pdf"))
-    args = ap.parse_args()
-    saida = Path(args.saida).resolve()
-    saida.parent.mkdir(parents=True, exist_ok=True)
-
-    corpo = converter(ENTRADA.read_text(encoding="utf-8"))
-    # monta a página ao lado do CSS e das fontes, para os caminhos relativos funcionarem
+def imprimir(corpo: str, saida: Path) -> str:
+    """Monta a página ao lado do CSS e das fontes (caminhos relativos) e imprime com o navegador. Devolve o stderr."""
     with tempfile.TemporaryDirectory() as tmp:
         tmp_p = Path(tmp)
         shutil.copytree(PASTA_PDF / "fonts", tmp_p / "fonts")
@@ -255,9 +249,47 @@ def main() -> int:
             f"--user-data-dir={perfil}", "--no-pdf-header-footer", "--run-all-compositor-stages-before-draw",
             "--virtual-time-budget=5000", f"--print-to-pdf={saida}", (tmp_p / "entrega.html").as_uri(),
         ]
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=120).stderr
+
+
+def secoes_no_topo(pdf: Path, titulos: list[str]) -> frozenset[str]:
+    """Títulos de seção que ficaram no topo de uma página. Usa o PyMuPDF se estiver instalado (opcional); sem ele devolve vazio
+    e o filete de separação aparece também nos topos de página."""
+    try:
+        import pymupdf  # type: ignore
+    except ImportError:
+        return frozenset()
+    achados = set()
+    with pymupdf.open(pdf) as d:
+        for pg in list(d)[1:]:
+            for b in pg.get_text("blocks"):
+                if b[1] < 95:
+                    achados.update(t for t in titulos if t.split(". ", 1)[-1] in b[4])
+    return frozenset(achados)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--saida", default=str(RAIZ / "dist" / "entrega.pdf"))
+    args = ap.parse_args()
+    saida = Path(args.saida).resolve()
+    saida.parent.mkdir(parents=True, exist_ok=True)
+
+    md = ENTRADA.read_text(encoding="utf-8")
+    titulos = [l[3:].strip() for l in md.splitlines() if l.startswith("## ")]
+    topos: frozenset[str] = frozenset()
+    erro = ""
+    for _ in range(4):  # a retirada do filete muda um pouco a paginação: repete até estabilizar
+        saida.unlink(missing_ok=True)
+        erro = imprimir(converter(md, topos), saida)
+        if not saida.exists() or saida.stat().st_size == 0:
+            break
+        novos = secoes_no_topo(saida, titulos)
+        if novos == topos:
+            break
+        topos = novos
     if not saida.exists() or saida.stat().st_size == 0:
-        print("Falha ao gerar o PDF.", r.stderr[-400:], file=sys.stderr)
+        print("Falha ao gerar o PDF.", erro[-400:], file=sys.stderr)
         return 1
     print(f"PDF: {saida}  ({contar_paginas(saida)} páginas, {saida.stat().st_size / 1024:.0f} KB)")
     return 0

@@ -165,3 +165,9 @@ td { padding: 7px 9px; } th { padding: 7px 9px; }
 .passo { padding: 18px 8px; }
 .telas-img .cartao-img:first-child .moldura { padding: 0 18mm; }
 .figuras-img .moldura { height: auto; } .figuras-img .cartao-img img { width: 100%; }
+.telas-img .cartao-img:first-child .moldura { padding: 0; }
+.figuras-img { break-inside: auto; }
+.figuras-img { grid-template-columns: repeat(2, 1fr); }
+h2.topo { border-top: 0 !important; padding-top: 0 !important; margin-top: 0 !important; }
+.cartao-img figcaption { font-size: 8.2pt; }
+.telas-img { grid-template-columns: 1fr; }
