@@ -164,3 +164,4 @@ td { padding: 7px 9px; } th { padding: 7px 9px; }
 .achados td { padding: 18px 10px; }
 .passo { padding: 18px 8px; }
 .telas-img .cartao-img:first-child .moldura { padding: 0 18mm; }
+.figuras-img .moldura { height: auto; } .figuras-img .cartao-img img { width: 100%; }
