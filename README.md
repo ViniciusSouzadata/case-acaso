@@ -1,5 +1,7 @@
 # Case Acaso: retenção de um assistente de IA
 
+O zip de entrega é o próprio repositório, com o histórico completo (`git log`); só as anotações internas de planejamento ficaram de fora.
+
 Repositório privado. Base analítica (Postgres 16) + carga e análise (Python) + painel e API (Next.js) que respondem: de cada 100 pessoas que experimentam o assistente, quantas voltam em até 7 dias, e o que muda essa chance.
 
 **Pré-requisitos:** Docker Engine com o plugin Compose (Docker Desktop, ou Engine dentro do WSL2). Nada mais: sem credencial AWS e sem internet depois do primeiro `build`. Portas livres no host: `5433` (Postgres) e `3000` (painel); mude com `POSTGRES_HOST_PORT` e `APP_HOST_PORT` no `.env`.
