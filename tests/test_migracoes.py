@@ -44,6 +44,11 @@ def test_parametros_v1():
         "limiar_conversas_ip": "200",
         "limiar_uas_ip": "10",
         "fuso_pais": "America/Sao_Paulo",
+        # migração 021 (alerta de divergência)
+        "alerta_desvios": "3",
+        "alerta_janela_semanas": "8",
+        "alerta_min_historico": "4",
+        "alerta_semanas_avaliadas": "1",
     }
 
 
