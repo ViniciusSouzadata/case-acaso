@@ -10,10 +10,10 @@ Não precisa de credencial AWS nem de internet depois do `build`. Copie `.env.ex
 O Docker é só o Docker Engine com o plugin Compose (Docker Desktop **ou** Engine dentro do WSL2). `make` é atalho opcional.
 
 ### Subir do zero (um comando)
-Com 4 GB de memória (ou menos) o comando único pode ser morto no `build` do app: nesse caso use **Subindo em etapas**, logo abaixo. Medido em 15/11/2026, banco vazio, WSL2 com ~2,4 GB: `db` 3 s, `loader` 101 s, `app` 245 s (build incluído), cerca de 6 min no total.
+Com 4 GB de memória (ou menos), construa as imagens **uma de cada vez**, com `COMPOSE_PARALLEL_LIMIT=1`: sem isso, o `build` do loader e o do app competem por memória e o app pode ser morto no `next build`. Medido em 16/11/2026, WSL2 com ~2,4 GB, **sem nenhuma imagem nem cache** (apagados antes): subida única de ponta a ponta em 13 min 19 s (build frio incluído); o loader fechou com 9 de 9 conferências e 2.372 / 566 / 23,86%. Com imagens em cache, cerca de 1 min. Se ainda assim o comando for morto, use **Subindo em etapas**, logo abaixo.
 
 ```
-docker compose up -d --build
+COMPOSE_PARALLEL_LIMIT=1 docker compose up -d --build
 docker compose ps -a
 docker compose logs loader
 ```
