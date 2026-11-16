@@ -10,6 +10,7 @@ Navegador: variável NAVEGADOR ou, se ausente, Chrome/Edge nos caminhos padrão 
 from __future__ import annotations
 
 import argparse
+import base64
 import html
 import os
 import re
@@ -63,9 +64,11 @@ def tabela(linhas: list[str], classe: str = "") -> str:
     cab = celulas(linhas[0])
     alinh = []
     for c in celulas(linhas[1]):
-        alinh.append(" dir" if c.endswith(":") and not c.startswith(":") else " cen" if c.startswith(":") and c.endswith(":") else "")
+        alinh.append("dir" if c.endswith(":") and not c.startswith(":") else "cen" if c.startswith(":") and c.endswith(":") else "")
+
     def cls(i: int) -> str:
-        return f' class="{alinh[i].strip()}"' if i < len(alinh) and alinh[i] else ""
+        return f' class="{alinh[i]}"' if i < len(alinh) and alinh[i] else ""
+
     th = "".join(f"<th{cls(i)}>{inline(c)}</th>" for i, c in enumerate(cab))
     corpo = []
     for l in linhas[2:]:
@@ -75,44 +78,124 @@ def tabela(linhas: list[str], classe: str = "") -> str:
     return f"<table{c}><thead><tr>{th}</tr></thead><tbody>{''.join(corpo)}</tbody></table>"
 
 
+def cartoes(linhas: list[str]) -> str:
+    """Tabela Número | O que é | Base vira cartões de indicador. O cartão do efeito real (−16) leva o laranja."""
+    saida = []
+    for l in linhas[2:]:
+        num, que, base = (celulas(l) + ["", "", ""])[:3]
+        num_txt = num.replace("**", "")
+        destaque = " real" if num_txt.startswith(("−16", "-16")) else ""
+        saida.append(
+            f'<div class="indicador{destaque}"><div class="num">{html.escape(num_txt)}</div>'
+            f'<div class="que">{inline(que)}</div><div class="base">{inline(base)}</div></div>'
+        )
+    return f'<div class="indicadores">{"".join(saida)}</div>'
+
+
+def imagem_dados(caminho: str) -> str:
+    arq = (RAIZ / "docs" / caminho).resolve()
+    if not arq.exists():
+        raise SystemExit(f"Imagem não encontrada: {arq}")
+    return "data:image/png;base64," + base64.b64encode(arq.read_bytes()).decode()
+
+
+def grade(imgs: list[tuple[str, str]]) -> str:
+    cartoes_img = "".join(
+        f'<figure class="cartao-img"><img src="{imagem_dados(c)}" alt="{html.escape(a)}"><figcaption>{inline(a)}</figcaption></figure>'
+        for a, c in imgs
+    )
+    classe = "telas-img" if "capturas" in imgs[0][1] else "figuras-img"
+    return f'<div class="grade {classe}">{cartoes_img}</div>'
+
+
+def fluxo(texto: str) -> str:
+    passos = [p.strip() for p in " ".join(texto.split()).split(" -> ")]
+    caixas = []
+    for k, p in enumerate(passos):
+        ultimo = " ultimo" if k == len(passos) - 1 else ""
+        caixas.append(f'<div class="passo{ultimo}">{inline(p)}</div>')
+        if k < len(passos) - 1:
+            caixas.append('<div class="seta">&#8594;</div>')
+    return f'<div class="fluxo">{"".join(caixas)}</div>'
+
+
+RE_IMG = re.compile(r"^!\[(.*)\]\((.+)\)\s*$")
+
+
 def converter(md: str) -> str:
     linhas = md.splitlines()
     out: list[str] = []
     i = 0
-    n_tabela = 0
-    h2_vistos = 0
+    secao = ""
     while i < len(linhas):
         l = linhas[i]
         if not l.strip():
             i += 1
+        elif l.startswith("```"):
+            tipo = l[3:].strip()
+            i += 1
+            bloco = []
+            while i < len(linhas) and not linhas[i].startswith("```"):
+                bloco.append(linhas[i])
+                i += 1
+            i += 1
+            if tipo == "fluxo":
+                out.append(fluxo(" ".join(bloco)))
+            else:
+                out.append(f'<pre class="codigo">{html.escape(chr(10).join(bloco))}</pre>')
         elif l.startswith("# "):
             titulo = inline(l[2:])
             autoria = ""
             j = i + 1
             while j < len(linhas) and not linhas[j].strip():
                 j += 1
-            if j < len(linhas) and not linhas[j].startswith(("#", "|")):
+            if j < len(linhas) and not linhas[j].startswith(("#", "|", ">", "-", "!", "`")):
                 autoria = f'<p class="autoria">{inline(linhas[j])}</p>'
                 i = j
             out.append(f'<header class="capa"><h1>{titulo}</h1>{autoria}</header>')
             i += 1
         elif l.startswith("## "):
-            h2_vistos += 1
-            # a página 1 é o resumo; a primeira seção numerada começa em página nova
-            nova = ' class="nova-pagina"' if l.startswith("## 1.") else ""
-            out.append(f"<h2{nova}>{inline(l[3:])}</h2>")
+            t = l[3:]
+            secao = t
+            m = re.match(r"(\d+)\.\s+(.*)", t)
+            nova = ' class="nova-pagina"' if t.startswith("1.") else ""
+            if m:
+                out.append(f'<h2{nova}><span class="selo">{m.group(1)}</span>{inline(m.group(2))}</h2>')
+            else:
+                out.append(f"<h2{nova}>{inline(t)}</h2>")
             i += 1
+        elif l.startswith("> "):
+            par = []
+            while i < len(linhas) and linhas[i].startswith("> "):
+                par.append(linhas[i][2:].strip())
+                i += 1
+            out.append(f'<div class="resposta">{inline(" ".join(par))}</div>')
+        elif l.startswith("- "):
+            itens = []
+            while i < len(linhas) and linhas[i].startswith("- "):
+                itens.append(f"<li>{inline(linhas[i][2:].strip())}</li>")
+                i += 1
+            out.append(f'<ul>{"".join(itens)}</ul>')
+        elif RE_IMG.match(l):
+            imgs = []
+            while i < len(linhas) and RE_IMG.match(linhas[i]):
+                m = RE_IMG.match(linhas[i])
+                imgs.append((m.group(1), m.group(2)))
+                i += 1
+            out.append(grade(imgs))
         elif l.startswith("|"):
             bloco = []
             while i < len(linhas) and linhas[i].startswith("|"):
                 bloco.append(linhas[i])
                 i += 1
-            n_tabela += 1
-            classe = "mapa" if n_tabela == 1 else "telas" if bloco[0].lstrip("| ").startswith("Tela ") else ""
-            out.append(tabela(bloco, classe))
+            cab = celulas(bloco[0])
+            if cab[:3] == ["Número", "O que é", "Base"]:
+                out.append(cartoes(bloco))
+            else:
+                out.append(tabela(bloco, "telas" if cab[0] == "Tela" else "achados" if cab[0] == "Achado" else ""))
         else:
             par = []
-            while i < len(linhas) and linhas[i].strip() and not linhas[i].startswith(("#", "|")):
+            while i < len(linhas) and linhas[i].strip() and not linhas[i].startswith(("#", "|", ">", "- ", "```", "![")):
                 par.append(linhas[i].strip())
                 i += 1
             out.append(f"<p>{inline(' '.join(par))}</p>")
