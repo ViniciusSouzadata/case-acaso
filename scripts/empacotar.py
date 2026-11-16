@@ -80,7 +80,11 @@ def empacotar_repositorio(clone: Path, saida: Path) -> int:
         for n in nomes:
             colocar(clone / n, f"case_acaso/{n}", modos[n])
         for arq in sorted((clone / ".git").rglob("*")):
-            if arq.is_file():
+            if arq.is_dir():  # o git exige pastas como refs/heads e objects/info, mesmo vazias
+                zi = zipfile.ZipInfo("case_acaso/" + arq.relative_to(clone).as_posix() + "/")
+                zi.external_attr = (0o040755 << 16) | 0x10
+                z.writestr(zi, b"")
+            elif arq.is_file():
                 colocar(arq, "case_acaso/" + arq.relative_to(clone).as_posix(), 0o644)
                 n_git += 1
     commits = _git(clone, "rev-list", "--count", "--all").strip()
