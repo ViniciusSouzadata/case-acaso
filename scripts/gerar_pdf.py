@@ -148,7 +148,6 @@ def converter(md: str, topos: frozenset[str] = frozenset()) -> str:
     linhas = md.splitlines()
     out: list[str] = []
     i = 0
-    secao = ""
     while i < len(linhas):
         l = linhas[i]
         if not l.strip():
@@ -178,7 +177,6 @@ def converter(md: str, topos: frozenset[str] = frozenset()) -> str:
             i += 1
         elif l.startswith("## "):
             t = l[3:]
-            secao = t
             m = re.match(r"(\d+)\.\s+(.*)", t)
             nova = ' class="topo"' if t in topos else ""
             if m:

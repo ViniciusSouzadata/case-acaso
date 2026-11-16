@@ -15,6 +15,7 @@ import pytest
 from loader import migrar
 
 REFERENCIA = Path(__file__).with_name("referencia_definicao.json")
+PREFIXO_OPERACIONAL = "alerta_"
 AVISO = "Se você mudou a definição de propósito, suba a versão (nova migração em ops.parametros) e acrescente-a a tests/referencia_definicao.json."
 
 
@@ -29,7 +30,8 @@ def verificar(parametros: dict[str, str], referencia: dict) -> list[str]:
         return [f"versao_definicao={versao!r} não tem referência em referencia_definicao.json "
                 f"(versões conhecidas: {sorted(referencia)}). {AVISO}"]
     esperado = referencia[versao]["parametros"]
-    atual = {k: v for k, v in parametros.items() if k != "versao_definicao"}
+    # parâmetros operacionais do alerta (prefixo alerta_, migração 021) não definem indicador: mudá-los não muda nenhum número
+    atual = {k: v for k, v in parametros.items() if k != "versao_definicao" and not k.startswith(PREFIXO_OPERACIONAL)}
     problemas = []
     for chave in sorted(set(esperado) | set(atual)):
         if esperado.get(chave) != atual.get(chave):
@@ -60,6 +62,10 @@ def test_verificar_aceita_versao_nova_com_referencia_acrescentada():
     ref = carregar_referencia()
     ref["1.1.0"] = {"parametros": {**ref["1.0.0"]["parametros"], "gap_sessao_min": "60"}}
     assert verificar({**PARAMS_V1, "versao_definicao": "1.1.0", "gap_sessao_min": "60"}, ref) == []
+
+
+def test_verificar_ignora_parametros_operacionais_do_alerta():
+    assert verificar({**PARAMS_V1, "alerta_desvios": "5"}, carregar_referencia()) == []
 
 
 def test_verificar_pega_parametro_novo_ou_removido():
