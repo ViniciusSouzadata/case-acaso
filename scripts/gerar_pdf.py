@@ -108,7 +108,8 @@ def converter(md: str) -> str:
                 bloco.append(linhas[i])
                 i += 1
             n_tabela += 1
-            out.append(tabela(bloco, "mapa" if n_tabela == 1 else ""))
+            classe = "mapa" if n_tabela == 1 else "telas" if bloco[0].lstrip("| ").startswith("Tela ") else ""
+            out.append(tabela(bloco, classe))
         else:
             par = []
             while i < len(linhas) and linhas[i].strip() and not linhas[i].startswith(("#", "|")):

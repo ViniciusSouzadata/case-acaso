@@ -103,3 +103,8 @@ td:first-child { font-weight: 500; }
 /* Página 1: tabela-mapa com a primeira coluna em destaque */
 .mapa td:first-child { color: var(--cor-marca-escura); width: 15%; }
 .mapa td:last-child { width: 24%; }
+
+/* Tabela das telas: nome da tela em uma linha, pergunta com largura própria, o resto para o gráfico */
+.telas td:first-child, .telas th:first-child { white-space: nowrap; width: 17%; }
+.telas td:first-child { color: var(--cor-marca-escura); }
+.telas td:nth-child(2), .telas th:nth-child(2) { width: 30%; }
