@@ -20,7 +20,7 @@ flowchart LR
 
 Regras que o desenho garante: texto de conversa não entra no Postgres; a aplicação lê só `mart.*` e `resultado.*` com o papel `app_ro`; limiares vêm de `ops.parametros`; toda taxa sai com intervalo e n.
 
-Imagem: `docs/arquitetura/fluxo-bruto-tela.png`.
+Imagem: `docs/arquitetura/fluxo-bruto-tela.png` (gerada por `scripts/gerar_diagrama_fluxo.py`, com os nomes das telas lidos de `app/mensagens/pt.json`).
 
 ## 2. Implantação na AWS (desenho)
 
