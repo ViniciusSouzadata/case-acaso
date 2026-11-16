@@ -33,6 +33,7 @@ Limite: é comparação, não experimento. Os dados não provam causa nem mostra
 |---|---|---|
 | Usuário | IP + família do navegador, sem versão | só IP: 23,94% · navegador completo: 25,14% |
 | Sessão | 30 min sem uso encerra | 60 min: 21,54% |
+| Primeira experiência | a primeira conversa da primeira sessão | não muda a taxa; muda os fatores |
 | Voltar | nova sessão em até 7 dias | só em outro dia: 16,86% |
 | Uso | 1 pergunta não vazia e 1 resposta | contando vazias: 23,69% |
 | Início da base | 14 primeiros dias fora | sem corte: 24,01% · 28 dias: 23,70% |
@@ -110,10 +111,10 @@ A de 01/05 me enganou na primeira leitura: comparada com o começo da coleta, pa
 
 ![Quantos voltam: linha por mês com faixa de margem de erro, para ninguém ler ponto solto como tendência.](capturas_m4/tela1-quantos-voltam-1280x720.png)
 ![O que faz voltar: um ponto por fator com a margem de erro. O que cruza o zero se vê de relance.](capturas_m4/tela2-o-que-faz-voltar-1280x720.png)
-![Dá para confiar?: conferência com a origem, validação da IA e problemas de qualidade.](capturas_m4/tela3-da-para-confiar-1280x720.png)
+![Dá para confiar?: cartões e barras, porque são contagens para conferir, não tendência.](capturas_m4/tela3-da-para-confiar-1280x720.png)
 
 - O texto fala de pessoas ("16 a menos voltam, a cada 100"), não de pontos percentuais.
-- Tudo é clicável. A caixa que abre traz definição, fórmula, denominador, período e a consulta SQL.
+- Tudo é clicável. A caixa que abre traz definição, fórmula, denominador, período e a consulta SQL de cada indicador.
 - Com pouca gente, o painel escreve "pouca gente" e não conclui.
 - Texto de conversa, IP e navegador não aparecem em tela nem na API. O texto nem entra no banco.
 
@@ -125,16 +126,18 @@ Arquivo bruto -> Carga em Python -> Postgres -> Análise em Python -> Tabelas fi
 
 - Na AWS: RDS, containers, balanceador, S3 e Bedrock, por **US$ 54 por mês**. É desenho com custo calculado; não implantei.
 - O LLM custou US$ 0,24 para 2.944 conversas.
-- Os indicadores são calculados na carga e a API usa cache. A consulta principal foi de 12 s para 0,33 s.
-- Outros países: o país já é parâmetro na base e na API; textos e fuso ficam por país.
+- Os indicadores são calculados na carga. A API guarda as respostas em cache até a carga seguinte e informa o tempo em cada resposta e no log. A consulta principal foi de 12 s para 0,33 s.
+- Outros países: o país já é parâmetro na base e na API. Textos da interface ficam em arquivo por idioma, o fuso é por país, e a comparação entre países usa a separação de público e comportamento da seção 4.
 - Diagramas, modelo da base e endpoints: `docs/arquitetura/arquitetura.md`. Decisões: ADR-01 a 10.
 
 ## 7. Como eu saberia que um número está errado
 
 - A cada carga, 9 contagens são refeitas direto do arquivo bruto e comparadas com a base. Hoje a diferença é zero nas 9.
-- Cada carga e cada resposta da API deixam registro. O caminho de investigação é tela, log, consulta, tabela, carga, arquivo.
+- Cada camada deixa registro. Carga: arquivo, linhas lidas, gravadas e rejeitadas. Base: versão das definições e a conferência com a origem. API: log com identificador, tempo e versão dos dados. Tela: mostra o identificador quando dá erro.
+- O caminho de investigação é tela, log, consulta, tabela, carga, arquivo.
 - Testes travam as definições numa base inventada de resposta conhecida: 6 dias e 23 horas conta, 7 dias e 1 minuto não.
 - Quebrei as regras de propósito para testar os testes. Um não pegava a troca de `<=` por `<`, e corrigi.
+- Até produção: a mesma imagem passa por local, homologação e produção. Mudança de banco é arquivo SQL numerado, com o passo inverso. Depois de implantar, rodam a verificação de saúde e a conferência com a origem.
 - Não fiz: o envio automático do alerta, a execução dos passos de reversão do banco e a primeira rodada da integração contínua.
 
 ## 8. O incidente: a retenção caiu de 31% para 18%
@@ -153,7 +156,7 @@ chave = f"{hashed_ip}|{user-agent}"                                             
 chave = "|".join([hashed_ip, familia_so(user_agent), familia_navegador(user_agent)])   # depois
 ```
 
-- Além de corrigir: reprocessar o histórico, alinhar a definição de usuário com o time de dados e ligar a conferência automática.
+- Além de corrigir: reprocessar o histórico e alinhar a definição de usuário com o time de dados. Para não voltar: a conferência automática e um teste que falha se alguém usar a chave antiga.
 - À gerente, durante: "A queda é quase certamente de medição. Quem voltou não mudou, só quem chegou. Não decida em cima do 18%. Volto com a causa até tal hora."
 - Depois: "Troca de navegador contava como usuário novo. Corrigimos, e os números que você já apresentou mudam assim."
 
@@ -169,12 +172,12 @@ chave = "|".join([hashed_ip, familia_so(user_agent), familia_navegador(user_agen
 
 ## 10. Sugestões
 
-- Assistente: revisar recusas desnecessárias e testar uma recusa que ofereça alternativa.
+- Assistente: revisar recusas desnecessárias e testar uma recusa que ofereça alternativa. Olhar a conversa pessoal, o tema que menos volta (17%).
 - Painel: mostrar a taxa de recusa e o "voltou em outro dia" ao lado da taxa oficial.
 
 ## 11. Uso de IA e horas
 
-Usei o Claude Code para planejar e escrever código e testes, e um LLM para classificar tema e recusa. A IA propôs opções; eu escolhi e respondo pelas conclusões. O que corrigi ou descartei:
+Usei o Claude Code para planejar e escrever código e testes, e um LLM para classificar tema e recusa. A IA propôs opções; eu escolhi e respondo pelas conclusões. Conferi com 200 rótulos feitos à mão, uma base inventada de resposta conhecida e a conferência com o arquivo bruto. O que corrigi ou descartei:
 
 - O primeiro cálculo de efeito dava 7,0 pontos onde o certo era 10,1. O teste pegou.
 - Descartei o classificador por palavras-chave e um segundo LLM que deixava 40% sem resposta.

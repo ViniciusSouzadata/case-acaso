@@ -9,9 +9,9 @@
 | ID | § | Exigência (literal ou quase) | Evidência na entrega | Status |
 |----|---|------------------------------|----------------------|--------|
 | C-01 | Como funciona | Entrega até seg 16/11 23h59 para nathalia.anjos@aca.so e daniele.cardoso@aca.so | E-mail com `docs/entrega.pdf` e `dist/case_acaso.zip`, enviado pelo Vinícius | 🔶 (envio) |
-| C-02 | Como funciona | Priorizar decisões claras e justificadas, não documento longo; ~12h esperadas | E-resumo (resumo com 3 achados e decisão de cada um); PDF de 6 páginas; 10 ADRs + 10 BDRs em `docs/decisoes/`; horas reais em E§12 / `docs/horas.md` | ✅ |
+| C-02 | Como funciona | Priorizar decisões claras e justificadas, não documento longo; ~12h esperadas | E-resumo (resumo com 3 achados e decisão de cada um); PDF de 7 páginas; 10 ADRs + 10 BDRs em `docs/decisoes/`; horas reais em E§11 / `docs/horas.md` | ✅ |
 | C-03 | Escopo | Análise executada + dashboard funcionando (frontend, backend, base analítica) + doc curto com achados e decisões | `resultado.*` populado por `python -m analise`; app em `app/` (3 telas, 11 rotas); base em `sql/`; `docs/entrega.md`; README em clone limpo (T-603, `docs/gate_m4.md`) | ✅ |
-| C-04 | Apresentação | 20 min apresentação + 40 min técnica: fluxo de construção, decisões registradas, o que faria diferente | E§11 (o que faria diferente); ADR/BDR com "Como defender"; roteiro e perguntas em M7 | ⬜ (M7) |
+| C-04 | Apresentação | 20 min apresentação + 40 min técnica: fluxo de construção, decisões registradas, o que faria diferente | Fica para a fala (saiu do PDF em 15/11, o enunciado pede na apresentação); ADR/BDR com "Como defender"; roteiro e perguntas em M7 | ⬜ (M7) |
 | C-05 | 1 | Pergunta: o que faz voltar em até 7 dias; quais fatores, quanto pesa cada um, quanto é causa × seleção | E-resumo, E§3 (tabela de efeitos bruto × ajustado; "o que prova e o que não prova"); Tela 2 `/fatores` | ✅ |
 | C-06 | 1 | Análise estatística, não só descritiva: efeito com incerteza, separando efeito do assistente do perfil | E§3 (logística com erro agrupado por IP, IPW com balanço, E-value, BH); ADR-10; `analise/`; `resultado.efeito_fator`, `resultado.balanco_propensao` | ✅ |
 | C-07 | 1 | Usuário final não técnico; resultados por dashboard (não notebook); cada tela se explica sozinha; cada número com definição e fonte; cada efeito com incerteza | E§5; telas `/`, `/fatores`, `/dados` (capturas em `docs/capturas_m4/`); caixa de detalhe por número, com bloco técnico; `mart.dicionario_indicador` | ✅ |
@@ -34,7 +34,7 @@
 | C-24 | 3.2 | Fatores de confusão e como tratou (comparar grupos semelhantes); o que prova e o que não prova | E§3 "Fatores de confusão" e "O que prova e o que não prova"; `docs/robustez_recusa.md`; `resultado.balanco_propensao` | ✅ |
 | C-25 | 3.2 | Uma semana em que o retorno caiu/subiu e o que explica: mudança de perfil (mix) ou de taxa dentro do perfil | E§4 (20/11/2023 e 01/05/2023, mix × taxa); BDR-09; Tela 1 (cartão da semana: público × comportamento); `/api/semana/decomposicao` | ✅ |
 | C-26 | 3.2 | Três achados para o cliente e a decisão que cada um sustenta | E-resumo (3 achados com decisão e limite); `seeds/achados.yaml` → `resultado.achado`; `/api/achados` | ✅ |
-| C-27 | 3.3 | Telas: pergunta que cada uma responde, gráficos e por que esse tipo | E§5 (tabela tela × pergunta × gráfico e por quê) | ✅ |
+| C-27 | 3.3 | Telas: pergunta que cada uma responde, gráficos e por que esse tipo | E§5 (3 capturas; o título de cada tela é a pergunta; a legenda diz o gráfico e por quê) | ✅ |
 | C-28 | 3.3 | Indicadores: definição, fórmula, denominador, período de referência, SQL de cada um; o que a tela mostra quando a base é pequena demais | `sql/transform/50_dicionario.sql` → `mart.dicionario_indicador` (com `sql_referencia`); `/api/dicionario`; Tela 3; E§5 regra de "pouca gente"; BDR-07 | ✅ |
 | C-29 | 3.3 | Arquitetura: fluxo bruto→tela com diagrama; componentes AWS e stack front/back com porquê; modelo da base analítica; endpoints (nome, entrada, saída) | ARQ§1 (diagrama + `fluxo-bruto-tela.png`), ARQ§2–3 (AWS + `implantacao-aws.png`), **ARQ§5 modelo da base e ARQ§6 endpoints (acrescentados em 13/11)**; ADR-01, ADR-06 | ✅ |
 | C-30 | 3.3 | Outros países: idioma da interface, fuso de cada país, comparação entre eles | ARQ§4 (país como parâmetro; idioma em `app/mensagens/pt.json`; `fuso_pais`; comparação por mix × taxa); E§6 | ✅ |
@@ -48,10 +48,15 @@
 | C-38 | 4.2.4 | O que mais fazer além do código + como evitar recorrência | E§8 Pergunta 4; `tests/test_regressao_incidente.py` (T-503) | ✅ |
 | C-39 | 4.2.5 | O que dizer à gerente de produto durante e depois | E§8 Pergunta 5 | ✅ |
 | C-40 | 4.3 | Riscos principais + decisões a levar ao time/cliente antes de implementar (fora do seu escopo) | E§9 (6 riscos × decisão de quem) | ✅ |
-| C-41 | 5 | Parágrafo final: ferramentas de IA e para quê; o que conferiu/corrigiu/descartou; horas aproximadas | E§12; `docs/conferi_da_ia.md`; `docs/horas.md` (~22 h) | ✅ |
+| C-41 | 5 | Parágrafo final: ferramentas de IA e para quê; o que conferiu/corrigiu/descartou; horas aproximadas | E§11; `docs/conferi_da_ia.md`; `docs/horas.md` (~22 h) | ✅ |
 | C-42 | 6 | 8 critérios de avaliação (Análise, Discovery/EDA, Investigação/sustentação, Dashboard, Construção/código, Clareza/premissas, Apresentação, Uso de IA) | Análise: C-05/06/23–26 · Discovery/EDA: C-08/19/20 · Sustentação: C-32–39 · Dashboard: C-07/27/28 · Código: C-14/15/34 · Clareza: C-13/16/21 · Apresentação: C-04 (M7) · IA: C-18/41 | ✅ (apresentação: depois do envio) |
 
 ## Resultado da conferência final (15/11/2026)
 - **40 ✅ · 1 🔶 · 1 ⬜.** O 🔶 é o envio do e-mail (C-01). O ⬜ é a apresentação, depois do envio (C-04).
 - Conferências feitas no fechamento: números de `docs/entrega.md` contra `resultado.*` e `mart.*`; subida do zero a partir do zip em pasta limpa; varredura de segredos e de conteúdo de conversa no zip; as 3 telas clicadas por inteiro (131 estados).
 - Lacuna encontrada e corrigida em 13/11: faltavam o modelo da base e os endpoints com entrada e saída em `arquitetura.md` (C-29) e o idioma da interface e a comparação entre países (C-30).
+
+## Revisão de 15/11/2026 (noite), depois de enxugar o documento
+- `docs/entrega.md` reescrito a pedido do Vinícius (mais curto, 11 seções, PDF de 7 páginas com as cores do painel, 6 figuras da EDA e 3 capturas). O mapa item a item foi para `docs/mapa_enunciado.md`.
+- Reconferidas as 42 linhas contra o texto novo. O corte tinha enfraquecido C-16 (primeira experiência), C-27, C-30, C-31, C-32, C-34 (caminho até produção) e C-38 (teste de regressão); todos repostos em versão curta.
+- "O que faria diferente" (C-04) saiu do PDF: o enunciado pede na apresentação.
