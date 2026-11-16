@@ -2,28 +2,33 @@
 
 Vinícius Souza · Desafio técnico Acaso · novembro de 2026
 
-## O trabalho em uma página
+## A resposta em uma página
 
-| Etapa | O que fiz | O que saiu |
+> De cada 100 pessoas que experimentam o assistente, **24 voltam em até 7 dias**. Só uma coisa que o assistente faz afasta de forma clara: **recusar a primeira pergunta**.
+
+| Número | O que é | Base |
 |---|---|---|
-| **Pergunta** | O que faz alguém voltar em até 7 dias depois da primeira vez, e quanto disso é efeito do assistente | — |
-| **Dado** | WildChat, só Brasil, de abril de 2023 a abril de 2024 | 11.621 conversas, 2.385 IPs |
-| **Definições** | Sem login, uma pessoa é um IP mais a família do navegador. Sessão fecha com 30 minutos sem uso. Voltar é abrir nova sessão em até 7 dias | 2.372 novos usuários |
-| **Medida** | Taxa de retorno com intervalo de 95% | 23,9% (de 22,2% a 25,6%) |
-| **Fatores** | 25 comparações entre pessoas de perfil parecido | 1 se sustenta: a recusa |
-| **Entrega** | Base em Postgres, API e painel com 3 telas, sobem com um comando | `docker compose up` |
+| **23,9%** | voltam em até 7 dias | 566 de 2.372 pessoas · margem de erro: 22,2% a 25,6% |
+| **−16** | voltam a menos, a cada 100, depois de uma recusa | entre 11 e 21 · comparando pessoas parecidas |
+| **Sem ganho** | de retorno com o GPT-4 no lugar do GPT-3.5 | −2,9 pontos (de −8,0 a +2,2) |
+| **1 de 33** | semanas com queda fora do normal | o acaso sozinho produz cerca de 2 |
 
-De cada 100 pessoas que experimentam o assistente, 24 voltam em até 7 dias. Se voltar exigir outro dia, são 17. A resposta honesta para o cliente é "entre 17% e 24%, conforme o que você chama de voltar".
+| Achado | O que vi | Decisão que sustenta | Limite |
+|---|---|---|---|
+| **1. A recusa afasta** | Dos 132 que receberam recusa na primeira resposta, 13 voltaram (9,8%). Dos outros 2.240, voltaram 553 (24,7%). Entre pessoas parecidas, são 16,4 pontos a menos (de 11,5 a 21,4). | Acompanhar a taxa de recusa como indicador de saúde e testar uma recusa que ofereça alternativa. | É comparação, não experimento, e o grupo é pequeno. |
+| **2. Modelo mais caro não trouxe retorno** | GPT-4 contra GPT-3.5: 2,9 pontos a menos (de −8,0 a +2,2). Os dados descartam um ganho acima de 2 pontos. | Não justificar um modelo mais caro por retenção. Se a troca vier por qualidade, medir com teste controlado. | Efeito menor que 5 pontos não aparece com esta base. |
+| **3. Semana ruim sozinha engana** | A maior queda da série (01/05/2023) era efeito do início da coleta: parecia 17,1 pontos e caiu para 7,7. A de 20/11/2023 caiu 4,9, dentro da variação normal. | O alerta do painel só dispara acima da variação normal. | De 33 a 197 pessoas por semana: só queda grande aparece. |
 
-**Achado 1. Quem recebe uma recusa na primeira resposta volta bem menos.** Dos 132 usuários que receberam recusa, 13 voltaram (9,8%). Dos outros 2.240, voltaram 553 (24,7%). Comparando pessoas de perfil parecido, a diferença é de 16,4 pontos, com intervalo de 11,5 a 21,4. É o único comportamento do assistente que resiste a todos os testes que fiz. A decisão que isso sustenta: acompanhar a taxa de recusa como indicador de saúde e testar, de forma controlada, uma recusa que ofereça alternativa. O limite: é comparação, não experimento, e o grupo é pequeno.
+```fluxo
+WildChat-1M, só Brasil: 11.621 conversas -> Definições: pessoa, sessão, voltar -> 2.372 pessoas novas -> 25 comparações entre pessoas parecidas -> 1 se sustenta: a recusa
+```
 
-**Achado 2. Trocar de modelo não mostrou ganho de retorno.** GPT-4 contra GPT-3.5 dá 2,9 pontos a menos, com intervalo de −8,0 a +2,2. Os dados descartam um ganho acima de 2 pontos. A decisão: não justificar um modelo mais caro por retenção. Se a troca vier por qualidade, medir com teste controlado.
-
-**Achado 3. Queda semanal isolada engana.** A maior queda da série, na semana de 01/05/2023, era efeito do início da coleta: parecia 17,1 pontos e caiu para 7,7 quando tratei o começo da base com folga. A semana de 20/11/2023, no mês em que o GPT-4 voltou a ser oferecido, caiu 4,9 pontos, dentro da variação normal. De 33 semanas testadas, 1 passou do limite; o acaso sozinho produz cerca de 2. A decisão: o alerta do painel só dispara acima da variação normal.
-
-O que os dados não permitem: provar causa, enxergar efeito menor que 5 pontos e reconhecer a mesma pessoa em outra rede ou outro aparelho.
+- **O que os dados não permitem:** provar causa, enxergar efeito menor que 5 pontos e reconhecer a mesma pessoa em outra rede ou outro aparelho.
+- **O que entrego:** base em Postgres, API e painel com 3 telas, que sobem com `docker compose up`.
 
 ## 1. Definições e o que muda se eu estiver errado
+
+> Só uma escolha move o número de verdade: o que se chama de voltar. A resposta honesta para o cliente é "entre 17% e 24%".
 
 Recalculei a taxa com cada definição alternativa, usando a mesma função. A oficial é 23,86%.
 
@@ -37,27 +42,61 @@ Recalculei a taxa com cada definição alternativa, usando a mesma função. A o
 | Tráfego anômalo | IP com 200 ou mais conversas, ou 10 ou mais navegadores, fica fora (11 usuários) | com eles: 24,08% |
 | Fuso | America/Sao_Paulo | UTC: mesma taxa; 44 usuários mudam de semana |
 
-A única escolha que move o número de verdade é o que se chama de voltar. As outras mexem menos de 2,5 pontos. Cada decisão tem um registro em `docs/decisoes/` (BDR-01 a BDR-07), com as opções que considerei.
+As outras escolhas mexem menos de 2,5 pontos. Cada uma tem registro em `docs/decisoes/` (BDR-01 a BDR-07), com as opções que considerei.
 
 ## 2. O que os dados mostram
 
-O uso é muito concentrado. Dos 2.385 IPs, os 24 mais ativos respondem por 42% das conversas, e um só responde por 13,4%. Sem tirar esse tráfego, qualquer média descreveria meia dúzia de robôs.
+> O uso é concentrado em poucos IPs, as conversas são curtas e cada semana tem pouca gente. Boa parte do sobe e desce semanal é ruído.
 
-As conversas são curtas: 56% têm um único turno. Quem tem 4 ou mais turnos na primeira sessão volta mais: 32,9%, contra 17,2% de quem teve um turno só. Mas isso acontece depois da resposta do assistente. Trato como sinal de interesse, não como fator do assistente.
+![Volume por semana: mediana de 163 conversas; 4 semanas com queda forte, possível indisponibilidade.](figuras/01_volume_semanal.png)
+![Concentração: 24 IPs (1%) fazem 42% das conversas, e um só faz 13,4%. Sem tirá-los, a média descreveria robôs.](figuras/02_concentracao_ip.png)
+![Retorno por semana: a margem de erro de cada ponto tem 22 pontos de largura, em média.](figuras/03_retorno_semanal.png)
+![Tamanho: 56% das conversas têm um único turno e 84% têm até três.](figuras/04_turnos.png)
+![Tema: trabalho e negócios volta mais (32%); conversa pessoal volta menos (17%).](figuras/05_retorno_por_tema.png)
+![Idioma: 70% em português. Em pergunta curta a detecção erra (61% contra 10%).](figuras/06_idioma.png)
 
-O retorno por semana varia muito. Nas semanas com amostra suficiente, a faixa de incerteza de cada ponto tem em média 22 pontos de largura. Boa parte do sobe e desce semanal é ruído. Os gráficos que levaram a essas conclusões estão em `docs/figuras/`.
+**Variáveis da primeira experiência e como cada uma é derivada** (`loader/derivar.py`; definições no dicionário do painel):
 
-**Variáveis da primeira experiência.** Modelo, tema, tamanho da pergunta e da resposta, recusa, idioma, dispositivo, período do dia, fim de semana e região. Todas são derivadas na carga (`loader/derivar.py`) e descritas no dicionário do painel.
+| Variável | Como é derivada |
+|---|---|
+| Modelo | família do modelo da primeira conversa: GPT-3.5 (1.340 pessoas) ou GPT-4 (1.032) |
+| Tema | classificado por LLM em 8 grupos, conferido à mão |
+| Tamanho | caracteres da primeira pergunta e da primeira resposta, em faixas |
+| Qualidade da resposta | não existe nota do usuário; uso dois sinais: recusa e resposta em idioma diferente do da pergunta |
+| Recusa | a primeira resposta é uma recusa, segundo o LLM, conferido à mão |
+| Número de turnos | trocas na primeira sessão. Acontece depois da resposta, então trato como sinal de interesse, não como fator do assistente. Quem tem 4 ou mais volta 32,9%, contra 17,2% de quem teve um |
+| Horário | período do dia e fim de semana, no fuso de São Paulo |
+| Idioma | idioma detectado na primeira pergunta |
+| Aparelho e região | celular ou computador, pelo navegador; região pelo estado que vem na base |
 
-**Como conferi a classificação por IA.** Rotulei 200 conversas à mão, sem ver a resposta da máquina. Na marcação de recusa, as regras de palavras-chave acertavam 81% das 200 conversas; o LLM (Claude Haiku) acertou 92%. No tema, 37% e 56%. Como a amostra foi montada com mais casos suspeitos de recusa, o número que vale para a base é o ponderado: de cada 10 recusas que o LLM aponta, cerca de 8 são recusas de fato, e ele encontra cerca de 86 de cada 100. Com só 20 recusas reais na amostra, essa margem é larga. Por isso a recusa entra na análise com o rótulo do LLM e o tema fica só como descrição. Essa troca mudou o resultado: com as regras, o efeito da recusa parecia 3,3 pontos e não se distinguia de zero. Detalhe em `docs/validacao_llm.md`.
+**Como conferi a classificação por IA:**
 
-**Problemas de qualidade.** 141 perguntas vazias, 93 conversas com texto repetido, 175 conversas em que o IP muda no meio, 56 conversas com dado removido pelos autores e detecção de idioma que erra em pergunta curta. O painel lista cada um com o tratamento. As conversas tóxicas foram removidas na origem, e é nelas que as recusas são mais comuns.
+- Rotulei 200 conversas à mão, sem ver a resposta da máquina.
+- Recusa: as regras de palavras-chave acertavam 81% das 200 conversas; o LLM (Claude Haiku) acertou 92%. O número que vale para a base é o ponderado, porque a amostra foi montada com mais casos suspeitos: de cada 10 recusas que o LLM aponta, cerca de 8 são recusas de fato, e ele encontra cerca de 86 de cada 100. Com só 20 recusas reais na amostra, essa margem é larga.
+- Tema: 37% com as regras e 56% com o LLM. Por isso o tema fica só como descrição.
+- A troca mudou o resultado: com as regras, o efeito da recusa parecia 3,3 pontos e não se distinguia de zero. Detalhe em `docs/validacao_llm.md`.
 
-**Dados que faltam.** ID de login, versão do produto por data, satisfação declarada e o motivo de a pessoa ter parado.
+**Problemas de qualidade e o que fiz com cada um:**
+
+| Problema | Tamanho | Tratamento |
+|---|---|---|
+| Uso com cara de robô | 7 IPs, 3.284 conversas (28,3%) | fora da conta; testei também incluindo |
+| Idioma mal detectado em pergunta curta | 964 conversas | o fator "idioma diferente" só usa perguntas com mais de 30 caracteres |
+| IP muda no meio da conversa | 175 conversas | uso o IP mais frequente da conversa |
+| Pergunta vazia | 141 conversas | mantidas; só conta como uso se houver pergunta não vazia |
+| Texto repetido | 93 conversas | mantidas e contadas separadamente |
+| Dado pessoal removido pelos autores | 56 conversas | mantidas |
+| Conversas tóxicas removidas na origem | não sei quantas | não tenho; é nelas que a recusa é mais comum |
+
+- **Dá para medir:** quem volta, com margem de erro, e o que anda junto com voltar.
+- **Não dá:** provar causa, nem saber por que a pessoa parou.
+- **Dados que faltam:** ID de login, versão do produto por data, satisfação declarada e o motivo da saída.
 
 ## 3. O que pesa no retorno
 
-Diferença na taxa de retorno, em pontos percentuais. O ajustado compara pessoas parecidas nos outros fatores, por regressão logística com erro agrupado por IP. Dos 25 efeitos ajustados, só a recusa passa a correção para muitos testes.
+> Dos 25 efeitos entre pessoas parecidas, só a recusa passa a correção para muitos testes.
+
+Diferença na taxa de retorno, em pontos percentuais. O ajustado compara pessoas parecidas nos outros fatores, por regressão logística com erro agrupado por IP.
 
 | Fator | Bruto | Ajustado (intervalo de 95%) | Leitura |
 |---|---:|---|---|
@@ -68,68 +107,100 @@ Diferença na taxa de retorno, em pontos percentuais. O ajustado compara pessoas
 | Resposta com mais de 2.500 caracteres | +7,9 | +0,5 (−6,0 a +7,0) | o bruto enganava |
 | Idioma diferente do da pergunta | +3,0 | +0,1 (−7,7 a +7,9) | não se distingue de zero |
 
-No painel, o tema aparece como comparação direta contra todos os outros temas (−9,2 para conversa pessoal); a base de comparação é outra, por isso o número difere do bruto da tabela.
-
-O efeito da recusa quase não muda quando troco a definição de usuário, a de sessão ou o corte do início da base: fica entre −14,4 e −16,4. As 132 recusas vêm de 131 IPs, então não é um usuário puxando o resultado. Os testes estão em `docs/robustez_recusa.md`.
-
-**Causa ou seleção.** O tamanho da resposta mostra bem o problema: no bruto, resposta mais longa parecia trazer 8 pontos de retorno; comparando pessoas parecidas, sobra quase nada. Era o perfil de quem pergunta, não a resposta. Para modelo e para a troca de modelo padrão em dezembro de 2023, usei um segundo método, que pondera os grupos até ficarem comparáveis, e a leitura foi a mesma. Para a recusa esse segundo método não fecha: com 132 casos não consegui montar um grupo de comparação equilibrado, e digo isso no painel.
-
-**O que isso prova.** Que a recusa anda junto de bem menos retorno. Não prova que a recusa cause a saída: ela pode ser o sinal de um pedido que o produto não atende. Só um teste controlado responde.
+- **Confusão que tratei:** os outros fatores da primeira experiência e a época de chegada entram no modelo, para comparar pessoas parecidas.
+- **Causa ou seleção:** no bruto, resposta mais longa parecia trazer 8 pontos de retorno. Entre pessoas parecidas, sobra quase nada. Era o perfil de quem pergunta, não a resposta.
+- **Segundo método:** para o modelo e para a troca do modelo padrão em dezembro de 2023, ponderei os grupos até ficarem comparáveis, e a leitura foi a mesma. Para a recusa ele não fecha: com 132 casos não consegui um grupo de comparação equilibrado, e digo isso no painel.
+- **Robustez da recusa:** fica entre −14,4 e −16,4 quando troco a definição de usuário, a de sessão ou o corte do início. As 132 recusas vêm de 131 IPs. Testes em `docs/robustez_recusa.md`.
+- **O que prova:** que a recusa anda junto de bem menos retorno.
+- **O que não prova:** que a recusa cause a saída. Ela pode ser o sinal de um pedido que o produto não atende. Só um teste controlado responde.
+- **Tema no painel:** aparece como comparação direta contra todos os outros temas (−9,2 para conversa pessoal). A base de comparação é outra, por isso difere do bruto da tabela.
 
 ## 4. A semana que caiu
 
-O enunciado pede uma semana e a explicação. Comparei cada semana com 4 semanas de base (as 4 anteriores; na de 01/05, as 4 seguintes, porque as anteriores eram o começo da coleta) e separei a diferença em duas partes: mudou quem chegou, ou mudou o comportamento de cada tipo de pessoa.
+> Nas duas semanas que analisei, quase toda a diferença é de comportamento, não de público. E nenhuma passa do que a variação normal produz.
 
-| Semana | Retorno | Base | Diferença | Quem chegou / comportamento | p |
+Comparei cada semana com 4 semanas de base e separei a diferença em duas partes: mudou quem chegou, ou mudou o comportamento de cada tipo de pessoa.
+
+| Semana | Retorno | Base de comparação | Diferença | Quem chegou / comportamento | p |
 |---|---|---|---:|---|---:|
-| 20/11/2023 | 21,5% (n = 65) | 26,4% (n = 197) | −4,9 | −0,4 / −4,4 | 0,43 |
-| 01/05/2023 | 16,7% (n = 84) | 24,4% (n = 340) | −7,7 | −0,6 / −7,1 | 0,13 |
+| 20/11/2023 | 21,5% (n = 65) | 26,4% (n = 197), 4 semanas anteriores | −4,9 | −0,4 / −4,4 | 0,43 |
+| 01/05/2023 | 16,7% (n = 84) | 24,4% (n = 340), 4 semanas seguintes | −7,7 | −0,6 / −7,1 | 0,13 |
 
-Nas duas, quase toda a diferença é de comportamento, não de público. E nenhuma das duas passa do que a variação normal produz. A semana de 01/05 me enganou na primeira leitura: comparada com as duas semanas anteriores, que eram o começo da coleta, parecia a maior queda da série.
+A semana de 01/05 me enganou na primeira leitura: comparada com as duas semanas anteriores, que eram o começo da coleta, parecia a maior queda da série. Por isso a base dela são as semanas seguintes.
 
 ## 5. O painel
 
-Três telas, cada uma com uma pergunta no título e a resposta em uma frase logo abaixo. Cada tela cabe sem rolar, inclusive em notebook.
+> Três telas, cada uma com uma pergunta no título e a resposta em uma frase. Cada tela cabe sem rolar, inclusive em notebook.
+
+![Quantos voltam](capturas_m4/tela1-quantos-voltam-1280x720.png)
+![O que faz voltar](capturas_m4/tela2-o-que-faz-voltar-1280x720.png)
+![Dá para confiar?](capturas_m4/tela3-da-para-confiar-1280x720.png)
 
 | Tela | Pergunta que responde | Gráfico e por quê |
 |---|---|---|
-| Quantos voltam | De cada 100 pessoas, quantas voltam em 7 dias, e isso está mudando? | Linha por mês com faixa de margem de erro, para ninguém ler ponto solto como tendência. Na visão por semana, a linha é a média de 4 semanas e cada semana vira um ponto, porque semana tem pouca gente. Ao lado, a semana que caiu: "26 → 22" e duas barras que separam o que veio do público e o que veio do comportamento |
-| O que faz voltar | Quais fatores pesam, e quanto é efeito do assistente? | Uma linha por fator: o ponto é a diferença, a barra é a margem de erro. O que cruza o zero se vê de relance. Abaixo, os três achados, cada um com a decisão que sustenta |
-| Dá para confiar? | Posso confiar nestes números? | Cartões com a conferência contra a origem e a validação da IA; barras com cada problema de qualidade e o que fiz com ele; e a lista do que o painel mostra e do que nunca mostra |
+| Quantos voltam | De cada 100 pessoas, quantas voltam em 7 dias, e isso está mudando? | Linha por mês com faixa de margem de erro, para ninguém ler ponto solto como tendência. Por semana, a linha é a média de 4 semanas e cada semana vira um ponto, porque semana tem pouca gente. Ao lado, a semana que caiu: "26 → 22" e duas barras, público e comportamento |
+| O que faz voltar | Quais fatores pesam, e quanto é efeito do assistente? | Uma linha por fator: o ponto é a diferença, a barra é a margem de erro. O que cruza o zero se vê de relance. Abaixo, os três achados com a decisão de cada um |
+| Dá para confiar? | Posso confiar nestes números? | Cartões com a conferência contra a origem e a validação da IA; barras com cada problema de qualidade; e a lista do que o painel mostra e do que nunca mostra |
 
-O texto das telas é para quem não é técnico: fala de pessoas ("16 a menos voltam, a cada 100"), não de pontos percentuais. Todo cartão, linha e barra é clicável e abre uma caixa curta com o número, a explicação e o cuidado na leitura. A definição, a fórmula, o denominador, o período e a consulta SQL ficam nessa caixa, num bloco recolhido "Para conferir (técnico)", e no dicionário da terceira tela. Laranja aparece só onde a diferença é real.
-
-Quando há pouca gente, o painel escreve "pouca gente" e não tira conclusão. Períodos que ainda não completaram 7 dias aparecem hachurados, nunca como queda. O painel mostra só agregados. Texto de conversa, IP e navegador não aparecem em nenhuma tela nem na API, e o texto de conversa nem entra no banco.
+- **Linguagem:** o texto das telas fala de pessoas ("16 a menos voltam, a cada 100"), não de pontos percentuais.
+- **Clique:** todo cartão, linha e barra abre uma caixa curta com o número, a explicação e o cuidado na leitura.
+- **Indicadores:** definição, fórmula, denominador, período e a consulta SQL de cada um ficam nessa caixa, no bloco "Para conferir (técnico)", e no dicionário da terceira tela.
+- **Pouca gente:** o painel escreve "pouca gente" e não tira conclusão. Períodos que não completaram 7 dias aparecem hachurados, nunca como queda.
+- **O que nunca mostra:** texto de conversa, IP e navegador não aparecem em nenhuma tela nem na API. O texto de conversa nem entra no banco. Só agregados.
 
 ## 6. Arquitetura e custo
 
-O arquivo bruto passa por uma carga em Python, que grava no Postgres. A análise lê dessa base e grava os resultados em tabelas. A API, em Next.js, lê só as tabelas finais, com um usuário de banco que só tem permissão de leitura. Os indicadores são calculados na carga e a API guarda as respostas em cache até a carga seguinte. Diagrama, modelo da base e lista de endpoints estão em `docs/arquitetura/arquitetura.md`.
+> O painel nunca lê o arquivo bruto. Ele lê tabelas prontas, com um usuário de banco que só pode ler.
 
-Na AWS, o desenho usa RDS PostgreSQL, containers para o app e a carga, balanceador, S3 para o bruto e Bedrock para o LLM. O custo estimado é de **US$ 54 por mês**, com preços da tabela oficial da AWS consultados em 12/11/2026. O LLM custou US$ 0,24 para classificar 2.944 conversas, cerca de US$ 0,08 por mil; rodei pela OpenRouter, porque o Bedrock ficou bloqueado na minha conta. A parte AWS é um desenho com custo calculado. Não implantei.
+```fluxo
+Arquivo bruto (parquet) -> Carga em Python -> Postgres: dado tratado -> Análise em Python -> Postgres: tabelas finais -> API em Next.js, só leitura -> 3 telas
+```
 
-Para outros países, o país já é parâmetro na base e na API. Os textos do painel ficam em arquivo separado por idioma, o fuso é configurado por país e a comparação entre países usa a mesma separação entre público e comportamento da seção 4.
+- **Stack:** Postgres, Python na carga e na análise, Next.js na API e nas telas. O porquê de cada escolha está nos ADR-01 a ADR-10.
+- **AWS (desenho, não implantei):** RDS PostgreSQL, containers para o app e a carga, balanceador, S3 para o bruto e Bedrock para o LLM. Custo estimado de **US$ 54 por mês**, com a tabela oficial de preços consultada em 12/11/2026.
+- **LLM:** custou US$ 0,24 para classificar 2.944 conversas, cerca de US$ 0,08 por mil. Rodei pela OpenRouter, porque o Bedrock ficou bloqueado na minha conta.
+- **Desempenho:** os indicadores são calculados na carga; a API guarda as respostas em cache até a carga seguinte; o tempo sai em cada resposta e no log. A consulta principal levava 12 segundos e passou a 0,33. Medidas em `docs/desempenho.md`.
+- **Outros países:** o país já é parâmetro na base e na API. Os textos ficam em arquivo por idioma, o fuso é configurado por país e a comparação entre países usa a mesma separação entre público e comportamento da seção 4.
+- **Diagramas, modelo da base e endpoints** (nome, entrada e saída): `docs/arquitetura/arquitetura.md`.
 
 ## 7. Como eu saberia que um número está errado
 
-A cada carga, o programa refaz 9 contagens direto do arquivo bruto e compara com a base. Hoje a diferença é zero nas 9. Cada carga deixa um registro com arquivo de origem, linhas lidas, gravadas e rejeitadas. Cada resposta da API deixa um log com identificador, tempo e versão dos dados, e a tela mostra esse identificador quando dá erro. O caminho de investigação é tela, log, consulta, tabela, carga, arquivo.
+> A cada carga, o programa refaz 9 contagens direto do arquivo bruto e compara com a base. Hoje a diferença é zero nas 9.
 
-As definições são travadas por testes sobre uma base pequena, inventada, em que eu sei a resposta certa: retorno em 6 dias e 23 horas conta, em 7 dias e 1 minuto não; trocar a versão do navegador não cria usuário novo. Quebrei as regras de propósito para ver se os testes pegavam. Um deles não pegava a troca de `<=` por `<` na janela de 7 dias, e acrescentei o teste que faltava.
-
-Até produção, a mesma imagem passa por local, homologação e produção, e nunca se constrói em produção. As mudanças de banco são arquivos SQL numerados, cada um com o passo inverso. Depois de cada implantação rodam a verificação de saúde e a conferência com a origem, e só então entra tráfego.
-
-Três ressalvas. O envio automático do alerta de divergência está descrito, não construído. Os passos inversos das mudanças de banco estão escritos, mas não foram executados. E a esteira de integração contínua está configurada, mas ainda não rodou.
+- **Registro por camada:** cada carga grava arquivo de origem, linhas lidas, gravadas e rejeitadas. Cada resposta da API deixa um log com identificador, tempo e versão dos dados. A tela mostra esse identificador quando dá erro.
+- **Caminho de investigação:** tela, log, consulta, tabela, carga, arquivo.
+- **Testes que travam as definições:** rodam sobre uma base pequena, inventada, em que eu sei a resposta certa. Retorno em 6 dias e 23 horas conta; em 7 dias e 1 minuto, não. Trocar a versão do navegador não cria usuário novo.
+- **Teste dos testes:** quebrei as regras de propósito para ver se eles pegavam. Um não pegava a troca de `<=` por `<` na janela de 7 dias, e acrescentei o que faltava.
+- **Até produção:** a mesma imagem passa por local, homologação e produção. Mudança de banco é arquivo SQL numerado, com o passo inverso. Depois de cada implantação rodam a verificação de saúde e a conferência com a origem.
+- **Três ressalvas:** o envio automático do alerta está descrito, não construído. Os passos inversos estão escritos, mas não foram executados. A esteira de integração contínua está configurada, mas ainda não rodou.
 
 ## 8. O incidente: a retenção caiu de 31% para 18%
 
-**Por onde eu começaria.** Pela tabela do enunciado, comparando as duas fontes semana a semana. Quem voltou fica estável nas duas: 366 no painel e 352 no relatório. Quem chegou explode só no painel: 2.034 contra 1.172. A queda não é de comportamento, é de contagem de usuários novos.
+> A queda é de contagem, não de comportamento: quem voltou ficou estável; quem chegou quase dobrou, só no painel.
 
-**Em qual camada.** Na carga, na regra que define o usuário. O relatório conta por IP; a carga conta por IP mais o texto completo do navegador. Reproduzi o mecanismo no dado real: por IP são 2.385 usuários; por IP mais navegador completo são 2.895, 21% a mais, e um único IP chega a ter 35 navegadores. A consulta de confirmação está em `docs/incidente/confirmacao.sql`.
+| Semana do incidente | Painel | Relatório do time de dados |
+|---|---:|---:|
+| Novos | 2.034 | 1.172 |
+| Voltaram em 7 dias | 366 | 352 |
 
-**O trecho e a correção.** A linha é `chave = f"{hashed_ip}|{user-agent}"`. Cada atualização de navegador vira uma pessoa nova. A correção escrita está em `docs/incidente/correcao/`: identidade por uma regra única, a mesma em todo o sistema, e carga dentro de transação. O código de referência tem outros defeitos sem relação com a queda, listados no mesmo lugar.
+- **Por onde eu começaria:** pela comparação acima, das duas fontes, semana a semana. Ela mostra em qual número está a diferença antes de eu abrir qualquer código.
+- **Em qual camada:** na carga, na regra que define o usuário. O relatório conta por IP; a carga conta por IP mais o texto completo do navegador.
+- **Evidência no dado real:** por IP são 2.385 usuários; por IP mais navegador completo são 2.895, 21% a mais, e um único IP chega a ter 35 navegadores. A consulta de confirmação está em `docs/incidente/confirmacao.sql`.
+- **O trecho que causa:** cada atualização do navegador vira uma pessoa nova.
 
-**O que mais fazer.** Reprocessar o histórico com a regra corrigida. Alinhar a definição de usuário com o time de dados, porque a causa de fundo são duas definições e nenhuma conferência entre elas. Ligar a conferência automática da seção 7. E manter o teste que escrevi para esse caso, que falha se alguém voltar à chave antiga.
+```python
+chave = f"{hashed_ip}|{user-agent}"
+```
 
-**O que eu diria à gerente de produto.** Durante: "A queda é quase certamente de medição. O número de pessoas que voltaram não mudou, só o de pessoas que chegaram. Não tome decisão em cima do 18%. Volto com a causa confirmada até tal hora." Depois: "Uma troca de navegador estava contando como usuário novo. Corrigimos, a retenção daquela semana é tanto, e os números que você já apresentou mudam assim. Agora a contagem é conferida automaticamente com o relatório do time de dados."
+- **A correção** (completa em `docs/incidente/correcao/`): identidade por uma regra única, sem a versão do navegador, usada em todo o sistema, e carga dentro de transação.
+
+```python
+chave = "|".join([hashed_ip, familia_so(user_agent), familia_navegador(user_agent)])
+```
+
+- **O que mais fazer:** reprocessar o histórico com a regra corrigida. Alinhar a definição de usuário com o time de dados, porque a causa de fundo são duas definições e nenhuma conferência entre elas. Ligar a conferência automática da seção 7. Manter o teste que escrevi para esse caso, que falha se alguém voltar à chave antiga.
+- **À gerente de produto, durante:** "A queda é quase certamente de medição. O número de pessoas que voltaram não mudou, só o de pessoas que chegaram. Não tome decisão em cima do 18%. Volto com a causa confirmada até tal hora."
+- **Depois:** "Uma troca de navegador estava contando como usuário novo. Corrigimos, a retenção daquela semana é tanto, e os números que você já apresentou mudam assim. Agora a contagem é conferida automaticamente com o relatório do time de dados."
 
 ## 9. Riscos e decisões que não são minhas
 
@@ -144,19 +215,24 @@ Três ressalvas. O envio automático do alerta de divergência está descrito, n
 
 ## 10. Sugestões
 
-Para o assistente: revisar as recusas desnecessárias e testar uma recusa que ofereça alternativa. Não trocar de modelo esperando retenção. Para o painel, depois de ver os dados: mostrar a taxa de recusa ao lado da retenção, mostrar "voltou em outro dia" ao lado da taxa oficial, e deixar a conferência com a origem visível para o cliente.
+- **Para o assistente:** revisar as recusas desnecessárias e testar uma recusa que ofereça alternativa. Não trocar de modelo esperando retenção.
+- **Para o painel, depois de ver os dados:** mostrar a taxa de recusa ao lado da retenção; mostrar "voltou em outro dia" ao lado da taxa oficial; deixar a conferência com a origem visível para o cliente.
 
 ## 11. O que eu faria diferente
 
-Com ID de login, refaria tudo com a identidade real; o código recalcula com um comando. Pediria a versão do produto por data, para explicar as semanas em vez de só descrevê-las. Faria o teste controlado de recusa. Implantaria de fato na AWS. E deixaria de regravar a base inteira a cada carga, passando para carga incremental.
+- Com ID de login, refaria tudo com a identidade real. O código recalcula com um comando.
+- Pediria a versão do produto por data, para explicar as semanas em vez de só descrevê-las.
+- Faria o teste controlado de recusa.
+- Implantaria de fato na AWS.
+- Passaria para carga incremental, em vez de regravar a base inteira a cada carga.
 
 ## 12. Uso de IA e horas
 
-Usei o Claude, pelo Claude Code, para planejar, escrever código e testes, e um LLM para classificar tema e recusa. A IA propôs opções de definição e de método; eu escolhi, revisei e aprovei cada uma, e respondo pelas conclusões. Conferi o trabalho da IA de três formas: 200 conversas rotuladas por mim, uma base inventada de resposta conhecida e a conferência do bruto com a base.
-
-O que corrigi ou descartei: a primeira versão do cálculo de efeito estimava 7,0 pontos onde o certo era 10,1, e o teste pegou. O classificador por palavras-chave foi descartado depois da validação. Um segundo LLM foi descartado por deixar 40% dos itens sem resposta. Reprovei duas versões do painel por estarem técnicas demais para o cliente e mandei refazer em linguagem leiga. A consulta principal levava 12 segundos e passou a 0,33. Mais casos em `docs/conferi_da_ia.md`.
-
-Foram cerca de **22 horas** minhas, acima das 12 sugeridas, porque rotulei a validação à mão, entreguei o painel completo e refiz as telas até ficarem claras para quem não é técnico.
+- **O que usei:** o Claude, pelo Claude Code, para planejar, escrever código e testes, e um LLM para classificar tema e recusa.
+- **Quem decidiu:** a IA propôs opções de definição e de método; eu escolhi, revisei e aprovei cada uma, e respondo pelas conclusões.
+- **Como conferi:** 200 conversas rotuladas por mim, uma base inventada de resposta conhecida e a conferência do bruto com a base.
+- **O que corrigi ou descartei:** a primeira versão do cálculo de efeito estimava 7,0 pontos onde o certo era 10,1, e o teste pegou. O classificador por palavras-chave foi descartado depois da validação. Um segundo LLM foi descartado por deixar 40% dos itens sem resposta. Reprovei duas versões do painel por estarem técnicas demais para o cliente e mandei refazer em linguagem leiga. Mais casos em `docs/conferi_da_ia.md`.
+- **Horas:** cerca de **22 horas** minhas, acima das 12 sugeridas, porque rotulei a validação à mão, entreguei o painel completo e refiz as telas até ficarem claras para quem não é técnico.
 
 ## Onde está cada item do enunciado
 
