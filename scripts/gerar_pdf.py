@@ -277,7 +277,8 @@ def main() -> int:
     titulos = [l[3:].strip() for l in md.splitlines() if l.startswith("## ")]
     topos: frozenset[str] = frozenset()
     erro = ""
-    for _ in range(4):  # a retirada do filete muda um pouco a paginação: repete até estabilizar
+    vistos: list[frozenset[str]] = []
+    for _ in range(6):  # a retirada do filete muda um pouco a paginação: repete até estabilizar
         saida.unlink(missing_ok=True)
         erro = imprimir(converter(md, topos), saida)
         if not saida.exists() or saida.stat().st_size == 0:
@@ -285,6 +286,12 @@ def main() -> int:
         novos = secoes_no_topo(saida, titulos)
         if novos == topos:
             break
+        if novos in vistos:  # oscila: o filete empurra o título para o topo e sem ele volta; quem oscila mantém o filete
+            topos = novos & topos
+            saida.unlink(missing_ok=True)
+            erro = imprimir(converter(md, topos), saida)
+            break
+        vistos.append(topos)
         topos = novos
     if not saida.exists() or saida.stat().st_size == 0:
         print("Falha ao gerar o PDF.", erro[-400:], file=sys.stderr)

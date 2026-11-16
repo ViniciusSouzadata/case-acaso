@@ -171,3 +171,6 @@ td { padding: 7px 9px; } th { padding: 7px 9px; }
 h2.topo { border-top: 0 !important; padding-top: 0 !important; margin-top: 0 !important; }
 .cartao-img figcaption { font-size: 8.2pt; }
 .telas-img { grid-template-columns: 1fr; }
+
+/* pedido 29: respiro menor e igual em todos os títulos, para o filete caber nas seções 8 e 11 sem passar de 8 páginas */
+body > h2 { margin-top: 18px !important; padding-top: 12px; }
