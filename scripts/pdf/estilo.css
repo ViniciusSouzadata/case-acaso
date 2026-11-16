@@ -121,3 +121,46 @@ table { break-inside: avoid; }
 .telas-img .cartao-img:first-child .moldura { padding: 0; }
 .telas-img .cartao-img:first-child .moldura { padding: 0 40mm; }
 body { font-size: 9.6pt; } .figuras-img .moldura { height: 34mm; }
+
+/* ===== Pedido 26: ritmo vertical. Hierarquia: seção (32px + filete) > bloco (17px, sempre igual) > item (6px) ===== */
+@page { margin: 15mm 16mm 16mm 16mm; }
+body { font-size: 9.6pt; line-height: 1.55; }
+body > * { margin: 0; }
+body > * + * { margin-top: 17px !important; }
+body > h2 { margin-top: 32px !important; padding-top: 22px; border-top: 1px solid #e6e7ec; }
+body > h2 + * { margin-top: 12px !important; }
+body > .capa + h2 { margin-top: 24px !important; padding-top: 0; border-top: 0; }
+.capa { margin-bottom: 0; }
+h2 { margin-bottom: 0; }
+p { margin-bottom: 0; }
+.resposta { padding: 12px 16px; margin-bottom: 0; }
+ul { margin: 0; line-height: 1.5; }
+li { margin: 0 0 6px; }
+li:last-child { margin-bottom: 0; }
+table { margin: 0; line-height: 1.4; }
+th { padding: 8px 9px; }
+td { padding: 8px 9px; }
+.achados td { padding: 10px 9px; }
+.indicadores { gap: 12px; margin: 0; }
+.indicador { padding: 14px 14px; }
+.indicador .num { font-size: 17pt; }
+.grade { gap: 12px; margin: 0; }
+.cartao-img { padding: 10px; }
+.cartao-img figcaption { margin-top: 8px; }
+.fluxo { margin: 0; }
+.passo { padding: 10px 7px; }
+.codigo { margin: 0; }
+p:has(+ .codigo) { break-after: avoid; }
+/* página 1: cartões e achados maiores, para a página ficar bem distribuída */
+.indicador { padding: 20px 15px 18px; }
+.indicador .num { font-size: 18pt; }
+.indicador .que { font-size: 9.6pt; margin-top: 8px; }
+.indicador .base { font-size: 7.8pt; margin-top: 10px; }
+.achados td { padding: 14px 10px; }
+.passo { padding: 14px 8px; font-size: 8pt; }
+td { padding: 7px 9px; } th { padding: 7px 9px; }
+.indicador { padding: 24px 16px 22px; }
+.indicador .num { font-size: 19pt; }
+.achados td { padding: 18px 10px; }
+.passo { padding: 18px 8px; }
+.telas-img .cartao-img:first-child .moldura { padding: 0 18mm; }
