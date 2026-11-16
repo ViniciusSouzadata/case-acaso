@@ -102,6 +102,8 @@ def imagem_dados(caminho: str) -> str:
 def legenda(alt: str, telas: bool) -> str:
     if telas and ": " in alt:
         antes, depois = alt.split(": ", 1)
+        if antes.endswith("?"):  # a pergunta já traz a pontuação: sem dois-pontos, resto com maiúscula
+            return f'<strong class="cap">{inline(antes)}</strong> {inline(depois[:1].upper() + depois[1:])}'
         return f'<strong class="cap">{inline(antes)}:</strong> {inline(depois)}'
     return inline(alt)
 

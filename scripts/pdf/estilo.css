@@ -114,3 +114,10 @@ p:has(+ table), p:has(+ ul), p:has(+ .grade) { break-after: avoid; }
 .telas-img .cartao-img:first-child .moldura { padding: 0 30mm; }
 .figuras-img .moldura { height: 30mm; }
 .telas-img .cartao-img:first-child .moldura { padding: 0 40mm; }
+
+/* pedido 25 */
+.capa h1 { font-size: 15.5pt; white-space: nowrap; }
+table { break-inside: avoid; }
+.telas-img .cartao-img:first-child .moldura { padding: 0; }
+.telas-img .cartao-img:first-child .moldura { padding: 0 40mm; }
+body { font-size: 9.6pt; } .figuras-img .moldura { height: 34mm; }
