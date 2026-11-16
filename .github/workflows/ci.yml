@@ -1,5 +1,5 @@
 # T-504: portão automático antes de aceitar uma mudança.
-# ESTADO: CONFIGURADO, NÃO EXECUTADO aqui (o repositório privado ainda não roda este workflow; sintaxe revisada à mão, sem actionlint).
+# ESTADO: roda no GitHub a cada push no main. A primeira execução (16/11/2026) falhou porque a fumaça do app rodava contra um banco só migrado, sem dados; a carga completa entrou antes dela.
 # Os passos repetem os comandos do README/Makefile (`make test`), que é o que foi executado localmente.
 name: ci
 
@@ -35,7 +35,9 @@ jobs:
       # Python: pytest no container do loader contra o Postgres do compose (migra, depois roda tests/)
       - run: docker compose up -d --wait db
       - run: docker compose run --build --rm loader sh -c "python -m loader.migrar && python -m pytest /app/tests -q -p no:cacheprovider"
-      # TypeScript: tsc estrito e vitest (inclui a fumaça contra o banco do compose, que o passo acima já migrou)
+      # Carga completa (migra, confere o bruto, carrega, transforma, reconcilia, analisa): a fumaça do app precisa do banco com dados
+      - run: docker compose run --rm loader
+      # TypeScript: tsc estrito e vitest (inclui a fumaça contra o banco do compose, que o passo acima carregou)
       - run: docker compose --profile testes run --build --rm app-testes sh -c "npx tsc --noEmit && npx vitest run"
       - if: always()
         run: docker compose down -v
