@@ -38,7 +38,12 @@ COR_TINTA = "#121212"
 COR_GRADE = "#e6e7ec"
 COR_FAIXAS = ["#f1eefe", "#f6f7f9", "#f1eefe", "#f6f7f9"]  # eras de modelo: tons bem claros, alternados
 TAMANHO = (5, 3.75)  # 4:3; impressa com ~55 mm de largura no PDF, por isso a letra é grande
-FONTE = 12
+FONTE = 15.5
+
+NOMES_TEMA = {  # só na exibição da figura; o nome completo continua nas tabelas e em conclusoes.md
+    "conversa pessoal/conselho": "conversa pessoal", "informação geral/curiosidade": "informação geral", "estudo/dever de casa": "estudo",
+    "criação/ficção e roleplay": "criação e ficção", "programação/TI": "programação", "trabalho/negócios": "trabalho", "outros/indefinido": "outros",
+}
 
 NOMES_IDIOMA = {
     "Portuguese": "Português", "English": "Inglês", "Spanish": "Espanhol", "French": "Francês", "German": "Alemão",
@@ -56,7 +61,7 @@ def _estilo() -> None:
         "axes.labelcolor": COR_CINZA, "axes.labelsize": FONTE, "axes.titlesize": FONTE, "axes.grid": True, "axes.grid.axis": "y",
         "axes.axisbelow": True, "grid.color": COR_GRADE, "grid.linewidth": 0.8,
         "xtick.color": COR_CINZA, "ytick.color": COR_CINZA, "xtick.labelsize": FONTE - 1, "ytick.labelsize": FONTE - 1,
-        "xtick.major.size": 0, "ytick.major.size": 0, "legend.fontsize": FONTE - 2, "legend.frameon": False,
+        "xtick.major.size": 0, "ytick.major.size": 0, "legend.fontsize": 12.5, "legend.frameon": False,
     })
 
 
@@ -174,11 +179,11 @@ def fig_retorno_semanal(conn) -> tuple[str, str]:
                 elinewidth=1.2, alpha=0.9, label="semana")
     ax.errorbar([p for p, o in zip(per, ok) if not o], taxa[~ok] * 100, yerr=[(taxa - inf)[~ok] * 100, (sup - taxa)[~ok] * 100],
                 fmt="o", ms=4, color=COR_CINZA, ecolor=COR_GRADE, elinewidth=1.2, label="pouca gente")
-    ax.plot(per, np.array(mm4) * 100, color=COR_DESTAQUE, lw=2.4, label="média de 4 semanas")
+    ax.plot(per, np.array(mm4) * 100, color=COR_DESTAQUE, lw=2.4, label="média 4 sem.")
     ax.set_ylabel("% que voltou em 7 dias")
     ax.xaxis.set_major_locator(mdates.MonthLocator(interval=6))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%y"))
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.16), ncol=3, columnspacing=0.8, handletextpad=0.3)
+    fig.legend(*ax.get_legend_handles_labels(), loc="outside upper center", ncol=3, fontsize=11.5, columnspacing=0.7, handletextpad=0.2, handlelength=1.2)
     nome = _salvar(fig, "03_retorno_semanal.png")
     larg = (sup - inf)[ok] * 100
     mm_validas = [m for m in mm4 if not np.isnan(m)]
@@ -222,7 +227,7 @@ def fig_tema(conn) -> tuple[str, str] | None:
     ax.grid(True, axis="x")
     ax.barh(y, taxa * 100, xerr=[[(t - i[0]) * 100 for t, i in zip(taxa, ics)], [(i[1] - t) * 100 for t, i in zip(taxa, ics)]],
             color=COR, ecolor=COR_CLARA, height=0.62, error_kw={"elinewidth": 1.4})
-    ax.set_yticks(y, [r for r in rot], fontsize=FONTE - 3)
+    ax.set_yticks(y, [NOMES_TEMA.get(r, r) for r in rot], fontsize=FONTE - 2)
     ax.invert_yaxis()
     ax.set_xlabel("% que voltou em 7 dias")
     nome = _salvar(fig, "05_retorno_por_tema.png")
@@ -247,12 +252,12 @@ def fig_idioma(conn) -> tuple[str, str]:
     a1.grid(True, axis="x")
     a1.barh([_nome_idioma(c[0]) for c in cont][::-1], [c[1] / total * 100 for c in cont][::-1], color=COR, height=0.65)
     a1.set_xlabel("% das conversas, por idioma")
-    a1.tick_params(axis="y", labelsize=FONTE - 2)
+    a1.tick_params(axis="y", labelsize=FONTE - 3)
     taxas = [f[2] / f[1] for f in faixas]
     a2.bar([f[0] for f in faixas], [t * 100 for t in taxas], color=[COR_DESTAQUE if i == 0 else COR for i in range(len(faixas))], width=0.65)
     a2.set_xlabel("caracteres da 1ª pergunta")
-    a2.set_ylabel("% de idioma trocado")
-    a2.tick_params(axis="x", labelsize=FONTE - 3)
+    a2.set_ylabel("% trocado")
+    a2.tick_params(axis="x", labelsize=FONTE - 4.5)
     nome = _salvar(fig, "06_idioma.png")
     resto = faixas[1:]
     taxa_resto = sum(f[2] for f in resto) / sum(f[1] for f in resto)
